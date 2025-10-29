@@ -7,7 +7,7 @@ namespace PracticalWork.Library.Abstractions.Services;
 /// <summary>
 /// Сервис по работе с книгами
 /// </summary>
-public interface IBookService
+public interface IBookService: IEntityService<Book>
 {
     /// <summary>
     /// Создание книги

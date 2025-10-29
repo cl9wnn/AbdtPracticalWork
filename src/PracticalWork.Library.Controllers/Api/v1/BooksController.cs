@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using PracticalWork.Library.Abstractions.Services;
 using PracticalWork.Library.Contracts.v1.Books.Request;
 using PracticalWork.Library.Contracts.v1.Books.Response;
+using PracticalWork.Library.Controllers.Attributes;
 using PracticalWork.Library.Controllers.Mappers.v1;
+using PracticalWork.Library.Models;
 
 namespace PracticalWork.Library.Controllers.Api.v1;
 
@@ -34,6 +36,7 @@ public class BooksController : Controller
 
     /// <summary> Редактирование книги </summary>
     [HttpPut("{id:guid}")]
+    [EntityExists<IBookService, Book>]
     [Produces("application/json")]
     [ProducesResponseType(typeof(UpdateBookResponse), 200)]
     [ProducesResponseType(404)]
@@ -48,6 +51,7 @@ public class BooksController : Controller
 
     /// <summary> Перевод книги в архив</summary>
     [HttpPost("{id:guid}/archive")]
+    [EntityExists<IBookService, Book>]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ArchiveBookResponse), 200)]
     [ProducesResponseType(404)]
@@ -79,12 +83,13 @@ public class BooksController : Controller
 
     /// <summary> Добавление деталей книги</summary>
     [HttpPost("{id:guid}/details")]
+    [EntityExists<IBookService, Book>]
     [Produces("application/json")]
     [ProducesResponseType(typeof(BookDetailsResponse), 200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
-    public async Task<IActionResult> AddBookDetails(Guid id, AddBookDetailsRequest request)
+    public async Task<IActionResult> AddBookDetails(Guid id, [FromForm] AddBookDetailsRequest request)
     {
         var result = await _bookService.AddBookDetails(id, request.CoverImage, request.Description);
 
