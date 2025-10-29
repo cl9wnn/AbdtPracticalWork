@@ -25,10 +25,69 @@ public class BooksController : Controller
     [ProducesResponseType(typeof(CreateBookResponse), 200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
-    public async Task<IActionResult> CreateOrder(CreateBookRequest request)
+    public async Task<IActionResult> CreateBook(CreateBookRequest request)
     {
         var result = await _bookService.CreateBook(request.ToBook());
 
-        return Content(result.ToString());
+        return Ok(result.ToString());
+    }
+
+    /// <summary> Редактирование книги </summary>
+    [HttpPut("{id:guid}")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(UpdateBookResponse), 200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> UpdateBook(Guid id, UpdateBookRequest request)
+    {
+        var result = await _bookService.UpdateBook(id, request.ToBook());
+
+        return Ok(result.ToString());
+    }
+
+    /// <summary> Перевод книги в архив</summary>
+    [HttpPost("{id:guid}/archive")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(ArchiveBookResponse), 200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> ArchiveBook(Guid id)
+    {
+        var result = await _bookService.ArchiveBook(id);
+
+        return Ok(result.ToArchiveBookResponse());
+    }
+
+    /// <summary> Получение списка книг</summary>
+    [HttpGet]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(PagedResponse<GetBookResponse>), 200)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> GetBooks(GetBooksRequest request)
+    {
+        var result = await _bookService.GetBooks(
+            request.ToBookFilterDto(),
+            request.Page,
+            request.PageSize);
+
+        return Ok(new PagedResponse<GetBookResponse>(
+            request.Page,
+            request.PageSize,
+            result.ToBookResponseList()));
+    }
+
+    /// <summary> Добавление деталей книги</summary>
+    [HttpPost("{id:guid}/details")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(BookDetailsResponse), 200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> AddBookDetails(Guid id, AddBookDetailsRequest request)
+    {
+        var result = await _bookService.AddBookDetails(id, request.CoverImage, request.Description);
+
+        return Ok(result.ToBookDetailsResponse());
     }
 }
