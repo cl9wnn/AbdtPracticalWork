@@ -5,9 +5,9 @@ using PracticalWork.Library.Cache.Redis;
 using PracticalWork.Library.Controllers;
 using PracticalWork.Library.Data.Minio;
 using PracticalWork.Library.Data.PostgreSql;
-using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.Web.Configuration;
 using System.Text.Json.Serialization;
+using PracticalWork.Library.SharedKernel.Exceptions;
 
 namespace PracticalWork.Library.Web;
 

@@ -13,8 +13,13 @@ public sealed class BookRepository : IBookRepository
     {
         _appDbContext = appDbContext;
     }
+    
+    public Task<Book> GetByIdAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
 
-    public async Task<Guid> CreateBook(Book book)
+    public async Task<Guid> AddAsync(Book book)
     {
         AbstractBookEntity entity = book.Category switch
         {
@@ -34,5 +39,25 @@ public sealed class BookRepository : IBookRepository
         await _appDbContext.SaveChangesAsync();
 
         return entity.Id;
+    }
+
+    public Task<Book> UpdateAsync(Book dto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ICollection<Book>> GetAllAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task ExistsAsync(Guid id)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace PracticalWork.Library.Exceptions;
+﻿using PracticalWork.Library.SharedKernel.Exceptions;
+
+namespace PracticalWork.Library.Exceptions;
 
 public sealed class BookServiceException : AppException
 {

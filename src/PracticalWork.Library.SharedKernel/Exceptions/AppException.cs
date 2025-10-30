@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Library.Exceptions;
+﻿namespace PracticalWork.Library.SharedKernel.Exceptions;
 
 /// <summary>
 /// Исключение уровня приложения

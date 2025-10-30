@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Library.Abstractions.Services;
+﻿namespace PracticalWork.Library.SharedKernel.Abstractions;
 
 public interface IEntityService<TDto>
 {
