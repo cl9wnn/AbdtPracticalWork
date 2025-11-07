@@ -1,5 +1,6 @@
 ﻿using PracticalWork.Library.Contracts.v1.Books.Request;
 using PracticalWork.Library.Contracts.v1.Books.Response;
+using PracticalWork.Library.Contracts.v1.Readers.Response;
 using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Enums;
 using PracticalWork.Library.Models;
@@ -65,4 +66,15 @@ public static class BooksExtensions
             Status: (Contracts.v1.Enums.BookStatus)dto.Status,
             IsArchived: dto.IsArchived
         );
+
+    public static GetBorrowedBookResponse ToBorrowedBookResponse(this BorrowedBookDto dto) =>
+        new(
+            BookId: dto.BookId,
+            BorrowDate: dto.BorrowDate,
+            DueDate: dto.DueDate
+        );
+
+    public static IReadOnlyList<GetBorrowedBookResponse> ToBorrowedBookResponseList(
+        this IEnumerable<BorrowedBookDto> books) =>
+        books.Select(b => b.ToBorrowedBookResponse()).ToList();
 }

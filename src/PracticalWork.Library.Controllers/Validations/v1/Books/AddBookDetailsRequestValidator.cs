@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using PracticalWork.Library.Contracts.v1.Books.Request;
 
-namespace PracticalWork.Library.Controllers.Validations.v1;
+namespace PracticalWork.Library.Controllers.Validations.v1.Books;
 
 public sealed class AddBookDetailsRequestValidator : AbstractValidator<AddBookDetailsRequest>
 {

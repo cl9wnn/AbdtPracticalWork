@@ -1,15 +1,18 @@
 ﻿using FluentValidation;
 using PracticalWork.Library.Contracts.v1.Books.Request;
 
-namespace PracticalWork.Library.Controllers.Validations.v1;
+namespace PracticalWork.Library.Controllers.Validations.v1.Books;
 
-public sealed class UpdateBookRequestValidator : AbstractValidator<UpdateBookRequest>
+public sealed class CreateBookRequestValidator : AbstractValidator<CreateBookRequest>
 {
-    public UpdateBookRequestValidator()
+    public CreateBookRequestValidator()
     {
         RuleFor(x => x.Title)
             .NotEmpty().WithMessage("Название книги обязательно.")
             .MaximumLength(500).WithMessage("Название книги не может превышать 500 символов.");
+
+        RuleFor(x => x.Category)
+            .IsInEnum().WithMessage("Категория должна быть от 1 до 3.");
 
         RuleFor(x => x.Authors)
             .NotEmpty().WithMessage("Автор или авторы книги обязательны.")
