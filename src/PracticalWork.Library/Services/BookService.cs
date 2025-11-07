@@ -30,7 +30,7 @@ public sealed class BookService : IBookService
         }
     }
 
-    public Task<Guid> UpdateBook(Guid id, Book book)
+    public Task UpdateBook(Guid id, Book book)
     {
         throw new NotImplementedException();
     }

@@ -31,22 +31,21 @@ public class BooksController : Controller
     {
         var result = await _bookService.CreateBook(request.ToBook());
 
-        return Ok(result.ToString());
+        return Ok(new CreateBookResponse(result));
     }
 
     /// <summary> Редактирование книги </summary>
     [HttpPut("{id:guid}")]
     [EntityExists<IBookService, Book>]
-    [Produces("application/json")]
-    [ProducesResponseType(typeof(UpdateBookResponse), 200)]
+    [ProducesResponseType(200)]   
     [ProducesResponseType(404)]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IActionResult> UpdateBook(Guid id, UpdateBookRequest request)
     {
-        var result = await _bookService.UpdateBook(id, request.ToBook());
-
-        return Ok(result.ToString());
+        await _bookService.UpdateBook(id, request.ToBook());
+        
+        return Ok();
     }
 
     /// <summary> Перевод книги в архив</summary>
@@ -55,11 +54,12 @@ public class BooksController : Controller
     [Produces("application/json")]
     [ProducesResponseType(typeof(ArchiveBookResponse), 200)]
     [ProducesResponseType(404)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IActionResult> ArchiveBook(Guid id)
     {
         var result = await _bookService.ArchiveBook(id);
-
+        
         return Ok(result.ToArchiveBookResponse());
     }
 
