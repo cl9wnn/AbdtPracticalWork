@@ -2,8 +2,8 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
-using PracticalWork.Library.Controllers.Validations.v1;
 using System.Globalization;
+using PracticalWork.Library.Controllers.Validations.v1.Books;
 
 namespace PracticalWork.Library.Controllers;
 

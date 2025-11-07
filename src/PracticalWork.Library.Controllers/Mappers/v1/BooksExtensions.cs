@@ -1,5 +1,7 @@
 ﻿using PracticalWork.Library.Contracts.v1.Books.Request;
 using PracticalWork.Library.Contracts.v1.Books.Response;
+using PracticalWork.Library.Contracts.v1.Library.Request;
+using PracticalWork.Library.Contracts.v1.Library.Response;
 using PracticalWork.Library.Contracts.v1.Readers.Response;
 using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Enums;
@@ -36,6 +38,14 @@ public static class BooksExtensions
             Author = request.Author,
         };
 
+    public static BookFilterDto ToBookFilterDto(this GetLibraryBooksRequest request) =>
+        new()
+        {
+            AvailableOnly = request.AvailableOnly,
+            Category = (BookCategory)request.BookCategory,
+            Author = request.Author,
+        };
+
     public static GetBookResponse ToBookResponse(this Book book) =>
         new(
             Title: book.Title,
@@ -44,8 +54,23 @@ public static class BooksExtensions
             Year: book.Year
         );
 
+    public static GetLibraryBookResponse ToLibraryBookResponse(this LibraryBookDto book) =>
+        new(
+            Title: book.Title,
+            Authors: book.Authors,
+            Description: book.Description,
+            Year: book.Year,
+            ReaderId: book.ReaderId,
+            BorrowDate:book.BorrowDate,
+            DueDate: book.DueDate
+        );
+
     public static IReadOnlyList<GetBookResponse> ToBookResponseList(this IEnumerable<Book> books) =>
         books.Select(b => b.ToBookResponse()).ToList();
+
+    public static IReadOnlyList<GetLibraryBookResponse> ToLibraryBookResponseList(
+        this IEnumerable<LibraryBookDto> books) =>
+        books.Select(b => b.ToLibraryBookResponse()).ToList();
 
     public static ArchiveBookResponse ToArchiveBookResponse(this ArchiveBookDto dto) =>
         new(

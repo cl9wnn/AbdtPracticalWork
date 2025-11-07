@@ -3,7 +3,7 @@
 namespace PracticalWork.Library.Contracts.v1.Books.Request;
 
 /// <summary>
-/// 
+/// Запрос на получение списка книг
 /// </summary>
 /// <param name="BookStatus">Статус книги</param>
 /// <param name="BookCategory">Категория книги</param>
