@@ -1,5 +1,8 @@
 ﻿namespace PracticalWork.Library.Contracts.v1.Abstracts;
 
+/// <summary>
+/// Базовый контракт для книги
+/// </summary>
 /// <param name="Title">Название книги</param>
 /// <param name="Authors">Авторы</param>
 /// <param name="Description">Краткое описание книги</param>

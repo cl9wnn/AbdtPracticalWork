@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PracticalWork.Library.SharedKernel.Abstractions;
 
+/// <summary>
+/// Базовый интерфейс сущности
+/// </summary>
 public interface IEntity
 {
     /// <summary> Идентификатор сущности </summary>

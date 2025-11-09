@@ -1,7 +1,7 @@
 ﻿namespace PracticalWork.Library.Contracts.v1.Abstracts;
 
 /// <summary>
-/// 
+/// Ответ на запрос о получении списка данных с пагинацией
 /// </summary>
 /// <param name="Page">Номер страницы</param>
 /// <param name="PageSize">Размер страницы</param>
