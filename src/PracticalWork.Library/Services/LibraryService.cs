@@ -6,12 +6,12 @@ namespace PracticalWork.Library.Services;
 
 public class LibraryService: ILibraryService
 {
-    public Task<Borrow> GetByIdAsync(Guid id)
+    public Task<Borrow> GetById(Guid id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<bool> ExistsAsync(Guid id)
+    public Task<bool> Exists(Guid id)
     {
         throw new NotImplementedException();
     }

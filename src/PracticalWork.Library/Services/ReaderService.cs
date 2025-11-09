@@ -6,12 +6,12 @@ namespace PracticalWork.Library.Services;
 
 public class ReaderService: IReaderService
 {
-    public Task<Reader> GetByIdAsync(Guid id)
+    public Task<Reader> GetById(Guid id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<bool> ExistsAsync(Guid id)
+    public Task<bool> Exists(Guid id)
     {
         throw new NotImplementedException();
     }

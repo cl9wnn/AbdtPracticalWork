@@ -12,7 +12,7 @@ public class EntityExistsFilter<TService, TDto>(TService service, string paramNa
     {
         if (context.ActionArguments.TryGetValue(paramName, out var idObj) && idObj is Guid id)
         {
-            var existsResult = await service.ExistsAsync(id);
+            var existsResult = await service.Exists(id);
             
             if (!existsResult)
             {

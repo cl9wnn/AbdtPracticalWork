@@ -17,12 +17,22 @@ public sealed class BookService : IBookService
         _bookRepository = bookRepository;
     }
 
+    public Task<Book> GetById(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+    
+    public Task<bool> Exists(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+    
     public async Task<Guid> CreateBook(Book book)
     {
         book.Status = BookStatus.Available;
         try
         {
-            return await _bookRepository.AddAsync(book);
+            return await _bookRepository.Add(book);
         }
         catch (Exception ex)
         {
@@ -46,16 +56,6 @@ public sealed class BookService : IBookService
     }
 
     public Task<BookDetailsDto> AddBookDetails(Guid id, IFormFile coverImage, string description)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Book> GetByIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> ExistsAsync(Guid id)
     {
         throw new NotImplementedException();
     }

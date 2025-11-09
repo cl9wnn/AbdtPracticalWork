@@ -14,12 +14,12 @@ public sealed class BookRepository : IBookRepository
         _appDbContext = appDbContext;
     }
     
-    public Task<Book> GetByIdAsync(Guid id)
+    public Task<Book> GetById(Guid id)
     {
         throw new NotImplementedException();
     }
-
-    public async Task<Guid> AddAsync(Book book)
+    
+    public async Task<Guid> Add(Book book)
     {
         AbstractBookEntity entity = book.Category switch
         {
@@ -41,22 +41,22 @@ public sealed class BookRepository : IBookRepository
         return entity.Id;
     }
 
-    public Task<Book> UpdateAsync(Book dto)
+    public Task<Book> Update(Book dto)
     {
         throw new NotImplementedException();
     }
 
-    public Task DeleteAsync(Guid id)
+    public Task Delete(Guid id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<ICollection<Book>> GetAllAsync()
+    public Task<ICollection<Book>> GetAll()
     {
         throw new NotImplementedException();
     }
 
-    public Task ExistsAsync(Guid id)
+    public Task Exists(Guid id)
     {
         throw new NotImplementedException();
     }
