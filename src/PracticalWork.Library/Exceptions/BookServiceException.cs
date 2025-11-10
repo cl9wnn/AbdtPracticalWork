@@ -2,6 +2,9 @@
 
 namespace PracticalWork.Library.Exceptions;
 
+/// <summary>
+/// Исключение уровня сервиса книг
+/// </summary>
 public sealed class BookServiceException : AppException
 {
     public BookServiceException(string message) : base($"{message}")

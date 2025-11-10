@@ -1,6 +1,6 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
-using PracticalWork.Library.Abstractions.Services;
+using PracticalWork.Library.Abstractions.Services.Domain;
 using PracticalWork.Library.Contracts.v1.Readers.Request;
 using PracticalWork.Library.Contracts.v1.Readers.Response;
 using PracticalWork.Library.Controllers.Attributes;

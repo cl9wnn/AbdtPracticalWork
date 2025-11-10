@@ -1,4 +1,4 @@
-﻿using PracticalWork.Library.Abstractions.Services;
+﻿using PracticalWork.Library.Abstractions.Services.Domain;
 using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Models;
 

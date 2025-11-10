@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using PracticalWork.Library.Abstractions.Services;
+using PracticalWork.Library.Abstractions.Services.Domain;
 using PracticalWork.Library.Abstractions.Storage;
 using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Enums;

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using PracticalWork.Library.Abstractions.Services;
+using PracticalWork.Library.Abstractions.Services.Domain;
 using PracticalWork.Library.Services;
 
 namespace PracticalWork.Library;

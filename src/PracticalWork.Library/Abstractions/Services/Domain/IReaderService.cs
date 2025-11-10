@@ -2,7 +2,7 @@
 using PracticalWork.Library.Models;
 using PracticalWork.Library.SharedKernel.Abstractions;
 
-namespace PracticalWork.Library.Abstractions.Services;
+namespace PracticalWork.Library.Abstractions.Services.Domain;
 
 /// <summary>
 /// Сервис по работе с карточкой читателя
