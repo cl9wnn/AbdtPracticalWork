@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PracticalWork.Library.Abstractions.Services.Infrastructure;
+using StackExchange.Redis;
 
 namespace PracticalWork.Library.Cache.Redis;
 
@@ -12,9 +14,16 @@ public static class Entry
     {
         var connectionString = configuration["App:Redis:RedisCacheConnection"];
         var prefix = configuration["App:Redis:RedisCachePrefix"];
-
-        // Реализация подключения к Redis и сервисов
-
+        
+        serviceCollection.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = connectionString;
+            options.InstanceName = prefix;
+        });
+        
+        serviceCollection.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(connectionString!));
+        serviceCollection.AddScoped<ICacheService, RedisCacheService>();
+        
         return serviceCollection;
     }
 }
