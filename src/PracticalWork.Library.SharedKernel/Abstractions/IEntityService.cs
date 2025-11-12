@@ -17,5 +17,5 @@ public interface IEntityService<TDto>
     /// Проверяет существование объекта по ID.
     /// </summary>
     /// <param name="id">Идентификатор объекта</param>
-    Task<bool> Exists(Guid id);
+    Task Exists(Guid id);
 }
