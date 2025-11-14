@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using PracticalWork.Library.Abstractions.Services;
+using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.SharedKernel.Abstractions;
 
 namespace PracticalWork.Library.Controllers.Filters;
@@ -18,8 +19,7 @@ public class EntityExistsFilter<TService, TDto>(TService service, string paramNa
             }
             catch (Exception ex)
             {
-                context.Result = new NotFoundObjectResult(new { error = ex.Message });
-                return;
+                throw new EntityNotFoundException(ex.Message);
             }
         }
         

@@ -5,5 +5,8 @@ namespace PracticalWork.Library.Controllers.Attributes;
 
 public class ValidateImageFileAttribute: TypeFilterAttribute
 {
-    public ValidateImageFileAttribute(): base(typeof(ValidateImageFileFilter)) { }
-}
+    public ValidateImageFileAttribute(long maxFileSizeBytes)
+        : base(typeof(ValidateImageFileFilter))
+    {
+        Arguments = new object[] { maxFileSizeBytes };
+    }}
