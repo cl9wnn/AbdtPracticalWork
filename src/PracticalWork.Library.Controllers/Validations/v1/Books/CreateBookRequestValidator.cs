@@ -17,7 +17,9 @@ public sealed class CreateBookRequestValidator : AbstractValidator<CreateBookReq
         RuleFor(x => x.Authors)
             .NotEmpty().WithMessage("Автор или авторы книги обязательны.")
             .Must(authors => authors?.All(a => !string.IsNullOrWhiteSpace(a)) == true)
-            .WithMessage("Все авторы должны быть непустыми строками.");
+            .WithMessage("Все авторы должны быть непустыми строками.")
+            .Must(authors => authors!.All(a => a.Length <= 100))
+            .WithMessage("Каждый автор должен быть не длиннее 100 символов.");;
 
         RuleFor(x => x.Description)
             .MaximumLength(2000).WithMessage("Описание не может превышать 2000 символов.")
