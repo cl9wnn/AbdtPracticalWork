@@ -45,10 +45,8 @@ public class DomainExceptionFilter<TAppException> : IAsyncActionFilter where TAp
     protected static ValidationProblemDetails BuildProblemDetails(Exception exception)
     {
         var exceptionName = exception.GetType().Name;
-        var errorMessages = new[] { exception.Message };
-
-        // Используем ValidationProblemDetails, а не базовый или свой тип, т. к. он обвешан атрибутами сериализации
-        // и так мы можем гарантировать идентичный ответ и при ошибках валидации, и при доменных исключениях:
+        var errorMessages = GetExceptionMessages(exception).ToArray();
+        
         var problemDetails = new ValidationProblemDetails
         {
             Title = "Произошла ошибка во время выполнения запроса.",
@@ -56,5 +54,15 @@ public class DomainExceptionFilter<TAppException> : IAsyncActionFilter where TAp
         };
 
         return problemDetails;
+    }
+    
+    private static IEnumerable<string> GetExceptionMessages(Exception exception)
+    {
+        var current = exception;
+        while (current != null)
+        {
+            yield return current.Message;
+            current = current.InnerException;
+        }
     }
 }
