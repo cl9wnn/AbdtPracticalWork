@@ -40,6 +40,11 @@ public sealed class Book
     /// <summary>Перевод в архив</summary>
     public void Archive()
     {
+        if (Status == BookStatus.Archived && IsArchived)
+        {
+            throw new InvalidOperationException("Книга уже в архиве.");
+        }
+        
         if (!CanBeArchived())
             throw new InvalidOperationException("Книга не может быть заархивирована.");
 
@@ -54,7 +59,26 @@ public sealed class Book
     /// <param name="coverImagePath"> Путь к изображению обложки </param>
     public void UpdateDetails(string description, string coverImagePath)
     {
-        Description = description;
         CoverImagePath = coverImagePath;
+
+        if (description != null)
+        {
+            Description = description;
+        }
+    }
+
+    /// <summary>
+    /// Редактирование книги
+    /// </summary>
+    /// <param name="title">Название книги</param>
+    /// <param name="authors">Авторы</param>
+    /// <param name="description">Краткое описание книги</param>
+    /// <param name="year">Год издания</param>
+    public void ChangeInformation(string title, IReadOnlyList<string> authors, string description, int year)
+    {
+        Title = title;
+        Authors = authors;
+        Description = description;
+        Year = year;
     }
 }

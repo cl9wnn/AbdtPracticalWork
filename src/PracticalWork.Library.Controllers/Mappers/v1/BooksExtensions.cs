@@ -37,6 +37,13 @@ public static class BooksExtensions
             Category = (BookCategory)request.BookCategory,
             Author = request.Author,
         };
+    
+    public static PaginationDto ToBookPaginationDto(this GetBooksRequest request) =>
+        new()
+        {
+            Page = request.Page,
+            PageSize = request.PageSize
+        };
 
     public static BookFilterDto ToBookFilterDto(this GetLibraryBooksRequest request) =>
         new()
@@ -72,7 +79,7 @@ public static class BooksExtensions
         this IEnumerable<LibraryBookDto> books) =>
         books.Select(b => b.ToLibraryBookResponse()).ToList();
 
-    public static ArchiveBookResponse ToArchiveBookResponse(this ArchiveBookDto dto) =>
+    public static ArchiveBookResponse ToArchiveBookResponse(this ArchivedBookDto dto) =>
         new(
             Id: dto.Id,
             Title: dto.Title,

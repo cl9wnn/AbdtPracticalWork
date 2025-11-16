@@ -38,14 +38,14 @@ public class BooksController : Controller
     /// <summary> Редактирование книги </summary>
     [HttpPut("{id:guid}")]
     [EntityExists<IBookService, Book>]
-    [ProducesResponseType(200)]   
+    [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IActionResult> UpdateBook(Guid id, UpdateBookRequest request)
     {
         await _bookService.UpdateBook(id, request.ToBook());
-        
+
         return Ok();
     }
 
@@ -60,7 +60,7 @@ public class BooksController : Controller
     public async Task<IActionResult> ArchiveBook(Guid id)
     {
         var result = await _bookService.ArchiveBook(id);
-        
+
         return Ok(result.ToArchiveBookResponse());
     }
 
@@ -69,12 +69,11 @@ public class BooksController : Controller
     [Produces("application/json")]
     [ProducesResponseType(typeof(PagedResponse<GetBookResponse>), 200)]
     [ProducesResponseType(500)]
-    public async Task<IActionResult> GetBooks(GetBooksRequest request)
+    public async Task<IActionResult> GetBooks([FromQuery] GetBooksRequest request)
     {
-        var result = await _bookService.GetBooks(
+        var result = await _bookService.GetBooksPage(
             request.ToBookFilterDto(),
-            request.Page,
-            request.PageSize);
+            request.ToBookPaginationDto());
 
         return Ok(new PagedResponse<GetBookResponse>(
             request.Page,
@@ -85,6 +84,7 @@ public class BooksController : Controller
     /// <summary> Добавление деталей книги</summary>
     [HttpPost("{id:guid}/details")]
     [EntityExists<IBookService, Book>]
+    [ValidateImageFile(5 * 1024 * 1024)]
     [Produces("application/json")]
     [ProducesResponseType(typeof(BookDetailsResponse), 200)]
     [ProducesResponseType(404)]
@@ -92,7 +92,15 @@ public class BooksController : Controller
     [ProducesResponseType(500)]
     public async Task<IActionResult> AddBookDetails(Guid id, [FromForm] AddBookDetailsRequest request)
     {
-        var result = await _bookService.AddBookDetails(id, request.CoverImage, request.Description);
+        await using var imageStream = request.CoverImage.OpenReadStream();
+        
+        var fileExtension = Path.GetExtension(request.CoverImage.FileName);
+
+        var result = await _bookService.AddBookDetails(
+            id,
+            request.Description,
+            imageStream, 
+            fileExtension);
 
         return Ok(result.ToBookDetailsResponse());
     }

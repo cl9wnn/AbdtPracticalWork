@@ -1,6 +1,6 @@
 ﻿namespace PracticalWork.Library.Dtos;
 
-public class ArchiveBookDto
+public class ArchivedBookDto
 {
    public Guid Id { get; set; }
    public string Title { get; set; }

@@ -1,5 +1,8 @@
-﻿using PracticalWork.Library.Abstractions.Storage;
+﻿using Microsoft.EntityFrameworkCore;
+using PracticalWork.Library.Abstractions.Storage;
 using PracticalWork.Library.Data.PostgreSql.Entities;
+using PracticalWork.Library.Data.PostgreSql.Mappers.v1;
+using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Enums;
 using PracticalWork.Library.Models;
 
@@ -13,12 +16,20 @@ public sealed class BookRepository : IBookRepository
     {
         _appDbContext = appDbContext;
     }
-    
-    public Task<Book> GetById(Guid id)
+
+    public async Task<Book> GetById(Guid id)
     {
-        throw new NotImplementedException();
+        var bookEntity = await _appDbContext.Books
+            .FindAsync(id);
+
+        if (bookEntity == null)
+        {
+            throw new KeyNotFoundException("Книга не найдена по данному идентификатору!");
+        }
+
+        return bookEntity.ToBook();
     }
-    
+
     public async Task<Guid> Add(Book book)
     {
         AbstractBookEntity entity = book.Category switch
@@ -26,7 +37,8 @@ public sealed class BookRepository : IBookRepository
             BookCategory.ScientificBook => new ScientificBookEntity(),
             BookCategory.EducationalBook => new EducationalBookEntity(),
             BookCategory.FictionBook => new FictionBookEntity(),
-            _ => throw new ArgumentException($"Неподдерживаемая категория книги: {book.Category}", nameof(book.Category))
+            _ => throw new ArgumentException($"Неподдерживаемая категория книги: {book.Category}",
+                nameof(book.Category))
         };
 
         entity.Title = book.Title;
@@ -34,6 +46,7 @@ public sealed class BookRepository : IBookRepository
         entity.Year = book.Year;
         entity.Authors = book.Authors;
         entity.Status = book.Status;
+        entity.CreatedAt = DateTime.UtcNow;
 
         _appDbContext.Add(entity);
         await _appDbContext.SaveChangesAsync();
@@ -41,23 +54,86 @@ public sealed class BookRepository : IBookRepository
         return entity.Id;
     }
 
-    public Task<Book> Update(Book dto)
+    public async Task<Book> Update(Guid id, Book book)
     {
-        throw new NotImplementedException();
+        var bookEntity = await _appDbContext.Books
+            .FindAsync(id);
+
+        if (bookEntity == null)
+        {
+            throw new KeyNotFoundException("Книга не найдена по данному идентификатору!");
+        }
+        
+        bookEntity.Title = book.Title;
+        bookEntity.Description = book.Description;
+        bookEntity.Year = book.Year;
+        bookEntity.Authors = book.Authors;
+        bookEntity.Status = book.Status;
+        bookEntity.UpdatedAt = DateTime.UtcNow;
+
+        if (book.CoverImagePath != null)
+        {
+            bookEntity.CoverImagePath = book.CoverImagePath;
+        }
+        
+        await _appDbContext.SaveChangesAsync();
+        
+        return bookEntity.ToBook();
     }
 
-    public Task Delete(Guid id)
+    public async Task Delete(Guid id)
     {
-        throw new NotImplementedException();
+        var bookEntity = await _appDbContext.Books
+            .FindAsync(id);
+
+        if (bookEntity == null)
+        {
+            throw new KeyNotFoundException("Книга не найдена по данному идентификатору!");
+        }
+
+        _appDbContext.Books.Remove(bookEntity);
+        await _appDbContext.SaveChangesAsync();
     }
 
-    public Task<ICollection<Book>> GetAll()
+    public async Task<ICollection<Book>> GetAll()
     {
-        throw new NotImplementedException();
+        var bookEntities = await _appDbContext.Books
+            .AsNoTracking()
+            .ToListAsync();
+
+        return bookEntities
+            .Select(b => b.ToBook())
+            .ToList();
     }
 
-    public Task Exists(Guid id)
+    public async Task<bool> Exists(Guid id)
     {
-        throw new NotImplementedException();
+        return await _appDbContext.Books.AnyAsync(b => b.Id == id);
+    }
+
+    public async Task<IReadOnlyList<Book>> GetBooksPage(BookFilterDto filter, PaginationDto pagination)
+    {
+        IQueryable<AbstractBookEntity> query = filter.Category switch
+        {
+            BookCategory.ScientificBook => _appDbContext.ScientificBooks,
+            BookCategory.EducationalBook => _appDbContext.EducationalBooks,
+            BookCategory.FictionBook => _appDbContext.FictionBooks,
+            _ => _appDbContext.Books
+        };
+
+        if (!string.IsNullOrWhiteSpace(filter.Author))
+            query = query.Where(b => b.Authors.Contains(filter.Author));
+        
+        if (filter.Status != null)
+            query = query.Where(b => b.Status == filter.Status);
+        
+        var bookEntities = await query
+            .Skip((pagination.Page - 1) * pagination.PageSize)
+            .Take(pagination.PageSize)
+            .ToListAsync();
+
+        return bookEntities
+            .Select(b => b.ToBook())
+            .ToList();
     }
 }

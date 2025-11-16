@@ -11,7 +11,7 @@ public class LibraryService: ILibraryService
         throw new NotImplementedException();
     }
 
-    public Task<bool> Exists(Guid id)
+    public Task Exists(Guid id)
     {
         throw new NotImplementedException();
     }

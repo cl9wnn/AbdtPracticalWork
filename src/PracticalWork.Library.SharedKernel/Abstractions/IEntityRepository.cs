@@ -20,13 +20,14 @@ public interface IEntityRepository<in TKey, TDto>
     /// <param name="dto">DTO добавляемой сущности</param>
     /// <returns>Идентификатор созданной сущности</returns>
     Task<Guid> Add(TDto dto);
-    
+
     /// <summary>
     /// Обновляет сущность в хранилище.
     /// </summary>
+    /// <param name="id">Идентификатор изменяемой сущности</param>
     /// <param name="dto">DTO обновляемой сущности</param>
     /// <returns>Изменённое DTO</returns>
-    Task<TDto> Update(TDto dto);
+    Task<TDto> Update(TKey id, TDto dto);
     
     /// <summary>
     /// Удаляет сущность из хранилища.
@@ -44,5 +45,5 @@ public interface IEntityRepository<in TKey, TDto>
     /// Проверяет существование сущности по ID.
     /// </summary>
     /// <param name="id">Идентификатор сущности</param>
-    Task Exists(TKey id);
+    Task<bool> Exists(TKey id);
 }

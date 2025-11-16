@@ -29,23 +29,23 @@ public interface IBookService : IEntityService<Book>
     /// </summary>
     /// <param name="bookId">Идентификатор книги</param>
     /// <returns>Информация об архивированной книге</returns>
-    Task<ArchiveBookDto> ArchiveBook(Guid bookId);
+    Task<ArchivedBookDto> ArchiveBook(Guid bookId);
 
     /// <summary>
-    /// Получение списка книг
+    /// Получение списка книг с учетом фильтров и пагинации
     /// </summary>
     /// <param name="filter">Фильтр поиска</param>
-    /// <param name="page">Номер страницы</param>
-    /// <param name="pageSize">Размер страницы</param>
+    /// <param name="pagination">Параметры пагинации</param>
     /// <returns>Список найденных книг</returns>
-    Task<IReadOnlyList<Book>> GetBooks(BookFilterDto filter, int page, int pageSize);
+    Task<IReadOnlyList<Book>> GetBooksPage(BookFilterDto filter, PaginationDto pagination);
 
     /// <summary>
     /// Добавление деталей книги
     /// </summary>
     /// <param name="bookId">Идентификатор книги</param>
-    /// <param name="coverImage">Обложка книги</param>
     /// <param name="description">Описание книги</param>
+    /// <param name="coverImageStream">Поток данных с обложкой книги</param>
+    /// <param name="contentType">Тип изображения</param>
     /// <returns>Информация об измененной книге</returns>
-    Task<BookDetailsDto> AddBookDetails(Guid bookId, IFormFile coverImage, string description);
+    Task<BookDetailsDto> AddBookDetails(Guid bookId, string description, Stream coverImageStream, string contentType);
 }
