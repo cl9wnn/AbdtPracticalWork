@@ -53,7 +53,7 @@ public static class BooksExtensions
             Author = request.Author,
         };
 
-    public static GetBookResponse ToBookResponse(this Book book) =>
+    public static GetBookResponse ToBookResponse(this BookListDto book) =>
         new(
             Title: book.Title,
             Authors: book.Authors,
@@ -72,7 +72,7 @@ public static class BooksExtensions
             DueDate: book.DueDate
         );
 
-    public static IReadOnlyList<GetBookResponse> ToBookResponseList(this IEnumerable<Book> books) =>
+    public static IReadOnlyList<GetBookResponse> ToBookResponseList(this IEnumerable<BookListDto> books) =>
         books.Select(b => b.ToBookResponse()).ToList();
 
     public static IReadOnlyList<GetLibraryBookResponse> ToLibraryBookResponseList(

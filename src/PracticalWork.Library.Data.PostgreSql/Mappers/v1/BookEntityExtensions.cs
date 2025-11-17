@@ -1,4 +1,5 @@
 ﻿using PracticalWork.Library.Data.PostgreSql.Entities;
+using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Enums;
 using PracticalWork.Library.Models;
 
@@ -20,8 +21,19 @@ public static class BookEntityExtensions
             IsArchived = bookEntity.Status == BookStatus.Archived,
         };
     }
-    
-    public static BookCategory GetBookCategory(this AbstractBookEntity entity)
+
+    public static BookListDto ToBookListDto(this AbstractBookEntity bookEntity)
+    {
+        return new BookListDto
+        {
+            Title = bookEntity.Title,
+            Authors = bookEntity.Authors,
+            Description = bookEntity.Description,
+            Year = bookEntity.Year,
+        };
+    }
+
+    private static BookCategory GetBookCategory(this AbstractBookEntity entity)
     {
         return entity switch
         {

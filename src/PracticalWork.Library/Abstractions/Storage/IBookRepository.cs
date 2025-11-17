@@ -14,5 +14,5 @@ public interface IBookRepository: IEntityRepository<Guid, Book>
     /// </summary>
     /// <param name="filter">Фильтр поиска</param>
     /// <param name="pagination">Параметры пагинации</param>
-    Task<IReadOnlyList<Book>> GetBooksPage(BookFilterDto filter, PaginationDto pagination);
+    Task<IReadOnlyList<BookListDto>> GetBooksPage(BookFilterDto filter, PaginationDto pagination);
 }

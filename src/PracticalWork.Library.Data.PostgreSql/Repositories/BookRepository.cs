@@ -111,7 +111,7 @@ public sealed class BookRepository : IBookRepository
         return await _appDbContext.Books.AnyAsync(b => b.Id == id);
     }
 
-    public async Task<IReadOnlyList<Book>> GetBooksPage(BookFilterDto filter, PaginationDto pagination)
+    public async Task<IReadOnlyList<BookListDto>> GetBooksPage(BookFilterDto filter, PaginationDto pagination)
     {
         IQueryable<AbstractBookEntity> query = filter.Category switch
         {
@@ -133,7 +133,7 @@ public sealed class BookRepository : IBookRepository
             .ToListAsync();
 
         return bookEntities
-            .Select(b => b.ToBook())
+            .Select(b => b.ToBookListDto())
             .ToList();
     }
 }
