@@ -39,4 +39,20 @@ public interface ICacheService
     /// <param name="cancellationToken">Токен отмены операции</param>
     /// <returns><c>true</c>, если значение существует; иначе — <c>false</c></returns>
     Task<bool> ExistsAsync(string key, CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    /// Возвращает текущую версию кэша по заданному ключу
+    /// </summary>
+    /// <param name="key">Ключ кэша</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Текущая версия кэша по заданному ключу</returns>
+    Task<int> GetVersionAsync(string key, CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    /// Атомарно увеличивает по заданному ключу на единицу
+    /// </summary>
+    /// <param name="key">Ключ кэша</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Обновленная версия кэша по заданному ключу</returns>
+    Task<int> IncrementVersionAsync(string key, CancellationToken cancellationToken = default);
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.Extensions.Options;
 using PracticalWork.Library.Abstractions.Services.Domain;
 using PracticalWork.Library.Abstractions.Services.Infrastructure;
 using PracticalWork.Library.Abstractions.Storage;
@@ -6,6 +6,8 @@ using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Enums;
 using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.Models;
+using PracticalWork.Library.Options;
+using PracticalWork.Library.SharedKernel.Helpers;
 
 namespace PracticalWork.Library.Services;
 
@@ -14,13 +16,15 @@ public sealed class BookService : IBookService
     private readonly IBookRepository _bookRepository;
     private readonly ICacheService _cacheService;
     private readonly IFileStorageService _fileStorageService;
+    private readonly IOptions<BooksCacheOptions> _options;
 
     public BookService(IBookRepository bookRepository, ICacheService cacheService,
-        IFileStorageService fileStorageService)
+        IFileStorageService fileStorageService, IOptions<BooksCacheOptions> options)
     {
         _bookRepository = bookRepository;
         _cacheService = cacheService;
         _fileStorageService = fileStorageService;
+        _options = options;
     }
 
     /// <summary> Получение книги по ее идентификатору </summary>
@@ -55,7 +59,10 @@ public sealed class BookService : IBookService
         book.Status = BookStatus.Available;
         try
         {
-            return await _bookRepository.Add(book);
+            var bookId = await _bookRepository.Add(book);
+            await _cacheService.IncrementVersionAsync(_options.Value.BooksListCache.KeyPrefix);
+
+            return bookId;
         }
         catch (Exception ex)
         {
@@ -77,6 +84,8 @@ public sealed class BookService : IBookService
 
             book.ChangeInformation(updatedBook.Title, updatedBook.Authors, updatedBook.Description, updatedBook.Year);
             await _bookRepository.Update(id, book);
+            
+            await _cacheService.IncrementVersionAsync(_options.Value.BooksListCache.KeyPrefix);
         }
         catch (NullReferenceException ex)
         {
@@ -96,7 +105,9 @@ public sealed class BookService : IBookService
             var book = await _bookRepository.GetById(id);
             book.Archive();
             await _bookRepository.Update(id, book);
-
+            
+            await _cacheService.IncrementVersionAsync(_options.Value.BooksListCache.KeyPrefix);
+            
             return new ArchivedBookDto
             {
                 Id = id,
@@ -115,11 +126,26 @@ public sealed class BookService : IBookService
     }
 
     /// <inheritdoc cref="IBookService.GetBooksPage"/>
-    public async Task<IReadOnlyList<Book>> GetBooksPage(BookFilterDto filter, PaginationDto pagination)
+    public async Task<IReadOnlyList<BookListDto>> GetBooksPage(BookFilterDto filter, PaginationDto pagination)
     {
         try
         {
+            var keyPrefix = _options.Value.BooksListCache.KeyPrefix;
+            var ttlMinutes = _options.Value.BooksListCache.TtlMinutes;
+            
+            var cacheVersion = await _cacheService.GetVersionAsync(keyPrefix);
+            var hash = CacheKeyHasher.GenerateCacheKey(keyPrefix, cacheVersion, new { filter, pagination });
+            
+            var cachedBooks = await _cacheService.GetAsync<IReadOnlyList<BookListDto>>(hash);
+
+            if (cachedBooks != null)
+            {
+                return cachedBooks;
+            }
+            
             var books = await _bookRepository.GetBooksPage(filter, pagination);
+            await _cacheService.SetAsync(hash, books, TimeSpan.FromMinutes(ttlMinutes));
+            
             return books;
         }
         catch (Exception ex)
@@ -143,6 +169,8 @@ public sealed class BookService : IBookService
             book.UpdateDetails(description, coverImagePath);
             await _bookRepository.Update(id, book);
 
+            await _cacheService.IncrementVersionAsync(_options.Value.BooksListCache.KeyPrefix);
+                
             return new BookDetailsDto
             {
                 Id = id,

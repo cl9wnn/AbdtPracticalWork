@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using PracticalWork.Library.Abstractions.Services.Infrastructure;
 using StackExchange.Redis;
 
@@ -9,6 +10,10 @@ namespace PracticalWork.Library.Cache.Redis;
 public class RedisCacheService : ICacheService
 {
     private readonly IDistributedCache _cache;
+    private readonly IConnectionMultiplexer _redis;
+    private readonly string _prefix;
+
+
 
     private readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
@@ -17,9 +22,11 @@ public class RedisCacheService : ICacheService
         WriteIndented = false
     };
 
-    public RedisCacheService(IDistributedCache cache, IConnectionMultiplexer redisDb)
+    public RedisCacheService(IDistributedCache cache, IConnectionMultiplexer redisDb, IConfiguration configuration)
     {
         _cache = cache;
+        _redis = redisDb;
+        _prefix = configuration["App:Redis:RedisCachePrefix"] ?? "";
     }
 
     public async Task SetAsync<T>(string key, T value, TimeSpan? ttl = null,
@@ -63,5 +70,23 @@ public class RedisCacheService : ICacheService
     {
         var value = await _cache.GetStringAsync(key, token: cancellationToken);
         return value != null;
+    }
+
+    public async Task<int> GetVersionAsync(string key, CancellationToken cancellationToken = default)
+    {
+        var db = _redis.GetDatabase();
+        var redisKey = $"{_prefix}{key}:version";
+
+        var version = await db.StringGetAsync(redisKey);
+
+        return version.IsNullOrEmpty ? 1 : (int)version;
+    }
+
+    public async Task<int> IncrementVersionAsync(string key, CancellationToken cancellationToken = default)
+    {
+        var db = _redis.GetDatabase();
+        var redisKey = $"{_prefix}{key}:version";
+
+        return (int)await db.StringIncrementAsync(redisKey);
     }
 }
