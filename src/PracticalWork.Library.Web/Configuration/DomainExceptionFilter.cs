@@ -45,7 +45,7 @@ public class DomainExceptionFilter<TAppException> : IAsyncActionFilter where TAp
     protected static ValidationProblemDetails BuildProblemDetails(Exception exception)
     {
         var exceptionName = exception.GetType().Name;
-        var errorMessages = GetExceptionMessages(exception).ToArray();
+        var errorMessages = new[] { exception.Message };
         
         var problemDetails = new ValidationProblemDetails
         {
@@ -54,15 +54,5 @@ public class DomainExceptionFilter<TAppException> : IAsyncActionFilter where TAp
         };
 
         return problemDetails;
-    }
-    
-    private static IEnumerable<string> GetExceptionMessages(Exception exception)
-    {
-        var current = exception;
-        while (current != null)
-        {
-            yield return current.Message;
-            current = current.InnerException;
-        }
     }
 }
