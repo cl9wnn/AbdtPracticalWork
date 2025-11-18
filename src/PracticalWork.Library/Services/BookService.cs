@@ -126,7 +126,7 @@ public sealed class BookService : IBookService
     }
 
     /// <inheritdoc cref="IBookService.GetBooksPage"/>
-    public async Task<IReadOnlyList<BookListDto>> GetBooksPage(BookFilterDto filter, PaginationDto pagination)
+    public async Task<PageDto<BookListDto>> GetBooksPage(BookFilterDto filter, PaginationDto pagination)
     {
         try
         {
@@ -140,13 +140,23 @@ public sealed class BookService : IBookService
 
             if (cachedBooks != null)
             {
-                return cachedBooks;
+                return new PageDto<BookListDto>
+                {
+                    PageSize = pagination.PageSize,
+                    Page = pagination.Page,
+                    Items = cachedBooks
+                };
             }
             
             var books = await _bookRepository.GetBooksPage(filter, pagination);
             await _cacheService.SetAsync(hash, books, TimeSpan.FromMinutes(ttlMinutes));
             
-            return books;
+            return new PageDto<BookListDto>
+            {
+                PageSize = pagination.PageSize,
+                Page = pagination.Page,
+                Items = books
+            };
         }
         catch (Exception ex)
         {

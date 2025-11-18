@@ -16,7 +16,7 @@ public class LibraryService: ILibraryService
         throw new NotImplementedException();
     }
 
-    public Task<IReadOnlyList<LibraryBookDto>> GetLibraryBooks(BookFilterDto filter, int page, int pageSize)
+    public Task<PageDto<LibraryBookDto>> GetLibraryBooksPage(BookFilterDto filter, PaginationDto pagination)
     {
         throw new NotImplementedException();
     }

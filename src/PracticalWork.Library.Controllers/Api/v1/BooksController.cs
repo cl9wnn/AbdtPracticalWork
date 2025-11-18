@@ -76,9 +76,9 @@ public class BooksController : Controller
             request.ToBookPaginationDto());
 
         return Ok(new PagedResponse<GetBookResponse>(
-            request.Page,
-            request.PageSize,
-            result.ToBookResponseList()));
+            result.Page,
+            result.PageSize,
+            result.Items.ToBookResponseList()));
     }
 
     /// <summary> Добавление деталей книги</summary>

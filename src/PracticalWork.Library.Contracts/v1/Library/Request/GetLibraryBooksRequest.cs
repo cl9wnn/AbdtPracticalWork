@@ -8,8 +8,8 @@ namespace PracticalWork.Library.Contracts.v1.Library.Request;
 /// <param name="BookCategory">Категория книг</param>
 /// <param name="Author">Автор</param>
 /// <param name="AvailableOnly">Только доступные книги</param>
-/// <param name="Page">Номер страницы</param>
-/// <param name="PageSize">Размер страницы</param>
+/// <param name="Page">Номер страницы (по умолчанию - 1)</param>
+/// <param name="PageSize">Размер страницы (по умолчанию - 10)</param>
 public sealed record GetLibraryBooksRequest(
     BookCategory BookCategory,
     string Author,

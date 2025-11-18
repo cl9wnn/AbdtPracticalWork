@@ -36,8 +36,8 @@ public interface IBookService : IEntityService<Book>
     /// </summary>
     /// <param name="filter">Фильтр поиска</param>
     /// <param name="pagination">Параметры пагинации</param>
-    /// <returns>Список найденных книг</returns>
-    Task<IReadOnlyList<BookListDto>> GetBooksPage(BookFilterDto filter, PaginationDto pagination);
+    /// <returns>Страница со списком книг</returns>
+    Task<PageDto<BookListDto>> GetBooksPage(BookFilterDto filter, PaginationDto pagination);
 
     /// <summary>
     /// Добавление деталей книги

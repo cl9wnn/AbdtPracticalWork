@@ -28,17 +28,16 @@ public class LibraryController : Controller
     [Produces("application/json")]
     [ProducesResponseType(typeof(PagedResponse<GetLibraryBookResponse>), 200)]
     [ProducesResponseType(500)]
-    public async Task<IActionResult> GetLibraryBooks(GetLibraryBooksRequest request)
+    public async Task<IActionResult> GetLibraryBooks([FromQuery] GetLibraryBooksRequest request)
     {
-        var result = await _libraryService.GetLibraryBooks(
+        var result = await _libraryService.GetLibraryBooksPage(
             request.ToBookFilterDto(),
-            request.Page,
-            request.PageSize);
+            request.ToLibraryBookPaginationDto());
 
         return Ok(new PagedResponse<GetLibraryBookResponse>(
-            request.Page,
-            request.PageSize,
-            result.ToLibraryBookResponseList()));
+            result.Page,
+            result.PageSize,
+            result.Items.ToLibraryBookResponseList()));
     }
 
     /// <summary> Выдача книги</summary>

@@ -10,10 +10,9 @@ public interface ILibraryService: IEntityService<Borrow>
     /// Получение списка книг библиотеки
     /// </summary>
     /// <param name="filter">Фильтр поиска</param>
-    /// <param name="page">Номер страницы</param>
-    /// <param name="pageSize">Размер страницы</param>
-    /// <returns>Список найденных книг в библиотеке</returns>
-    Task<IReadOnlyList<LibraryBookDto>> GetLibraryBooks(BookFilterDto filter, int page, int pageSize);
+    /// <param name="pagination">Параметры пагинации</param>
+    /// <returns>Страница со списком найденных книг в библиотеке</returns>
+    Task<PageDto<LibraryBookDto>> GetLibraryBooksPage(BookFilterDto filter, PaginationDto pagination);
     
     /// <summary>
     /// Выдача книги

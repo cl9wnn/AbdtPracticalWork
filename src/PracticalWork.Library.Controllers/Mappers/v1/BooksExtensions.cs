@@ -41,8 +41,15 @@ public static class BooksExtensions
     public static PaginationDto ToBookPaginationDto(this GetBooksRequest request) =>
         new()
         {
-            Page = request.Page,
-            PageSize = request.PageSize
+            Page = request.Page > 0 ?  request.Page : 1,
+            PageSize = request.PageSize  is > 0 and <= 100 ? request.PageSize : 10
+        };
+    
+    public static PaginationDto ToLibraryBookPaginationDto(this GetLibraryBooksRequest request) =>
+        new()
+        {
+            Page = request.Page > 0 ?  request.Page : 1,
+            PageSize = request.PageSize  is > 0 and <= 100 ? request.PageSize : 10
         };
 
     public static BookFilterDto ToBookFilterDto(this GetLibraryBooksRequest request) =>

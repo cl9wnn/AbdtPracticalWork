@@ -130,6 +130,7 @@ public sealed class BookRepository : IBookRepository
         var bookEntities = await query
             .Skip((pagination.Page - 1) * pagination.PageSize)
             .Take(pagination.PageSize)
+            .OrderBy(b => b.Title)
             .ToListAsync();
 
         return bookEntities
