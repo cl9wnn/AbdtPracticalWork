@@ -5,7 +5,7 @@ using PracticalWork.Library.SharedKernel.Abstractions;
 namespace PracticalWork.Library.Abstractions.Services.Domain;
 
 /// <summary>
-/// Сервис по работе с карточкой читателя
+/// Контракт сервиса по работе с карточкой читателя
 /// </summary>
 public interface IReaderService: IEntityService<Reader>
 {

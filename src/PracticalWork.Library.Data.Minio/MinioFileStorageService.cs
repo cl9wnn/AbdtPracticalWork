@@ -6,6 +6,9 @@ using PracticalWork.Library.Abstractions.Services.Infrastructure;
 
 namespace PracticalWork.Library.Data.Minio;
 
+/// <summary>
+/// Сервис хранения файлов с помощью S3 хранилища MinIO
+/// </summary>
 public class MinioFileStorageService : IFileStorageService
 {
     private readonly IMinioClient _minioClient;
@@ -21,6 +24,7 @@ public class MinioFileStorageService : IFileStorageService
             .Build();
     }
 
+    /// <inheritdoc cref="IFileStorageService.UploadFileAsync"/>
     public async Task<string> UploadFileAsync(string path, Stream stream, string contentType,
         CancellationToken cancellationToken = default)
     {
@@ -41,6 +45,7 @@ public class MinioFileStorageService : IFileStorageService
 
     }
 
+    /// <inheritdoc cref="IFileStorageService.GetFilePathAsync"/>
     public async Task<string> GetFilePathAsync(string path, CancellationToken cancellationToken = default)
     {
         var args = new PresignedGetObjectArgs()
@@ -52,6 +57,7 @@ public class MinioFileStorageService : IFileStorageService
         return url;
     }
 
+    /// <inheritdoc cref="IFileStorageService.DeleteFileAsync"/>
     public async Task DeleteFileAsync(string path, CancellationToken cancellationToken = default)
     {
         var args = new RemoveObjectArgs()
@@ -61,6 +67,7 @@ public class MinioFileStorageService : IFileStorageService
         await _minioClient.RemoveObjectAsync(args, cancellationToken);
     }
 
+    /// <inheritdoc cref="IFileStorageService.ExistsFileAsync"/>
     public async Task<bool> ExistsFileAsync(string path, CancellationToken cancellationToken = default)
     {
         try
@@ -78,6 +85,7 @@ public class MinioFileStorageService : IFileStorageService
         }
     }
     
+    /// <summary>Создает бакет, если еще не создан</summary>
     private async Task EnsureBucketExistsAsync(string bucketName, CancellationToken cancellationToken = default)
     {
         var existsArgs = new BucketExistsArgs()

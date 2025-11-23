@@ -7,14 +7,15 @@ using StackExchange.Redis;
 
 namespace PracticalWork.Library.Cache.Redis;
 
+/// <summary>
+/// Сервис кэширования данных с помощью распределенного сервиса Redis
+/// </summary>
 public class RedisCacheService : ICacheService
 {
     private readonly IDistributedCache _cache;
     private readonly IConnectionMultiplexer _redis;
     private readonly string _prefix;
-
-
-
+    
     private readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -29,6 +30,7 @@ public class RedisCacheService : ICacheService
         _prefix = configuration["App:Redis:RedisCachePrefix"] ?? "";
     }
 
+    /// <inheritdoc cref="ICacheService.SetAsync{T}"/>
     public async Task SetAsync<T>(string key, T value, TimeSpan? ttl = null,
         CancellationToken cancellationToken = default)
     {
@@ -48,6 +50,7 @@ public class RedisCacheService : ICacheService
         await _cache.SetStringAsync(key, serializedData, options, token: cancellationToken);
     }
 
+    /// <inheritdoc cref="ICacheService.GetAsync{T}"/>
     public async Task<T> GetAsync<T>(string key, CancellationToken cancellationToken = default)
     {
         var cachedData = await _cache.GetStringAsync(key, token: cancellationToken);
@@ -60,18 +63,21 @@ public class RedisCacheService : ICacheService
         return JsonSerializer.Deserialize<T>(cachedData, _jsonSerializerOptions);
     }
 
+    /// <inheritdoc cref="ICacheService.RemoveAsync"/>
     public async Task<bool> RemoveAsync(string key, CancellationToken cancellationToken = default)
     {
         await _cache.RemoveAsync(key, cancellationToken);
         return true;
     }
 
+    /// <inheritdoc cref="ICacheService.ExistsAsync"/>
     public async Task<bool> ExistsAsync(string key, CancellationToken cancellationToken = default)
     {
         var value = await _cache.GetStringAsync(key, token: cancellationToken);
         return value != null;
     }
 
+    /// <inheritdoc cref="ICacheService.GetVersionAsync"/>
     public async Task<int> GetVersionAsync(string key, CancellationToken cancellationToken = default)
     {
         var db = _redis.GetDatabase();
@@ -82,6 +88,7 @@ public class RedisCacheService : ICacheService
         return version.IsNullOrEmpty ? 1 : (int)version;
     }
 
+    /// <inheritdoc cref="ICacheService.IncrementVersionAsync"/>
     public async Task<int> IncrementVersionAsync(string key, CancellationToken cancellationToken = default)
     {
         var db = _redis.GetDatabase();

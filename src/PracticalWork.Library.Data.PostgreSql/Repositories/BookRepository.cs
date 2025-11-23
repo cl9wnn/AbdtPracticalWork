@@ -8,6 +8,9 @@ using PracticalWork.Library.Models;
 
 namespace PracticalWork.Library.Data.PostgreSql.Repositories;
 
+/// <summary>
+/// Репозиторий для работы с книгами
+/// </summary>
 public sealed class BookRepository : IBookRepository
 {
     private readonly AppDbContext _appDbContext;
@@ -17,6 +20,7 @@ public sealed class BookRepository : IBookRepository
         _appDbContext = appDbContext;
     }
 
+    /// <summary> Получение книги по её идентификатору</summary>
     public async Task<Book> GetById(Guid id)
     {
         var bookEntity = await _appDbContext.Books
@@ -30,6 +34,7 @@ public sealed class BookRepository : IBookRepository
         return bookEntity.ToBook();
     }
 
+    /// <summary> Добавление книги</summary>
     public async Task<Guid> Add(Book book)
     {
         AbstractBookEntity entity = book.Category switch
@@ -54,6 +59,7 @@ public sealed class BookRepository : IBookRepository
         return entity.Id;
     }
 
+    /// <summary> Обновление книги</summary>
     public async Task<Book> Update(Guid id, Book book)
     {
         var bookEntity = await _appDbContext.Books
@@ -81,6 +87,7 @@ public sealed class BookRepository : IBookRepository
         return bookEntity.ToBook();
     }
 
+    /// <summary> Удаление книги</summary>
     public async Task Delete(Guid id)
     {
         var bookEntity = await _appDbContext.Books
@@ -95,6 +102,7 @@ public sealed class BookRepository : IBookRepository
         await _appDbContext.SaveChangesAsync();
     }
 
+    /// <summary> Получение всех книг</summary>
     public async Task<ICollection<Book>> GetAll()
     {
         var bookEntities = await _appDbContext.Books
@@ -106,11 +114,13 @@ public sealed class BookRepository : IBookRepository
             .ToList();
     }
 
+    /// <summary> Проверка существования книги</summary>
     public async Task<bool> Exists(Guid id)
     {
         return await _appDbContext.Books.AnyAsync(b => b.Id == id);
     }
 
+    /// <inheritdoc cref="IBookRepository.GetBooksPage"/>
     public async Task<IReadOnlyList<BookListDto>> GetBooksPage(BookFilterDto filter, PaginationDto pagination)
     {
         IQueryable<AbstractBookEntity> query = filter.Category switch

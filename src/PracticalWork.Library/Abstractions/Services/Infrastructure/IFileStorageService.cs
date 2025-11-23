@@ -1,7 +1,7 @@
 ﻿namespace PracticalWork.Library.Abstractions.Services.Infrastructure;
 
 /// <summary>
-/// Определяет контракт для сервиса хранения файлов.
+/// Контракт сервиса хранения файлов
 /// </summary>
 public interface IFileStorageService
 {

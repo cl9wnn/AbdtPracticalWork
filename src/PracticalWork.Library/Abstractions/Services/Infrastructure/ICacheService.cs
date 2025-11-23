@@ -1,7 +1,7 @@
 ﻿namespace PracticalWork.Library.Abstractions.Services.Infrastructure;
 
 /// <summary>
-/// Определяет контракт для сервиса кэширования данных.
+/// Контракт сервиса кэширования данных
 /// </summary>
 public interface ICacheService
 {

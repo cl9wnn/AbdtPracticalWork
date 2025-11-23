@@ -11,6 +11,9 @@ using PracticalWork.Library.SharedKernel.Helpers;
 
 namespace PracticalWork.Library.Services;
 
+/// <summary>
+/// Сервис по работе с книгами
+/// </summary>
 public sealed class BookService : IBookService
 {
     private readonly IBookRepository _bookRepository;

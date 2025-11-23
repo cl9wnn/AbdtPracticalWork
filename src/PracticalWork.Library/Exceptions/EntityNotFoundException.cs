@@ -2,6 +2,9 @@
 
 namespace PracticalWork.Library.Exceptions;
 
+/// <summary>
+/// Исключение, возникающее при попытке доступа к сущности, которая не была найдена
+/// </summary>
 public class EntityNotFoundException : AppException
 {
     public EntityNotFoundException(string message) : base($"{message}")

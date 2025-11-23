@@ -5,7 +5,7 @@ using PracticalWork.Library.SharedKernel.Abstractions;
 namespace PracticalWork.Library.Abstractions.Storage;
 
 /// <summary>
-/// Репозиторий для работы с книгами
+/// Контракт репозитория для работы с книгами
 /// </summary>
 public interface IBookRepository: IEntityRepository<Guid, Book>
 {

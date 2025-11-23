@@ -6,7 +6,7 @@ using PracticalWork.Library.SharedKernel.Abstractions;
 namespace PracticalWork.Library.Abstractions.Services.Domain;
 
 /// <summary>
-/// Сервис по работе с книгами
+/// Контракт сервиса по работе с книгами
 /// </summary>
 public interface IBookService : IEntityService<Book>
 {
