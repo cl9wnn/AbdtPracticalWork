@@ -48,9 +48,15 @@ public class MinioFileStorageService : IFileStorageService
     /// <inheritdoc cref="IFileStorageService.GetFilePathAsync"/>
     public async Task<string> GetFilePathAsync(string path, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return null; 
+        }
+        
         var args = new PresignedGetObjectArgs()
             .WithBucket(_minioOptions.BucketName)
-            .WithObject(path);
+            .WithObject(path)
+            .WithExpiry(_minioOptions.ExpirySeconds); 
         
         var url = await _minioClient.PresignedGetObjectAsync(args);
 
