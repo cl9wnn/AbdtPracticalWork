@@ -29,7 +29,7 @@ internal sealed class AbstractBookConfiguration : EntityConfigurationBase<Abstra
             .HasMaxLength(500);
 
         builder.HasMany(c => c.IssuanceRecords)
-            .WithOne()
+            .WithOne(b => b.Book)
             .HasForeignKey(p => p.BookId);
     }
 }

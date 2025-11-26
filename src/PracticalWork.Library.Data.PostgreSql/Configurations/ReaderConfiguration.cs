@@ -18,7 +18,7 @@ internal sealed class ReaderConfiguration : EntityConfigurationBase<ReaderEntity
             .IsRequired();
 
         builder.HasMany(c => c.BorrowedRecords)
-            .WithOne()
+            .WithOne(r => r.Reader)
             .HasForeignKey(p => p.ReaderId);
 
         builder.HasIndex(r => r.PhoneNumber).IsUnique();
