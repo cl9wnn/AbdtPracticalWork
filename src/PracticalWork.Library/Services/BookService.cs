@@ -19,7 +19,8 @@ public sealed class BookService : IBookService
     private readonly IBookRepository _bookRepository;
     private readonly ICacheService _cacheService;
     private readonly IFileStorageService _fileStorageService;
-    private readonly IOptions<BooksCacheOptions> _options;
+    private readonly IOptions<BooksCacheOptions> _cacheOptions;
+    private readonly string _booksCacheVersionPrefix;
 
     public BookService(IBookRepository bookRepository, ICacheService cacheService,
         IFileStorageService fileStorageService, IOptions<BooksCacheOptions> options)
@@ -27,7 +28,9 @@ public sealed class BookService : IBookService
         _bookRepository = bookRepository;
         _cacheService = cacheService;
         _fileStorageService = fileStorageService;
-        _options = options;
+        _cacheOptions = options;
+        
+        _booksCacheVersionPrefix = options.Value.BooksCacheVersionPrefix;
     }
 
     /// <summary> Получение книги по ее идентификатору </summary>
@@ -46,14 +49,12 @@ public sealed class BookService : IBookService
     /// <summary> Проверка существования книги </summary>
     public async Task Exists(Guid id)
     {
-        
         var exists = await _bookRepository.Exists(id);
 
         if (!exists)
         {
             throw new BookServiceException("Книга не обнаружена!");
         }
-        
     }
 
     /// <inheritdoc cref="IBookService.CreateBook"/>
@@ -63,7 +64,7 @@ public sealed class BookService : IBookService
         try
         {
             var bookId = await _bookRepository.Add(book);
-            await _cacheService.IncrementVersionAsync(_options.Value.BooksListCache.KeyPrefix);
+            await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
 
             return bookId;
         }
@@ -88,9 +89,9 @@ public sealed class BookService : IBookService
             book.ChangeInformation(updatedBook.Title, updatedBook.Authors, updatedBook.Description, updatedBook.Year);
             await _bookRepository.Update(id, book);
             
-            await _cacheService.IncrementVersionAsync(_options.Value.BooksListCache.KeyPrefix);
+            await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
         }
-        catch (NullReferenceException ex)
+        catch (EntityNotFoundException ex)
         {
             throw new BookServiceException("Книга не обнаружена!", ex);
         }
@@ -107,10 +108,10 @@ public sealed class BookService : IBookService
         {
             var book = await _bookRepository.GetById(id);
             book.Archive();
+            
             await _bookRepository.Update(id, book);
-            
-            await _cacheService.IncrementVersionAsync(_options.Value.BooksListCache.KeyPrefix);
-            
+            await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
+
             return new ArchivedBookDto
             {
                 Id = id,
@@ -118,7 +119,7 @@ public sealed class BookService : IBookService
                 ArchivedAt = DateTime.UtcNow
             };
         }
-        catch (NullReferenceException ex)
+        catch (EntityNotFoundException ex)
         {
             throw new BookServiceException("Книга не обнаружена!", ex);
         }
@@ -133,26 +134,26 @@ public sealed class BookService : IBookService
     {
         try
         {
-            var keyPrefix = _options.Value.BooksListCache.KeyPrefix;
-            var ttlMinutes = _options.Value.BooksListCache.TtlMinutes;
+            var keyPrefix = _cacheOptions.Value.BooksListCache.KeyPrefix;
+            var ttlMinutes = _cacheOptions.Value.BooksListCache.TtlMinutes;
             
-            var cacheVersion = await _cacheService.GetVersionAsync(keyPrefix);
-            var hash = CacheKeyHasher.GenerateCacheKey(keyPrefix, cacheVersion, new { filter, pagination });
+            var cacheVersion = await _cacheService.GetVersionAsync(_booksCacheVersionPrefix);
+            var hashedKey = CacheKeyHasher.GenerateCacheKey(keyPrefix, cacheVersion, new { filter, pagination });
             
-            var cachedBooks = await _cacheService.GetAsync<IReadOnlyList<BookListDto>>(hash);
+            var cachedBooks = await _cacheService.GetAsync<IReadOnlyList<BookListDto>>(hashedKey);
 
             if (cachedBooks != null)
             {
                 return new PageDto<BookListDto>
                 {
-                    PageSize = pagination.PageSize,
                     Page = pagination.Page,
+                    PageSize = pagination.PageSize,
                     Items = cachedBooks
                 };
             }
             
-            var books = await _bookRepository.GetBooksPage(filter, pagination);
-            await _cacheService.SetAsync(hash, books, TimeSpan.FromMinutes(ttlMinutes));
+            var books = await _bookRepository.GetBooks(filter, pagination);
+            await _cacheService.SetAsync(hashedKey, books, TimeSpan.FromMinutes(ttlMinutes));
             
             return new PageDto<BookListDto>
             {
@@ -168,36 +169,21 @@ public sealed class BookService : IBookService
     }
 
     /// <inheritdoc cref="IBookService.AddBookDetails"/>
-    public async Task<BookDetailsDto> AddBookDetails(Guid id, string description, Stream coverImageStream,
+    public async Task AddBookDetails(Guid id, string description, Stream coverImageStream,
         string contentType)
     {
         try
         {
             var book = await _bookRepository.GetById(id);
-
+            
             var filePath = $"{DateTime.Today.Year}/{DateTime.Today.Month}/{id}{contentType}";
+            book.UpdateDetails(description, filePath);
 
-            var coverImagePath = await _fileStorageService.UploadFileAsync(filePath, coverImageStream, contentType);
-
-            book.UpdateDetails(description, coverImagePath);
+            await _fileStorageService.UploadFileAsync(filePath, coverImageStream, contentType);
             await _bookRepository.Update(id, book);
-
-            await _cacheService.IncrementVersionAsync(_options.Value.BooksListCache.KeyPrefix);
-                
-            return new BookDetailsDto
-            {
-                Id = id,
-                Title = book.Title,
-                Category = book.Category,
-                Authors = book.Authors,
-                Description = book.Description,
-                Year = book.Year,
-                CoverImagePath = coverImagePath,
-                Status = book.Status,
-                IsArchived = book.IsArchived
-            };
+            await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
         }
-        catch (NullReferenceException ex)
+        catch (EntityNotFoundException ex)
         {
             throw new BookServiceException("Книга не обнаружена!", ex);
         }

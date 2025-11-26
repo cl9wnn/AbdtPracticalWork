@@ -88,23 +88,16 @@ public class BooksController : Controller
     [HttpPost("{id:guid}/details")]
     [EntityExists<IBookService, Book>]
     [ValidateImageFile(5 * 1024 * 1024)]
-    [Produces("application/json")]
-    [ProducesResponseType(typeof(BookDetailsResponse), 200)]
+    [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IActionResult> AddBookDetails(Guid id, [FromForm] AddBookDetailsRequest request)
     {
         await using var imageStream = request.CoverImage.OpenReadStream();
-        
         var fileExtension = Path.GetExtension(request.CoverImage.FileName);
+        await _bookService.AddBookDetails(id, request.Description, imageStream, fileExtension);
 
-        var result = await _bookService.AddBookDetails(
-            id,
-            request.Description,
-            imageStream, 
-            fileExtension);
-
-        return Ok(result.ToBookDetailsResponse());
+        return Ok();
     }
 }

@@ -1,47 +1,154 @@
-﻿using PracticalWork.Library.Abstractions.Services.Domain;
+﻿using Microsoft.Extensions.Options;
+using PracticalWork.Library.Abstractions.Services.Domain;
+using PracticalWork.Library.Abstractions.Services.Infrastructure;
+using PracticalWork.Library.Abstractions.Storage;
 using PracticalWork.Library.Dtos;
+using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.Models;
+using PracticalWork.Library.Options;
 
 namespace PracticalWork.Library.Services;
 
 /// <summary>
 /// Сервис по работе с карточкой читателя
 /// </summary>
-public class ReaderService: IReaderService
+public class ReaderService : IReaderService
 {
-    /// <summary> Получение карточки читателя по её идентификатору </summary>
-    public Task<Reader> GetById(Guid id)
+    private readonly IReaderRepository _readerRepository;
+    private readonly ICacheService _cacheService;
+    private readonly IOptions<ReadersCacheOptions> _options;
+    private readonly string _readersBooksVersionPrefix;
+
+    public ReaderService(IReaderRepository readerRepository, ICacheService cacheService,
+        IOptions<ReadersCacheOptions> options)
     {
-        throw new NotImplementedException();
+        _readerRepository = readerRepository;
+        _cacheService = cacheService;
+        _options = options;
+        _readersBooksVersionPrefix = options.Value.ReadersCacheVersionPrefix;
+    }
+
+    /// <summary> Получение карточки читателя по её идентификатору </summary>
+    public async Task<Reader> GetById(Guid id)
+    {
+        try
+        {
+            return await _readerRepository.GetById(id);
+        }
+        catch (Exception ex)
+        {
+            throw new ReaderServiceException("Ошибка получения карточки читателя!", ex);
+        }
     }
 
     /// <summary> Проверка существования карточки читателя </summary>
-    public Task Exists(Guid id)
+    public async Task Exists(Guid id)
     {
-        throw new NotImplementedException();
+        var exists = await _readerRepository.Exists(id);
+
+        if (!exists)
+        {
+            throw new BookServiceException("Карточка читателя не обнаружена!");
+        }
     }
 
     /// <inheritdoc cref="IReaderService.CreateReader"/>
-    public Task<Guid> CreateReader(Reader reader)
+    public async Task<Guid> CreateReader(Reader reader)
     {
-        throw new NotImplementedException();
+        reader.IsActive = true;
+        try
+        {
+            var iExists = await _readerRepository.Exists(reader.PhoneNumber);
+
+            if (iExists)
+            {
+                throw new ReaderServiceException("Карточка по такому номеру телефона уже существует!");
+            }
+
+            return await _readerRepository.Add(reader);
+        }
+        catch (Exception ex)
+        {
+            throw new ReaderServiceException("Ошибка создания карточки читателя!", ex);
+        }
     }
 
     /// <inheritdoc cref="IReaderService.ExtendReader"/>
-    public Task ExtendReader(Guid readerId, DateOnly newExpiryDate)
+    public async Task ExtendReader(Guid readerId, DateOnly newExpiryDate)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var reader = await _readerRepository.GetById(readerId);
+            reader.Extend(newExpiryDate);
+            await _readerRepository.Update(readerId, reader);
+        }
+        catch (EntityNotFoundException ex)
+        {
+            throw new ReaderServiceException("Карточка читателя не найдена!", ex);
+        }
+        catch (Exception ex)
+        {
+            throw new ReaderServiceException("Ошибка продления срока карточки читателя!", ex);
+        }
     }
 
     /// <inheritdoc cref="IReaderService.CloseReader"/>
-    public Task CloseReader(Guid readerId)
+    public async Task CloseReader(Guid readerId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var reader = await _readerRepository.GetById(readerId);
+            var borrowedBooks = await _readerRepository.GetBorrowedBooks(readerId);
+
+            if (borrowedBooks.Any())
+            {
+                throw new ReaderServiceException("У пользователя есть взятые книги!", borrowedBooks);
+            }
+
+            reader.Close();
+
+            await _readerRepository.Update(readerId, reader);
+        }
+        catch (EntityNotFoundException ex)
+        {
+            throw new ReaderServiceException("Карточка читателя не найдена!", ex);
+        }
+        catch (Exception ex)
+        {
+            throw new ReaderServiceException("Ошибка закрытия карточки читателя!", ex);
+        }
     }
 
     /// <inheritdoc cref="IReaderService.GetBorrowedBooks"/>
-    public Task<IReadOnlyList<BorrowedBookDto>> GetBorrowedBooks(Guid readerId)
+    public async Task<IReadOnlyList<BorrowedBookDto>> GetBorrowedBooks(Guid readerId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var keyPrefix = _options.Value.ReadersBooksCache.KeyPrefix;
+            var ttlMinutes = _options.Value.ReadersBooksCache.TtlMinutes;
+            
+            var cacheVersion = await _cacheService.GetVersionAsync(_readersBooksVersionPrefix);
+            var cacheKey = $"{keyPrefix}:v{cacheVersion}:{readerId}";
+
+            var cachedBorrowedBooks = await _cacheService.GetAsync<IReadOnlyList<BorrowedBookDto>>(cacheKey);
+            
+            if (cachedBorrowedBooks != null)
+            {
+                return cachedBorrowedBooks;
+            }
+            
+            var borrowedBooks = await _readerRepository.GetBorrowedBooks(readerId);
+            await _cacheService.SetAsync(cacheKey, borrowedBooks, TimeSpan.FromMinutes(ttlMinutes));
+            
+            return borrowedBooks;
+        }
+        catch (EntityNotFoundException ex)
+        {
+            throw new ReaderServiceException("Карточка читателя не найдена!", ex);
+        }
+        catch (Exception ex)
+        {
+            throw new ReaderServiceException("Ошибка получения взятых читателем книг!", ex);
+        }
     }
 }

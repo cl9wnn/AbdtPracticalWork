@@ -81,7 +81,7 @@ public class RedisCacheService : ICacheService
     public async Task<int> GetVersionAsync(string key, CancellationToken cancellationToken = default)
     {
         var db = _redis.GetDatabase();
-        var redisKey = $"{_prefix}{key}:version";
+        var redisKey = $"{_prefix}{key}";
 
         var version = await db.StringGetAsync(redisKey);
 
@@ -92,7 +92,7 @@ public class RedisCacheService : ICacheService
     public async Task<int> IncrementVersionAsync(string key, CancellationToken cancellationToken = default)
     {
         var db = _redis.GetDatabase();
-        var redisKey = $"{_prefix}{key}:version";
+        var redisKey = $"{_prefix}{key}";
 
         return (int)await db.StringIncrementAsync(redisKey);
     }

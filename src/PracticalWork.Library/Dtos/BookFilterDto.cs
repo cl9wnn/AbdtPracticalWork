@@ -1,4 +1,5 @@
-﻿using PracticalWork.Library.Enums;
+﻿using JetBrains.Annotations;
+using PracticalWork.Library.Enums;
 
 namespace PracticalWork.Library.Dtos;
 
@@ -8,9 +9,10 @@ namespace PracticalWork.Library.Dtos;
 public class BookFilterDto
 {
     /// <summary>Категория книги</summary>
-    public BookCategory Category { get; set; }
+    public BookCategory? Category { get; set; }
     
     /// <summary>Автор книги</summary>
+    [CanBeNull]
     public string Author { get; set; }
     
     /// <summary>Статус книги</summary>

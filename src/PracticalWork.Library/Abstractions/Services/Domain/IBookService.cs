@@ -46,6 +46,5 @@ public interface IBookService : IEntityService<Book>
     /// <param name="description">Описание книги</param>
     /// <param name="coverImageStream">Поток данных с обложкой книги</param>
     /// <param name="contentType">Тип изображения</param>
-    /// <returns>Информация об измененной книге</returns>
-    Task<BookDetailsDto> AddBookDetails(Guid bookId, string description, Stream coverImageStream, string contentType);
+    Task AddBookDetails(Guid bookId, string description, Stream coverImageStream, string contentType);
 }

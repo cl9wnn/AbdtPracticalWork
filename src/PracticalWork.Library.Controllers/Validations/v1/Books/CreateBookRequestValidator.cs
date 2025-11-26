@@ -12,7 +12,7 @@ public sealed class CreateBookRequestValidator : AbstractValidator<CreateBookReq
             .MaximumLength(500).WithMessage("Название книги не может превышать 500 символов.");
 
         RuleFor(x => x.Category)
-            .IsInEnum().WithMessage("Категория должна быть от 1 до 3.");
+            .IsInEnum().WithMessage("Категория должна быть от 10 до 30.");
 
         RuleFor(x => x.Authors)
             .NotEmpty().WithMessage("Автор или авторы книги обязательны.")

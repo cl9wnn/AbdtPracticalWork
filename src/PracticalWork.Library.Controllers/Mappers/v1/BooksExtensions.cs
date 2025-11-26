@@ -86,31 +86,35 @@ public static class BooksExtensions
         this IEnumerable<LibraryBookDto> books) =>
         books.Select(b => b.ToLibraryBookResponse()).ToList();
 
-    public static ArchiveBookResponse ToArchiveBookResponse(this ArchivedBookDto dto) =>
+    public static ArchiveBookResponse ToArchiveBookResponse(this ArchivedBookDto book) =>
         new(
-            Id: dto.Id,
-            Title: dto.Title,
-            ArchivedAt: dto.ArchivedAt
+            Id: book.Id,
+            Title: book.Title,
+            ArchivedAt: book.ArchivedAt
         );
 
-    public static BookDetailsResponse ToBookDetailsResponse(this BookDetailsDto dto) =>
+    public static BookDetailsResponse ToBookDetailsResponse(this BookDetailsDto book) =>
         new(
-            Id: dto.Id,
-            Title: dto.Title,
-            Category: (Contracts.v1.Enums.BookCategory)dto.Category,
-            Authors: dto.Authors,
-            Description: dto.Description,
-            Year: dto.Year,
-            CoverImagePath: dto.CoverImagePath,
-            Status: (Contracts.v1.Enums.BookStatus)dto.Status,
-            IsArchived: dto.IsArchived
+            Id: book.Id,
+            Title: book.Title,
+            Category: (Contracts.v1.Enums.BookCategory)book.Category,
+            Authors: book.Authors,
+            Description: book.Description,
+            Year: book.Year,
+            CoverImagePath: book.CoverImagePath,
+            Status: (Contracts.v1.Enums.BookStatus)book.Status,
+            IsArchived: book.IsArchived
         );
 
-    public static GetBorrowedBookResponse ToBorrowedBookResponse(this BorrowedBookDto dto) =>
+    public static GetBorrowedBookResponse ToBorrowedBookResponse(this BorrowedBookDto book) =>
         new(
-            BookId: dto.BookId,
-            BorrowDate: dto.BorrowDate,
-            DueDate: dto.DueDate
+            BookId: book.BookId,
+            Title: book.Title,
+            Authors: book.Authors,
+            Description: book.Description,
+            Year: book.Year,    
+            BorrowDate: book.BorrowDate,
+            DueDate: book.DueDate
         );
 
     public static IReadOnlyList<GetBorrowedBookResponse> ToBorrowedBookResponseList(

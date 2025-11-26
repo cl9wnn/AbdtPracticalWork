@@ -5,6 +5,9 @@
 /// </summary>
 public class BooksCacheOptions
 {
+    /// <summary> Общий префикс для инвалидации кэша</summary>
+    public string BooksCacheVersionPrefix { get; set; }  
+        
     /// <summary> Настройки кэширования для списков книг</summary>
     public CacheEntryOptions BooksListCache { get; set; } 
     

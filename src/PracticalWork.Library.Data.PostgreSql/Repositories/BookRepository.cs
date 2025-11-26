@@ -4,7 +4,9 @@ using PracticalWork.Library.Data.PostgreSql.Entities;
 using PracticalWork.Library.Data.PostgreSql.Mappers.v1;
 using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Enums;
+using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.Models;
+using PracticalWork.Library.SharedKernel.Abstractions;
 
 namespace PracticalWork.Library.Data.PostgreSql.Repositories;
 
@@ -20,7 +22,7 @@ public sealed class BookRepository : IBookRepository
         _appDbContext = appDbContext;
     }
 
-    /// <summary> Получение книги по её идентификатору</summary>
+    /// <inheritdoc cref="IEntityRepository{Guid,Book}.GetById"/>
     public async Task<Book> GetById(Guid id)
     {
         var bookEntity = await _appDbContext.Books
@@ -28,13 +30,27 @@ public sealed class BookRepository : IBookRepository
 
         if (bookEntity == null)
         {
-            throw new KeyNotFoundException("Книга не найдена по данному идентификатору!");
+            throw new EntityNotFoundException("Книга не найдена по данному идентификатору!");
         }
 
         return bookEntity.ToBook();
     }
+    
+    /// <inheritdoc cref="IBookRepository.GetByTitle"/>
+    public async Task<BookDetailsDto> GetByTitle(string title)
+    {
+        var bookEntity = await _appDbContext.Books
+            .FirstOrDefaultAsync(b => b.Title == title);
+        
+        if (bookEntity == null)
+        {
+            throw new EntityNotFoundException("Книга не найдена по данному идентификатору!");
+        }
 
-    /// <summary> Добавление книги</summary>
+        return bookEntity.ToBookDetailsDto();
+    }
+
+    /// <inheritdoc cref="IEntityRepository{Guid,Book}.Add"/>
     public async Task<Guid> Add(Book book)
     {
         AbstractBookEntity entity = book.Category switch
@@ -59,7 +75,7 @@ public sealed class BookRepository : IBookRepository
         return entity.Id;
     }
 
-    /// <summary> Обновление книги</summary>
+    /// <inheritdoc cref="IEntityRepository{Guid,Book}.Update"/>
     public async Task<Book> Update(Guid id, Book book)
     {
         var bookEntity = await _appDbContext.Books
@@ -67,7 +83,7 @@ public sealed class BookRepository : IBookRepository
 
         if (bookEntity == null)
         {
-            throw new KeyNotFoundException("Книга не найдена по данному идентификатору!");
+            throw new EntityNotFoundException("Книга не найдена по данному идентификатору!");
         }
         
         bookEntity.Title = book.Title;
@@ -87,7 +103,7 @@ public sealed class BookRepository : IBookRepository
         return bookEntity.ToBook();
     }
 
-    /// <summary> Удаление книги</summary>
+    /// <inheritdoc cref="IEntityRepository{Guid,Book}.Delete"/>
     public async Task Delete(Guid id)
     {
         var bookEntity = await _appDbContext.Books
@@ -95,33 +111,69 @@ public sealed class BookRepository : IBookRepository
 
         if (bookEntity == null)
         {
-            throw new KeyNotFoundException("Книга не найдена по данному идентификатору!");
+            throw new EntityNotFoundException("Книга не найдена по данному идентификатору!");
         }
 
         _appDbContext.Books.Remove(bookEntity);
         await _appDbContext.SaveChangesAsync();
     }
 
-    /// <summary> Получение всех книг</summary>
+    /// <inheritdoc cref="IEntityRepository{Guid,Book}.GetAll"/>
     public async Task<ICollection<Book>> GetAll()
     {
         var bookEntities = await _appDbContext.Books
+            .Select(b => b.ToBook())
             .AsNoTracking()
             .ToListAsync();
 
-        return bookEntities
-            .Select(b => b.ToBook())
-            .ToList();
+        return bookEntities;
     }
 
-    /// <summary> Проверка существования книги</summary>
+    /// <inheritdoc cref="IEntityRepository{Guid,Book}.Exists"/>
     public async Task<bool> Exists(Guid id)
     {
         return await _appDbContext.Books.AnyAsync(b => b.Id == id);
     }
 
-    /// <inheritdoc cref="IBookRepository.GetBooksPage"/>
-    public async Task<IReadOnlyList<BookListDto>> GetBooksPage(BookFilterDto filter, PaginationDto pagination)
+    /// <inheritdoc cref="IBookRepository.GetBooks"/>
+    public async Task<IReadOnlyList<BookListDto>> GetBooks(BookFilterDto filter, PaginationDto pagination)
+    {
+        var query = BuildBooksQuery(filter, includeIssuance: false);
+        
+        return await query
+            .OrderBy(b => b.Title)
+            .Skip((pagination.Page - 1) * pagination.PageSize)
+            .Take(pagination.PageSize)
+            .Select(b => b.ToBookListDto())
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    /// <inheritdoc cref="IBookRepository.GetLibraryBooks"/>
+    public async Task<IReadOnlyList<LibraryBookDto>> GetLibraryBooks(BookFilterDto filter, PaginationDto pagination)
+    {
+        var query = BuildBooksQuery(filter, includeIssuance: true);
+
+        var bookEntities = await query
+            .OrderBy(b => b.Title)
+            .Skip((pagination.Page - 1) * pagination.PageSize)
+            .Take(pagination.PageSize)
+            .Select(b => new 
+            {
+                Book = b,
+                ActiveBorrow = b.IssuanceRecords
+                    .FirstOrDefault(r => r.Status == BookIssueStatus.Issued) 
+            })
+            .AsNoTracking()
+            .ToListAsync();
+
+        return bookEntities
+            .Select(x => x.Book.ToLibraryBookDto(x.ActiveBorrow))
+            .ToList();
+    }
+    
+    /// <summary>Построение запроса для поиска книг по фильтрации</summary>
+    private IQueryable<AbstractBookEntity> BuildBooksQuery(BookFilterDto filter, bool includeIssuance)
     {
         IQueryable<AbstractBookEntity> query = filter.Category switch
         {
@@ -133,18 +185,20 @@ public sealed class BookRepository : IBookRepository
 
         if (!string.IsNullOrWhiteSpace(filter.Author))
             query = query.Where(b => b.Authors.Contains(filter.Author));
-        
+
         if (filter.Status != null)
             query = query.Where(b => b.Status == filter.Status);
-        
-        var bookEntities = await query
-            .Skip((pagination.Page - 1) * pagination.PageSize)
-            .Take(pagination.PageSize)
-            .OrderBy(b => b.Title)
-            .ToListAsync();
 
-        return bookEntities
-            .Select(b => b.ToBookListDto())
-            .ToList();
+        if (filter.AvailableOnly == true)
+            query = query.Where(b => b.Status == BookStatus.Available);
+
+        if (includeIssuance)
+        {
+            query = query
+                .Where(b => b.Status != BookStatus.Archived)
+                .Include(b => b.IssuanceRecords);
+        }
+
+        return query;
     }
 }

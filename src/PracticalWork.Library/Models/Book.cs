@@ -44,14 +44,43 @@ public sealed class Book
         {
             throw new InvalidOperationException("Книга уже в архиве.");
         }
-        
+
         if (!CanBeArchived())
+        {
             throw new InvalidOperationException("Книга не может быть заархивирована.");
+        }
 
         IsArchived = true;
         Status = BookStatus.Archived;
     }
-
+    
+    /// <summary>Выдача книги на руки читателю</summary>
+    public void Borrow()
+    {
+        if (Status == BookStatus.Borrow)
+        {
+            throw new InvalidOperationException("Книга уже выдана читателю.");
+        }
+        
+        if (!CanBeBorrowed())
+        {
+            throw new InvalidOperationException("Книга не может быть выдана читателю.");
+        }
+        
+        Status = BookStatus.Borrow;
+    }
+    
+    /// <summary>Возврат книги в библиотеку</summary>
+    public void Return()
+    {
+        if (Status != BookStatus.Borrow)
+        {
+            throw new InvalidOperationException("Книга не выдана читателю.");
+        }
+        
+        Status = BookStatus.Available;
+    }
+    
     /// <summary>
     /// Обновление деталей
     /// </summary>
@@ -59,6 +88,11 @@ public sealed class Book
     /// <param name="coverImagePath"> Путь к изображению обложки </param>
     public void UpdateDetails(string description, string coverImagePath)
     {
+        if (Status == BookStatus.Archived && IsArchived)
+        {
+            throw new InvalidOperationException("Книга в архиве!");
+        }
+        
         CoverImagePath = coverImagePath;
 
         if (description != null)
