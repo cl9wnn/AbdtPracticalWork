@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using PracticalWork.Library.Exceptions;
 
 namespace PracticalWork.Library.Web.Configuration;
 
@@ -27,32 +28,54 @@ public class DomainExceptionFilter<TAppException> : IAsyncActionFilter where TAp
         }
     }
 
-    private static bool HasException(ActionExecutedContext context) => context.Exception != null && !context.ExceptionHandled;
+    private static bool HasException(ActionExecutedContext context) =>
+        context.Exception != null && !context.ExceptionHandled;
 
     protected virtual void TryHandleException(ActionExecutedContext context, Exception exception)
     {
         if (exception is not TAppException)
             return;
 
-        var problemDetails = BuildProblemDetails(exception);
+        var statusCode = GetStatusCode(exception);
+        var problemDetails = BuildProblemDetails(exception, statusCode);
 
-        context.Result = new BadRequestObjectResult(problemDetails);
+        context.Result = new ObjectResult(problemDetails)
+        {
+            StatusCode = statusCode
+        };
         context.ExceptionHandled = true;
 
-        Logger.LogError(exception, "Unhandled domain exception. Transformed to Bad request (400).");
+        LogException(exception, statusCode);
     }
 
-    protected static ValidationProblemDetails BuildProblemDetails(Exception exception)
+    protected virtual int GetStatusCode(Exception exception)
+    {
+        return exception switch
+        {
+            EntityNotFoundException => StatusCodes.Status404NotFound,
+            _ => StatusCodes.Status400BadRequest
+        };
+    }
+
+    protected static ValidationProblemDetails BuildProblemDetails(Exception exception, int statusCode)
     {
         var exceptionName = exception.GetType().Name;
         var errorMessages = new[] { exception.Message };
-        
+
         var problemDetails = new ValidationProblemDetails
         {
             Title = "Произошла ошибка во время выполнения запроса.",
+            Status = statusCode,
             Errors = { { exceptionName, errorMessages } }
         };
 
         return problemDetails;
+    }
+
+    protected virtual void LogException(Exception exception, int statusCode)
+    {
+        Logger.LogError(exception,
+            "Domain exception transformed to HTTP {StatusCode}. Message: {Message}",
+            statusCode, exception.Message);
     }
 }
