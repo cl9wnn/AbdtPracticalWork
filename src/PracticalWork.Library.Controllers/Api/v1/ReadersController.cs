@@ -70,6 +70,8 @@ public class ReadersController: Controller
     [EntityExists<IReaderService, Reader>]
     [Produces("application/json")]
     [ProducesResponseType(typeof(IReadOnlyList<GetBorrowedBookResponse>), 200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IActionResult> GetBorrowedBooks(Guid id)
     {

@@ -7,6 +7,9 @@ using PracticalWork.Library.Models;
 
 namespace PracticalWork.Library.Data.PostgreSql.Repositories;
 
+/// <summary>
+/// Репозиторий для работы с записями о выдаче книг читателям
+/// </summary>
 public class BookBorrowRepository: IBookBorrowRepository
 {
     private readonly AppDbContext _dbContext;

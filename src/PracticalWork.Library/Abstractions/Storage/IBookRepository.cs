@@ -9,7 +9,6 @@ namespace PracticalWork.Library.Abstractions.Storage;
 /// </summary>
 public interface IBookRepository: IEntityRepository<Guid, Book>
 {
-  
     /// <summary>
     /// Получение детальной информации о книги по ее названию
     /// </summary>
@@ -32,5 +31,4 @@ public interface IBookRepository: IEntityRepository<Guid, Book>
     /// <param name="pagination">Параметры пагинации</param>
     /// <returns>Список не архивных книг из библиотеки</returns>
     Task<IReadOnlyList<LibraryBookDto>> GetLibraryBooks(BookFilterDto filter, PaginationDto pagination);
-
 }
