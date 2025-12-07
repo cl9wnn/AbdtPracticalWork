@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Library.Contracts.v1.Books.Response;
+﻿namespace PracticalWork.Library.Contracts.v1.Books.Archive;
 
 /// <summary>
 /// Ответ на перевод книги в архив

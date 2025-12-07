@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Library.Contracts.v1.Readers.Request;
+﻿namespace PracticalWork.Library.Contracts.v1.Readers.Create;
 
 /// <summary>
 /// Запрос на создание карточки читателя

@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Library.Contracts.v1.Library.Request;
+﻿namespace PracticalWork.Library.Contracts.v1.Library.Borrow;
 
 /// <summary>
 /// Запрос на выдачу книги на руки читателю

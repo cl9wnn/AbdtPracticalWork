@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Library.Contracts.v1.Library.Response;
+﻿namespace PracticalWork.Library.Contracts.v1.Library.Borrow;
 
 /// <summary>
 /// Ответ на запрос о выдаче книги читателю

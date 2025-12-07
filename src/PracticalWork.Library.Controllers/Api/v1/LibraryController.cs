@@ -2,9 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using PracticalWork.Library.Abstractions.Services.Domain;
 using PracticalWork.Library.Contracts.v1.Abstracts;
-using PracticalWork.Library.Contracts.v1.Books.Response;
-using PracticalWork.Library.Contracts.v1.Library.Request;
-using PracticalWork.Library.Contracts.v1.Library.Response;
+using PracticalWork.Library.Contracts.v1.Books.AddDetails;
+using PracticalWork.Library.Contracts.v1.Library.Borrow;
+using PracticalWork.Library.Contracts.v1.Library.Get;
+using PracticalWork.Library.Contracts.v1.Library.Return;
 using PracticalWork.Library.Controllers.Attributes;
 using PracticalWork.Library.Controllers.Mappers.v1;
 using PracticalWork.Library.Models;

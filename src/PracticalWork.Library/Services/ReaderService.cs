@@ -31,14 +31,7 @@ public class ReaderService : IReaderService
     /// <summary> Получение карточки читателя по её идентификатору </summary>
     public async Task<Reader> GetById(Guid id)
     {
-        try
-        {
-            return await _readerRepository.GetById(id);
-        }
-        catch (Exception ex)
-        {
-            throw new ReaderServiceException("Ошибка получения карточки читателя!", ex);
-        }
+        return await _readerRepository.GetById(id);
     }
 
     /// <summary> Проверка существования карточки читателя </summary>
@@ -48,7 +41,7 @@ public class ReaderService : IReaderService
 
         if (!exists)
         {
-            throw new BookServiceException("Карточка читателя не обнаружена!");
+            throw new EntityNotFoundException("Карточка читателя не обнаружена!");
         }
     }
 
@@ -56,99 +49,60 @@ public class ReaderService : IReaderService
     public async Task<Guid> CreateReader(Reader reader)
     {
         reader.IsActive = true;
-        try
-        {
-            var iExists = await _readerRepository.Exists(reader.PhoneNumber);
 
-            if (iExists)
-            {
-                throw new ReaderServiceException("Карточка по такому номеру телефона уже существует!");
-            }
+        var iExists = await _readerRepository.Exists(reader.PhoneNumber);
 
-            return await _readerRepository.Add(reader);
-        }
-        catch (Exception ex)
+        if (iExists)
         {
-            throw new ReaderServiceException("Ошибка создания карточки читателя!", ex);
+            throw new ReaderServiceException("Карточка по такому номеру телефона уже существует!");
         }
+
+        return await _readerRepository.Add(reader);
     }
 
     /// <inheritdoc cref="IReaderService.ExtendReader"/>
     public async Task ExtendReader(Guid readerId, DateOnly newExpiryDate)
     {
-        try
-        {
-            var reader = await _readerRepository.GetById(readerId);
-            reader.Extend(newExpiryDate);
-            await _readerRepository.Update(readerId, reader);
-        }
-        catch (EntityNotFoundException ex)
-        {
-            throw new ReaderServiceException("Карточка читателя не найдена!", ex);
-        }
-        catch (Exception ex)
-        {
-            throw new ReaderServiceException("Ошибка продления срока карточки читателя!", ex);
-        }
+        var reader = await _readerRepository.GetById(readerId);
+        reader.Extend(newExpiryDate);
+        await _readerRepository.Update(readerId, reader);
     }
 
     /// <inheritdoc cref="IReaderService.CloseReader"/>
     public async Task CloseReader(Guid readerId)
     {
-        try
-        {
-            var reader = await _readerRepository.GetById(readerId);
-            var borrowedBooks = await _readerRepository.GetBorrowedBooks(readerId);
+        var reader = await _readerRepository.GetById(readerId);
+        var borrowedBooks = await _readerRepository.GetBorrowedBooks(readerId);
 
-            if (borrowedBooks.Any())
-            {
-                throw new ReaderServiceException("У пользователя есть взятые книги!", borrowedBooks);
-            }
-
-            reader.Close();
-
-            await _readerRepository.Update(readerId, reader);
-        }
-        catch (EntityNotFoundException ex)
+        if (borrowedBooks.Any())
         {
-            throw new ReaderServiceException("Карточка читателя не найдена!", ex);
+            throw new ReaderServiceException("У пользователя есть взятые книги!", borrowedBooks);
         }
-        catch (Exception ex)
-        {
-            throw new ReaderServiceException("Ошибка закрытия карточки читателя!", ex);
-        }
+
+        reader.Close();
+
+        await _readerRepository.Update(readerId, reader);
     }
 
     /// <inheritdoc cref="IReaderService.GetBorrowedBooks"/>
     public async Task<IReadOnlyList<BorrowedBookDto>> GetBorrowedBooks(Guid readerId)
     {
-        try
-        {
-            var keyPrefix = _options.Value.ReadersBooksCache.KeyPrefix;
-            var ttlMinutes = _options.Value.ReadersBooksCache.TtlMinutes;
-            
-            var cacheVersion = await _cacheService.GetVersionAsync(_readersBooksVersionPrefix);
-            var cacheKey = $"{keyPrefix}:v{cacheVersion}:{readerId}";
+        var keyPrefix = _options.Value.ReadersBooksCache.KeyPrefix;
+        var ttlMinutes = _options.Value.ReadersBooksCache.TtlMinutes;
 
-            var cachedBorrowedBooks = await _cacheService.GetAsync<IReadOnlyList<BorrowedBookDto>>(cacheKey);
-            
-            if (cachedBorrowedBooks != null)
-            {
-                return cachedBorrowedBooks;
-            }
-            
-            var borrowedBooks = await _readerRepository.GetBorrowedBooks(readerId);
-            await _cacheService.SetAsync(cacheKey, borrowedBooks, TimeSpan.FromMinutes(ttlMinutes));
-            
-            return borrowedBooks;
-        }
-        catch (EntityNotFoundException ex)
+        var cacheVersion = await _cacheService.GetVersionAsync(_readersBooksVersionPrefix);
+        var cacheKey = $"{keyPrefix}:v{cacheVersion}:{readerId}";
+
+        var cachedBorrowedBooks = await _cacheService.GetAsync<IReadOnlyList<BorrowedBookDto>>(cacheKey);
+
+        if (cachedBorrowedBooks != null)
         {
-            throw new ReaderServiceException("Карточка читателя не найдена!", ex);
+            return cachedBorrowedBooks;
         }
-        catch (Exception ex)
-        {
-            throw new ReaderServiceException("Ошибка получения взятых читателем книг!", ex);
-        }
+
+        var borrowedBooks = await _readerRepository.GetBorrowedBooks(readerId);
+        await _cacheService.SetAsync(cacheKey, borrowedBooks, TimeSpan.FromMinutes(ttlMinutes));
+
+        return borrowedBooks;
     }
 }

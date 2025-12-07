@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using PracticalWork.Library.Contracts.v1.Books.Request;
+using PracticalWork.Library.Contracts.v1.Books.AddDetails;
 
 namespace PracticalWork.Library.Controllers.Validations.v1.Books;
 

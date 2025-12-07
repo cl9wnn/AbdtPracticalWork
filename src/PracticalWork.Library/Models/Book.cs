@@ -1,4 +1,5 @@
 ﻿using PracticalWork.Library.Enums;
+using PracticalWork.Library.Exceptions;
 
 namespace PracticalWork.Library.Models;
 
@@ -42,12 +43,12 @@ public sealed class Book
     {
         if (Status == BookStatus.Archived && IsArchived)
         {
-            throw new InvalidOperationException("Книга уже в архиве.");
+            throw new BookServiceException("Книга уже в архиве.");
         }
 
         if (!CanBeArchived())
         {
-            throw new InvalidOperationException("Книга не может быть заархивирована.");
+            throw new BookServiceException("Книга не может быть заархивирована.");
         }
 
         IsArchived = true;
@@ -59,12 +60,12 @@ public sealed class Book
     {
         if (Status == BookStatus.Borrow)
         {
-            throw new InvalidOperationException("Книга уже выдана читателю.");
+            throw new LibraryServiceException("Книга уже выдана читателю.");
         }
         
         if (!CanBeBorrowed())
         {
-            throw new InvalidOperationException("Книга не может быть выдана читателю.");
+            throw new LibraryServiceException("Книга не может быть выдана читателю.");
         }
         
         Status = BookStatus.Borrow;
@@ -75,7 +76,7 @@ public sealed class Book
     {
         if (Status != BookStatus.Borrow)
         {
-            throw new InvalidOperationException("Книга не выдана читателю.");
+            throw new LibraryServiceException("Книга не выдана читателю.");
         }
         
         Status = BookStatus.Available;
@@ -90,7 +91,7 @@ public sealed class Book
     {
         if (Status == BookStatus.Archived && IsArchived)
         {
-            throw new InvalidOperationException("Книга в архиве!");
+            throw new BookServiceException("Книга в архиве!");
         }
         
         CoverImagePath = coverImagePath;

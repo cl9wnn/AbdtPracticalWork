@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Library.Contracts.v1.Readers.Response;
+﻿namespace PracticalWork.Library.Contracts.v1.Readers.Create;
 
 /// <summary>
 /// Ответ на создание карточки читателя

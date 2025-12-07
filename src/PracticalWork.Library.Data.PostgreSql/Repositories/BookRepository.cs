@@ -58,8 +58,7 @@ public sealed class BookRepository : IBookRepository
             BookCategory.ScientificBook => new ScientificBookEntity(),
             BookCategory.EducationalBook => new EducationalBookEntity(),
             BookCategory.FictionBook => new FictionBookEntity(),
-            _ => throw new ArgumentException($"Неподдерживаемая категория книги: {book.Category}",
-                nameof(book.Category))
+            _ => throw new BookServiceException($"Неподдерживаемая категория книги: {book.Category}")
         };
 
         entity.Title = book.Title;

@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Library.Contracts.v1.Library.Request;
+﻿namespace PracticalWork.Library.Contracts.v1.Library.Return;
 
 /// <summary>
 /// Запрос на возврат книги читателем

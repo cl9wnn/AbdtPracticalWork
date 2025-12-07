@@ -1,6 +1,6 @@
 ﻿using PracticalWork.Library.Contracts.v1.Abstracts;
 
-namespace PracticalWork.Library.Contracts.v1.Library.Response;
+namespace PracticalWork.Library.Contracts.v1.Library.Get;
 
 /// <summary>
 /// Ответ на запрос получения книг библиотеки

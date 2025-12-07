@@ -1,8 +1,10 @@
-﻿using PracticalWork.Library.Contracts.v1.Books.Request;
-using PracticalWork.Library.Contracts.v1.Books.Response;
-using PracticalWork.Library.Contracts.v1.Library.Request;
-using PracticalWork.Library.Contracts.v1.Library.Response;
-using PracticalWork.Library.Contracts.v1.Readers.Response;
+﻿using PracticalWork.Library.Contracts.v1.Books.AddDetails;
+using PracticalWork.Library.Contracts.v1.Books.Archive;
+using PracticalWork.Library.Contracts.v1.Books.Create;
+using PracticalWork.Library.Contracts.v1.Books.Get;
+using PracticalWork.Library.Contracts.v1.Books.Update;
+using PracticalWork.Library.Contracts.v1.Library.Get;
+using PracticalWork.Library.Contracts.v1.Readers.GetBorrowedBooks;
 using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Enums;
 using PracticalWork.Library.Models;

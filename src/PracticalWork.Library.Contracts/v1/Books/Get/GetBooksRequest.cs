@@ -1,18 +1,18 @@
 ﻿using PracticalWork.Library.Contracts.v1.Enums;
 
-namespace PracticalWork.Library.Contracts.v1.Library.Request;
+namespace PracticalWork.Library.Contracts.v1.Books.Get;
 
 /// <summary>
-/// Запрос на получение книг библиотеки
+/// Запрос на получение списка книг
 /// </summary>
-/// <param name="BookCategory">Категория книг</param>
+/// <param name="BookStatus">Статус книги</param>
+/// <param name="BookCategory">Категория книги</param>
 /// <param name="Author">Автор</param>
-/// <param name="AvailableOnly">Только доступные книги</param>
 /// <param name="Page">Номер страницы (по умолчанию - 1)</param>
 /// <param name="PageSize">Размер страницы (по умолчанию - 10)</param>
-public sealed record GetLibraryBooksRequest(
+public sealed record GetBooksRequest(
+    BookStatus BookStatus,
     BookCategory BookCategory,
     string Author,
-    bool AvailableOnly,
     int Page,
     int PageSize);

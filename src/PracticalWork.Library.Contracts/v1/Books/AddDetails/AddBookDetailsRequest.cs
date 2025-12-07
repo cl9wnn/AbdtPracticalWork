@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace PracticalWork.Library.Contracts.v1.Books.Request;
+namespace PracticalWork.Library.Contracts.v1.Books.AddDetails;
 
 /// <summary>
 /// Запрос на добавления деталей по книге

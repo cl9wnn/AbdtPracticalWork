@@ -1,4 +1,6 @@
-﻿namespace PracticalWork.Library.Models;
+﻿using PracticalWork.Library.Exceptions;
+
+namespace PracticalWork.Library.Models;
 
 /// <summary>
 /// Карточка читателя
@@ -29,12 +31,12 @@ public sealed class Reader
     {
         if (!IsValid())
         {
-            throw new InvalidOperationException("Карточка не действительна!");
+            throw new ReaderServiceException("Карточка не действительна!");
         }
 
         if (newExpiryDate < ExpiryDate)
         {
-            throw new InvalidOperationException("Новая дата окончания не может быть устаревшей!");
+            throw new ReaderServiceException("Новая дата окончания не может быть устаревшей!");
         }
         
         ExpiryDate = newExpiryDate;
@@ -45,7 +47,7 @@ public sealed class Reader
     {
         if (!IsValid())
         {
-            throw new InvalidOperationException("Карточка не действительна!");
+            throw new ReaderServiceException("Карточка не действительна!");
         }
         
         IsActive = false;

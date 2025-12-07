@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Library.Contracts.v1.Readers.Request;
+﻿namespace PracticalWork.Library.Contracts.v1.Readers.Extend;
 
 /// <summary>
 /// Запрос на продление срока карточки читателя

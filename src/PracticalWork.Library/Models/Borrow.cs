@@ -1,4 +1,5 @@
 ﻿using PracticalWork.Library.Enums;
+using PracticalWork.Library.Exceptions;
 
 namespace PracticalWork.Library.Models;
 
@@ -43,7 +44,7 @@ public sealed class Borrow
     {
         if (Status != BookIssueStatus.Issued)
         {
-            throw new InvalidOperationException("Книга не выдана на руки читателю!");
+            throw new LibraryServiceException("Книга не выдана на руки читателю!");
         }
         
         ReturnDate = DateOnly.FromDateTime(DateTime.UtcNow);

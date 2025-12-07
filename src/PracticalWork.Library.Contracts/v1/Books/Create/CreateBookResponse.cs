@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Library.Contracts.v1.Books.Response;
+﻿namespace PracticalWork.Library.Contracts.v1.Books.Create;
 
 /// <summary>
 /// Ответ на создание книги

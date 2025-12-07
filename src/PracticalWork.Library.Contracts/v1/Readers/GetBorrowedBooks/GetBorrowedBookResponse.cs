@@ -1,6 +1,6 @@
 ﻿using PracticalWork.Library.Contracts.v1.Abstracts;
 
-namespace PracticalWork.Library.Contracts.v1.Readers.Response;
+namespace PracticalWork.Library.Contracts.v1.Readers.GetBorrowedBooks;
 
 /// <summary>
 /// Ответ на запрос о получении взятой книги

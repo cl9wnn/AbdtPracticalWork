@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using PracticalWork.Library.Contracts.v1.Readers.Request;
+using PracticalWork.Library.Contracts.v1.Readers.Create;
 
 namespace PracticalWork.Library.Controllers.Validations.v1.Readers;
 
