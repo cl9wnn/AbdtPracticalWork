@@ -19,6 +19,9 @@ internal sealed class AbstractBookConfiguration : EntityConfigurationBase<Abstra
             .HasMaxLength(500)
             .IsRequired();
 
+        builder.Property(p => p.Description)
+            .HasMaxLength(2000);
+        
         builder.Property(p => p.Authors)
             .IsRequired();
 
