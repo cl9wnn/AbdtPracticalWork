@@ -3,11 +3,9 @@ using PracticalWork.Library.Abstractions.Services.Domain;
 using PracticalWork.Library.Abstractions.Services.Infrastructure;
 using PracticalWork.Library.Abstractions.Storage;
 using PracticalWork.Library.Dtos;
-using PracticalWork.Library.Enums;
 using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.Models;
 using PracticalWork.Library.Options;
-using PracticalWork.Library.SharedKernel.Helpers;
 
 namespace PracticalWork.Library.Services;
 
@@ -49,12 +47,11 @@ public class LibraryService : ILibraryService
     {
         var keyPrefix = _booksCacheOptions.Value.LibraryBooksCache.KeyPrefix;
         var ttlMinutes = _booksCacheOptions.Value.LibraryBooksCache.TtlMinutes;
+        var searchDto = new SearchBooksDto { BookFilter = filter, Pagination = pagination };
 
-        var cacheVersion = await _cacheService.GetVersionAsync(_booksCacheVersionPrefix);
-        var hashedKey =
-            CacheKeyHasher.GenerateCacheKey(keyPrefix, cacheVersion, new { filter, pagination });
-
-        var cachedBooks = await _cacheService.GetAsync<IReadOnlyList<LibraryBookDto>>(hashedKey);
+        var cachedBooks =
+            await _cacheService.GetByModelAsync<SearchBooksDto, IReadOnlyList<LibraryBookDto>>(keyPrefix,
+                _booksCacheVersionPrefix, searchDto);
 
         if (cachedBooks != null)
         {
@@ -67,8 +64,9 @@ public class LibraryService : ILibraryService
         }
 
         var books = await _bookRepository.GetLibraryBooks(filter, pagination);
-        await _cacheService.SetAsync(hashedKey, books, TimeSpan.FromMinutes(ttlMinutes));
-
+        await _cacheService.SetByModelAsync(keyPrefix, _booksCacheVersionPrefix, searchDto, books,
+            TimeSpan.FromMinutes(ttlMinutes));
+        
         return new PageDto<LibraryBookDto>
         {
             Page = pagination.Page,
@@ -121,11 +119,8 @@ public class LibraryService : ILibraryService
     {
         var keyPrefix = _booksCacheOptions.Value.BookDetailsCache.KeyPrefix;
         var ttlMinutes = _booksCacheOptions.Value.BookDetailsCache.TtlMinutes;
-
-        var cacheVersion = await _cacheService.GetVersionAsync(_booksCacheVersionPrefix);
-        var cacheKey = $"{keyPrefix}:v{cacheVersion}:{bookId}";
-
-        var cachedBook = await _cacheService.GetAsync<BookDetailsDto>(cacheKey);
+        
+        var cachedBook = await _cacheService.GetAsync<Guid,BookDetailsDto>(keyPrefix, _booksCacheVersionPrefix, bookId);
 
         if (cachedBook != null)
         {
@@ -148,7 +143,8 @@ public class LibraryService : ILibraryService
             IsArchived = book.IsArchived,
         };
 
-        await _cacheService.SetAsync(cacheKey, bookDetails, TimeSpan.FromMinutes(ttlMinutes));
+        await _cacheService.SetAsync(keyPrefix, _booksCacheVersionPrefix, bookId, bookDetails, 
+            TimeSpan.FromMinutes(ttlMinutes));
 
         return bookDetails;
     }

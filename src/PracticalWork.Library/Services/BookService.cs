@@ -7,7 +7,6 @@ using PracticalWork.Library.Enums;
 using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.Models;
 using PracticalWork.Library.Options;
-using PracticalWork.Library.SharedKernel.Helpers;
 
 namespace PracticalWork.Library.Services;
 
@@ -99,11 +98,11 @@ public sealed class BookService : IBookService
     {
         var keyPrefix = _cacheOptions.Value.BooksListCache.KeyPrefix;
         var ttlMinutes = _cacheOptions.Value.BooksListCache.TtlMinutes;
+        var searchDto = new SearchBooksDto { BookFilter = filter, Pagination = pagination };
 
-        var cacheVersion = await _cacheService.GetVersionAsync(_booksCacheVersionPrefix);
-        var hashedKey = CacheKeyHasher.GenerateCacheKey(keyPrefix, cacheVersion, new { filter, pagination });
-
-        var cachedBooks = await _cacheService.GetAsync<IReadOnlyList<BookListDto>>(hashedKey);
+        var cachedBooks =
+            await _cacheService.GetByModelAsync<SearchBooksDto, IReadOnlyList<BookListDto>>(keyPrefix,
+                _booksCacheVersionPrefix, searchDto);
 
         if (cachedBooks != null)
         {
@@ -116,7 +115,8 @@ public sealed class BookService : IBookService
         }
 
         var books = await _bookRepository.GetBooks(filter, pagination);
-        await _cacheService.SetAsync(hashedKey, books, TimeSpan.FromMinutes(ttlMinutes));
+        await _cacheService.SetByModelAsync(keyPrefix, _booksCacheVersionPrefix, searchDto, books,
+            TimeSpan.FromMinutes(ttlMinutes));
 
         return new PageDto<BookListDto>
         {

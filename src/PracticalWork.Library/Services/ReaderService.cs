@@ -90,10 +90,9 @@ public class ReaderService : IReaderService
         var keyPrefix = _options.Value.ReadersBooksCache.KeyPrefix;
         var ttlMinutes = _options.Value.ReadersBooksCache.TtlMinutes;
 
-        var cacheVersion = await _cacheService.GetVersionAsync(_readersBooksVersionPrefix);
-        var cacheKey = $"{keyPrefix}:v{cacheVersion}:{readerId}";
-
-        var cachedBorrowedBooks = await _cacheService.GetAsync<IReadOnlyList<BorrowedBookDto>>(cacheKey);
+        var cachedBorrowedBooks = 
+            await _cacheService.GetAsync<Guid, IReadOnlyList<BorrowedBookDto>>(keyPrefix, _readersBooksVersionPrefix,
+            readerId);
 
         if (cachedBorrowedBooks != null)
         {
@@ -101,7 +100,8 @@ public class ReaderService : IReaderService
         }
 
         var borrowedBooks = await _readerRepository.GetBorrowedBooks(readerId);
-        await _cacheService.SetAsync(cacheKey, borrowedBooks, TimeSpan.FromMinutes(ttlMinutes));
+        await _cacheService.SetAsync(keyPrefix, _readersBooksVersionPrefix, readerId, borrowedBooks,
+            TimeSpan.FromMinutes(ttlMinutes));
 
         return borrowedBooks;
     }
