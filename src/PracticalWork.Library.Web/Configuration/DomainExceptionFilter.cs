@@ -33,19 +33,35 @@ public class DomainExceptionFilter<TAppException> : IAsyncActionFilter where TAp
 
     protected virtual void TryHandleException(ActionExecutedContext context, Exception exception)
     {
-        if (exception is not TAppException)
-            return;
-
-        var statusCode = GetStatusCode(exception);
-        var problemDetails = BuildProblemDetails(exception, statusCode);
-
-        context.Result = new ObjectResult(problemDetails)
+        if (exception is TAppException)
         {
-            StatusCode = statusCode
+            var statusCode = GetStatusCode(exception);
+            var problemDetails = BuildProblemDetails(exception, statusCode);
+
+            context.Result = new ObjectResult(problemDetails)
+            {
+                StatusCode = statusCode
+            };
+            context.ExceptionHandled = true;
+
+            LogException(exception, statusCode);
+            return;
+        }
+
+        var internalError = new ProblemDetails
+        {
+            Title = "Internal server error!",
+            Status = StatusCodes.Status500InternalServerError
         };
+
+        context.Result = new ObjectResult(internalError)
+        {
+            StatusCode = StatusCodes.Status500InternalServerError
+        };
+
         context.ExceptionHandled = true;
 
-        LogException(exception, statusCode);
+        Logger.LogError(exception, "Unexpected exception transformed to HTTP 500");
     }
 
     protected virtual int GetStatusCode(Exception exception)
