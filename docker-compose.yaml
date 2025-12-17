@@ -2,7 +2,7 @@ services:
   library-service:
     container_name: library-service
     build:
-      context: .
+      context: ./PracticalWork.Library
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
