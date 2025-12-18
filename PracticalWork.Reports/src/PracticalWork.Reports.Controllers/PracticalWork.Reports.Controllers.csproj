@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>PracticalWork.Reports.Controllers</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Mvc" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" />
+    <PackageReference Include="FluentValidation.AspNetCore" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PracticalWork.Reports.Contracts\PracticalWork.Reports.Contracts.csproj" />
+    <ProjectReference Include="..\PracticalWork.Reports\PracticalWork.Reports.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Api\v1\" />
+    <Folder Include="Mappers\v1\" />
+    <Folder Include="Validations\v1\" />
+  </ItemGroup>
+</Project>

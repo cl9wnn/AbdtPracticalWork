@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PracticalWork.Reports.SharedKernel\PracticalWork.Reports.SharedKernel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Abstractions\Services\Domain\" />
+    <Folder Include="Abstractions\Storage\" />
+    <Folder Include="Dtos\" />
+    <Folder Include="Enums\" />
+    <Folder Include="Models\" />
+    <Folder Include="Options\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+</Project>

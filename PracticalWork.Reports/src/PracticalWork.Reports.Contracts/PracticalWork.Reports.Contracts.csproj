@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="v1\" />
+  </ItemGroup>
+
+</Project>
