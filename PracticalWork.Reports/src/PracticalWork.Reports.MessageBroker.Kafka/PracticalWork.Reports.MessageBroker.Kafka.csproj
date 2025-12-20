@@ -14,4 +14,8 @@
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\PracticalWork.Reports.SharedKernel\PracticalWork.Reports.SharedKernel.csproj" />
+    </ItemGroup>
+
 </Project>

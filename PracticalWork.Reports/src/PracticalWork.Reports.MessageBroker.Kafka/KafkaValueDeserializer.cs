@@ -3,10 +3,10 @@ using Confluent.Kafka;
 
 namespace PracticalWork.Reports.MessageBroker.Kafka;
 
-public class KafkaValueDeserializer<TMessage>: IDeserializer<TMessage>
+public class KafkaValueDeserializer<TEvent>: IDeserializer<TEvent>
 {
-    public TMessage Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)
+    public TEvent Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)
     {
-        return JsonSerializer.Deserialize<TMessage>(data)!;
+        return JsonSerializer.Deserialize<TEvent>(data)!;
     }
 }
