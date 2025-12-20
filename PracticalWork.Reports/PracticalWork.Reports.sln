@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticalWork.Reports.Cache
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticalWork.Reports.SharedKernel", "src\PracticalWork.Reports.SharedKernel\PracticalWork.Reports.SharedKernel.csproj", "{DD16BE4D-1264-4DF0-9E14-21D11C438840}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticalWork.Reports.MessageBroker.Kafka", "src\PracticalWork.Reports.MessageBroker.Kafka\PracticalWork.Reports.MessageBroker.Kafka.csproj", "{F13E0A8C-CDED-4D2F-B70D-4034CA94B03F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{DD16BE4D-1264-4DF0-9E14-21D11C438840}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD16BE4D-1264-4DF0-9E14-21D11C438840}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD16BE4D-1264-4DF0-9E14-21D11C438840}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F13E0A8C-CDED-4D2F-B70D-4034CA94B03F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F13E0A8C-CDED-4D2F-B70D-4034CA94B03F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F13E0A8C-CDED-4D2F-B70D-4034CA94B03F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F13E0A8C-CDED-4D2F-B70D-4034CA94B03F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +96,7 @@ Global
 		{049D739E-6948-41B4-9CD9-5EEDBC0AE7DB} = {5EF1ADE2-5A1C-434E-83B7-32EFF5DF0A11}
 		{C340B6F8-F230-A5B4-337D-6191E887F844} = {5EF1ADE2-5A1C-434E-83B7-32EFF5DF0A11}
 		{DD16BE4D-1264-4DF0-9E14-21D11C438840} = {7E366027-D18D-45C9-928C-D527C6271DC9}
+		{F13E0A8C-CDED-4D2F-B70D-4034CA94B03F} = {5EF1ADE2-5A1C-434E-83B7-32EFF5DF0A11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C42A2C9B-25DC-4CF3-8FF1-E3CE64B080D6}

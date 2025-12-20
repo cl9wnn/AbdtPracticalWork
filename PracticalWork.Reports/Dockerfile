@@ -14,6 +14,7 @@ COPY src/PracticalWork.Reports.Contracts/PracticalWork.Reports.Contracts.csproj 
 COPY src/PracticalWork.Reports.SharedKernel/PracticalWork.Reports.SharedKernel.csproj src/PracticalWork.Reports.SharedKernel/
 COPY src/PracticalWork.Reports.Cache.Redis/PracticalWork.Reports.Cache.Redis.csproj src/PracticalWork.Reports.Cache.Redis/
 COPY src/PracticalWork.Reports.Data.PostgreSql/PracticalWork.Reports.Data.PostgreSql.csproj src/PracticalWork.Reports.Data.PostgreSql/
+COPY src/PracticalWork.Reports.MessageBroker.Kafka/PracticalWork.Reports.MessageBroker.Kafka.csproj src/PracticalWork.Reports.MessageBroker.Kafka/
 COPY src/PracticalWork.Reports.Data.Minio/PracticalWork.Reports.Data.Minio.csproj src/PracticalWork.Reports.Data.Minio/
 COPY utils/PracticalWork.Reports.Data.PostgreSql.Migrator/PracticalWork.Reports.Data.PostgreSql.Migrator.csproj utils/PracticalWork.Reports.Data.PostgreSql.Migrator/
 

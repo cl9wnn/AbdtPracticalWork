@@ -107,7 +107,6 @@ public class RedisCacheService : ICacheService
     {
         var cacheVersion = await GetVersionAsync(cacheVersionPrefix, cancellationToken);
         var hashedKey = BuildKeyFromModel(keyPrefix, cacheVersion, model);
-
         
         var cachedData = await _cache.GetStringAsync(hashedKey, token: cancellationToken);
 
