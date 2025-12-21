@@ -18,8 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Configurations\" />
-    <Folder Include="Entities\" />
     <Folder Include="Mappers\v1\" />
     <Folder Include="Migrations\" />
     <Folder Include="Repositories\" />

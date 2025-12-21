@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PracticalWork.Reports.Data.PostgreSql.Entities;
 using PracticalWork.Reports.SharedKernel.Abstractions;
 
 namespace PracticalWork.Reports.Data.PostgreSql;
@@ -48,4 +49,7 @@ public sealed class AppDbContext : DbContext
     }
 
     #endregion
+    
+    internal DbSet<ReportEntity> Reports { get; set; }
+    internal DbSet<ActivityLogEntity> ActivityLogs { get; set; }
 }
