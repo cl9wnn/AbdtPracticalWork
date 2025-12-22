@@ -1,6 +1,8 @@
-﻿namespace PracticalWork.Reports.SharedKernel.Abstractions;
+﻿using PracticalWork.Reports.SharedKernel.Events;
 
-public interface IEventHandler<in TEvent>
+namespace PracticalWork.Reports.SharedKernel.Abstractions;
+
+public interface IEventHandler<in TEvent> where TEvent: BaseEvent
 {
     Task HandleAsync(TEvent message, CancellationToken cancellationToken);
 }

@@ -7,6 +7,8 @@ using PracticalWork.Reports.Data.Minio;
 using PracticalWork.Reports.Data.PostgreSql;
 using PracticalWork.Reports.Web.Configuration;
 using System.Text.Json.Serialization;
+using PracticalWork.Reports.MessageBroker.Kafka;
+using PracticalWork.Reports.SharedKernel.Events;
 using PracticalWork.Reports.SharedKernel.Exceptions;
 
 namespace PracticalWork.Reports.Web;
@@ -56,6 +58,7 @@ public class Startup
         services.AddDomain(Configuration);
         services.AddCache(Configuration);
         services.AddMinioFileStorage(Configuration);
+        services.AddKafkaConsumers(Configuration);
     }
 
     [UsedImplicitly]

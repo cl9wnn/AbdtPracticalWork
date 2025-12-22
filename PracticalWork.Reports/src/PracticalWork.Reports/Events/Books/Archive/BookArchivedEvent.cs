@@ -1,6 +1,6 @@
 ﻿using PracticalWork.Reports.Events.Abstractions;
 
-namespace PracticalWork.Reports.Events.Books;
+namespace PracticalWork.Reports.Events.Books.Archive;
 
 /// <summary>
 /// Событие архивации книги в библиотеке

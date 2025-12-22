@@ -16,6 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\PracticalWork.Reports.SharedKernel\PracticalWork.Reports.SharedKernel.csproj" />
+      <ProjectReference Include="..\PracticalWork.Reports\PracticalWork.Reports.csproj" />
     </ItemGroup>
 
 </Project>
