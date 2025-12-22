@@ -15,10 +15,4 @@
     <ProjectReference Include="..\PracticalWork.Reports.Contracts\PracticalWork.Reports.Contracts.csproj" />
     <ProjectReference Include="..\PracticalWork.Reports\PracticalWork.Reports.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Api\v1\" />
-    <Folder Include="Mappers\v1\" />
-    <Folder Include="Validations\v1\" />
-  </ItemGroup>
 </Project>

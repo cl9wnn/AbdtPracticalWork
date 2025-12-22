@@ -14,9 +14,6 @@
     <ProjectReference Include="..\PracticalWork.Reports.SharedKernel\PracticalWork.Reports.SharedKernel.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Abstractions\Services\Domain\" />
     <Folder Include="Abstractions\Storage\" />
-    <Folder Include="Dtos\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 </Project>

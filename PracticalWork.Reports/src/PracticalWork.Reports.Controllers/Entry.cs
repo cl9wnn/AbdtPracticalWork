@@ -3,6 +3,7 @@ using Asp.Versioning;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
+using PracticalWork.Reports.Controllers.Validations.v1;
 
 namespace PracticalWork.Reports.Controllers;
 
@@ -15,14 +16,14 @@ public static class Entry
     {
         builder.Services.AddValidation();
         builder.Services.AddApiVersioning();
-       // builder.AddApplicationPart(typeof(Api.v1.BooksController).Assembly);
+        builder.AddApplicationPart(typeof(Api.v1.ReportsController).Assembly);
 
         return builder;
     }
 
     private static void AddValidation(this IServiceCollection services)
     {
-     //   services.AddValidatorsFromAssemblyContaining<CreateBookRequestValidator>();
+        services.AddValidatorsFromAssemblyContaining<GenerateReportValidator>();
         services.AddFluentValidationAutoValidation();
 
         ValidatorOptions.Global.DisplayNameResolver = (_, member, _) => member?.Name;

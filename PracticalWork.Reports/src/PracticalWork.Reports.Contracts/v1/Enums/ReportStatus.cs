@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Reports.Enums;
+﻿namespace PracticalWork.Reports.Contracts.v1.Enums;
 
 /// <summary>
 /// Статус отчета

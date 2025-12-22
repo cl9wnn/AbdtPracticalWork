@@ -31,6 +31,7 @@
     <ProjectReference Include="..\PracticalWork.Reports.Controllers\PracticalWork.Reports.Controllers.csproj" />
     <ProjectReference Include="..\PracticalWork.Reports.Data.Minio\PracticalWork.Reports.Data.Minio.csproj" />
     <ProjectReference Include="..\PracticalWork.Reports.Data.PostgreSql\PracticalWork.Reports.Data.PostgreSql.csproj" />
+    <ProjectReference Include="..\PracticalWork.Reports.MessageBroker.Kafka\PracticalWork.Reports.MessageBroker.Kafka.csproj" />
     <ProjectReference Include="..\PracticalWork.Reports.SharedKernel\PracticalWork.Reports.SharedKernel.csproj" />
     <ProjectReference Include="..\PracticalWork.Reports\PracticalWork.Reports.csproj" />
   </ItemGroup>
