@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PracticalWork.Library.Abstractions.Storage;
 using PracticalWork.Library.Data.PostgreSql.Entities;
+using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Enums;
 using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.Models;
@@ -75,5 +76,25 @@ public class BookBorrowRepository: IBookBorrowRepository
         bookBorrowEntity.UpdatedAt = DateTime.UtcNow;
         
         await _dbContext.SaveChangesAsync();
+    }
+
+    /// <inheritdoc cref="IBookBorrowRepository.GetReaderInfoByBorrowedBookId"/>
+    public async Task<ReaderInfoDto> GetReaderInfoByBorrowedBookId(Guid bookId)
+    {
+        var bookBorrowEntity = await _dbContext.BookBorrows
+            .Include(bookBorrowEntity => bookBorrowEntity.Reader)
+            .FirstOrDefaultAsync(b => b.BookId == bookId && b.Status == BookIssueStatus.Issued);
+
+        if (bookBorrowEntity == null)
+        {
+            throw new EntityNotFoundException("Отсутствует активная запись о выдаче книги!");
+        }
+
+        return new ReaderInfoDto
+        {
+            Id = bookBorrowEntity.ReaderId,
+            FullName = bookBorrowEntity.Reader.FullName,
+            PhoneNumber = bookBorrowEntity.Reader.PhoneNumber,
+        };
     }
 }

@@ -3,6 +3,7 @@ using PracticalWork.Library.Abstractions.Services.Domain;
 using PracticalWork.Library.Abstractions.Services.Infrastructure;
 using PracticalWork.Library.Abstractions.Storage;
 using PracticalWork.Library.Dtos;
+using PracticalWork.Library.Events.Readers;
 using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.Models;
 using PracticalWork.Library.Options;
@@ -17,14 +18,16 @@ public class ReaderService : IReaderService
     private readonly IReaderRepository _readerRepository;
     private readonly ICacheService _cacheService;
     private readonly IOptions<ReadersCacheOptions> _options;
+    private readonly IMessageBrokerProducer _kafkaProducer;
     private readonly string _readersBooksVersionPrefix;
 
     public ReaderService(IReaderRepository readerRepository, ICacheService cacheService,
-        IOptions<ReadersCacheOptions> options)
+        IOptions<ReadersCacheOptions> options, IMessageBrokerProducer kafkaProducer)
     {
         _readerRepository = readerRepository;
         _cacheService = cacheService;
         _options = options;
+        _kafkaProducer = kafkaProducer;
         _readersBooksVersionPrefix = options.Value.ReadersCacheVersionPrefix;
     }
 
@@ -56,8 +59,20 @@ public class ReaderService : IReaderService
         {
             throw new ReaderServiceException("Карточка по такому номеру телефона уже существует!");
         }
+        
+        var readerId = await _readerRepository.Add(reader);
 
-        return await _readerRepository.Add(reader);
+        var readerCreatedEvent = new ReaderCreatedEvent(
+            ReaderId: readerId,
+            FullName: reader.FullName,
+            PhoneNumber: reader.PhoneNumber,
+            ExpiryDate: reader.ExpiryDate,
+            CreatedAt: DateTime.UtcNow
+        );
+        
+        await _kafkaProducer.ProduceAsync(readerCreatedEvent.EventId.ToString(), readerCreatedEvent);
+        
+        return readerId;
     }
 
     /// <inheritdoc cref="IReaderService.ExtendReader"/>
@@ -82,6 +97,14 @@ public class ReaderService : IReaderService
         reader.Close();
 
         await _readerRepository.Update(readerId, reader);
+        
+        var readerClosedEvent = new ReaderClosedEvent(
+            ReaderId: readerId,
+            FullName: reader.FullName,
+            ClosedAt: DateTime.UtcNow
+        );
+        
+        await _kafkaProducer.ProduceAsync(readerClosedEvent.EventId.ToString(), readerClosedEvent);
     }
 
     /// <inheritdoc cref="IReaderService.GetBorrowedBooks"/>

@@ -4,6 +4,7 @@ using PracticalWork.Library.Abstractions.Services.Infrastructure;
 using PracticalWork.Library.Abstractions.Storage;
 using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Enums;
+using PracticalWork.Library.Events.Books;
 using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.Models;
 using PracticalWork.Library.Options;
@@ -18,16 +19,19 @@ public sealed class BookService : IBookService
     private readonly IBookRepository _bookRepository;
     private readonly ICacheService _cacheService;
     private readonly IFileStorageService _fileStorageService;
+    private readonly IMessageBrokerProducer _kafkaProducer;
     private readonly IOptions<BooksCacheOptions> _cacheOptions;
     private readonly string _booksCacheVersionPrefix;
 
     public BookService(IBookRepository bookRepository, ICacheService cacheService,
-        IFileStorageService fileStorageService, IOptions<BooksCacheOptions> options)
+        IFileStorageService fileStorageService, IOptions<BooksCacheOptions> options,
+        IMessageBrokerProducer messageBrokerProducer)
     {
         _bookRepository = bookRepository;
         _cacheService = cacheService;
         _fileStorageService = fileStorageService;
         _cacheOptions = options;
+        _kafkaProducer = messageBrokerProducer;
 
         _booksCacheVersionPrefix = options.Value.BooksCacheVersionPrefix;
     }
@@ -57,6 +61,17 @@ public sealed class BookService : IBookService
         var bookId = await _bookRepository.Add(book);
         await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
 
+        var bookCreatedEvent = new BookCreatedEvent(
+            BookId: bookId,
+            Title: book.Title,
+            Category: book.Category.ToString(),
+            Authors: book.Authors.ToArray(),
+            Year: book.Year,
+            CreatedAt: DateTime.UtcNow
+        );
+
+        await _kafkaProducer.ProduceAsync(bookCreatedEvent.EventId.ToString(), bookCreatedEvent);
+
         return bookId;
     }
 
@@ -85,6 +100,14 @@ public sealed class BookService : IBookService
         await _bookRepository.Update(id, book);
         await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
 
+        var bookArchivedEvent = new BookArchivedEvent(
+             BookId: id,
+             Title: book.Title,
+             ArchivedAt: DateTime.UtcNow
+        );
+
+        await _kafkaProducer.ProduceAsync(bookArchivedEvent.EventId.ToString(), bookArchivedEvent);
+        
         return new ArchivedBookDto
         {
             Id = id,

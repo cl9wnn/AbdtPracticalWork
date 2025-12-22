@@ -1,4 +1,5 @@
-﻿using PracticalWork.Library.Models;
+﻿using PracticalWork.Library.Dtos;
+using PracticalWork.Library.Models;
 using PracticalWork.Library.SharedKernel.Abstractions;
 
 namespace PracticalWork.Library.Abstractions.Storage;
@@ -30,4 +31,12 @@ public interface IBookBorrowRepository
     /// <param name="bookId">Идентификатор взятой книги</param>
     /// <param name="bookBorrow">Запись о выдаче книги</param>
     Task Update(Guid bookId, Borrow bookBorrow);
+
+    /// <summary>
+    /// Получение информации о читателе, взявшем книгу
+    /// </summary>
+    /// <param name="borrowedBookId"></param>
+    /// <returns>Краткая информация о читателе</returns>
+    Task<ReaderInfoDto> GetReaderInfoByBorrowedBookId(Guid borrowedBookId);
+
 }

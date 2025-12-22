@@ -3,6 +3,7 @@ using PracticalWork.Library.Abstractions.Services.Domain;
 using PracticalWork.Library.Abstractions.Services.Infrastructure;
 using PracticalWork.Library.Abstractions.Storage;
 using PracticalWork.Library.Dtos;
+using PracticalWork.Library.Events.Books;
 using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.Models;
 using PracticalWork.Library.Options;
@@ -20,6 +21,7 @@ public class LibraryService : ILibraryService
     private readonly IOptions<BooksCacheOptions> _booksCacheOptions;
     private readonly ICacheService _cacheService;
     private readonly IFileStorageService _fileStorageService;
+    private readonly IMessageBrokerProducer _kafkaProducer;
     private readonly string _booksCacheVersionPrefix;
     private readonly string _readersCacheVersionPrefix;
 
@@ -29,7 +31,8 @@ public class LibraryService : ILibraryService
         IOptions<BooksCacheOptions> booksCacheOptions,
         IOptions<ReadersCacheOptions> readersCacheOptions,
         ICacheService cacheService,
-        IFileStorageService fileStorageService)
+        IFileStorageService fileStorageService, 
+        IMessageBrokerProducer kafkaProducer)
     {
         _bookRepository = bookRepository;
         _readerRepository = readerRepository;
@@ -37,6 +40,7 @@ public class LibraryService : ILibraryService
         _booksCacheOptions = booksCacheOptions;
         _cacheService = cacheService;
         _fileStorageService = fileStorageService;
+        _kafkaProducer = kafkaProducer;
 
         _readersCacheVersionPrefix = readersCacheOptions.Value.ReadersCacheVersionPrefix;
         _booksCacheVersionPrefix = _booksCacheOptions.Value.BooksCacheVersionPrefix;
@@ -66,7 +70,7 @@ public class LibraryService : ILibraryService
         var books = await _bookRepository.GetLibraryBooks(filter, pagination);
         await _cacheService.SetByModelAsync(keyPrefix, _booksCacheVersionPrefix, searchDto, books,
             TimeSpan.FromMinutes(ttlMinutes));
-        
+
         return new PageDto<LibraryBookDto>
         {
             Page = pagination.Page,
@@ -95,6 +99,17 @@ public class LibraryService : ILibraryService
         await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
         await _cacheService.IncrementVersionAsync(_readersCacheVersionPrefix);
 
+        var bookBorrowedEvent = new BookBorrowedEvent(
+            BookId: bookId,
+            ReaderId: readerId,
+            BookTitle: book.Title,
+            ReaderName: reader.FullName,
+            BorrowDate: borrow.BorrowDate,
+            DueDate: borrow.DueDate
+        );
+
+        await _kafkaProducer.ProduceAsync(bookBorrowedEvent.EventId.ToString(), bookBorrowedEvent);
+
         return borrowBookId;
     }
 
@@ -102,6 +117,7 @@ public class LibraryService : ILibraryService
     public async Task ReturnBook(Guid bookId)
     {
         var borrow = await _bookBorrowRepository.GetActiveBorrowByBookId(bookId);
+        var reader = await _bookBorrowRepository.GetReaderInfoByBorrowedBookId(bookId);
         var book = await _bookRepository.GetById(bookId);
 
         borrow.ReturnBook();
@@ -112,6 +128,16 @@ public class LibraryService : ILibraryService
 
         await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
         await _cacheService.IncrementVersionAsync(_readersCacheVersionPrefix);
+
+        var bookReturnedEvent = new BookReturnedEvent(
+             BookId: bookId,
+             ReaderId :reader.Id,
+             BookTitle: book.Title,
+             ReaderName: reader.FullName,
+             ReturnDate: borrow.ReturnDate
+        );
+        
+        await _kafkaProducer.ProduceAsync(bookReturnedEvent.EventId.ToString(), bookReturnedEvent);
     }
 
     /// <inheritdoc cref="ILibraryService.GetBookDetailsById"/>
@@ -119,8 +145,9 @@ public class LibraryService : ILibraryService
     {
         var keyPrefix = _booksCacheOptions.Value.BookDetailsCache.KeyPrefix;
         var ttlMinutes = _booksCacheOptions.Value.BookDetailsCache.TtlMinutes;
-        
-        var cachedBook = await _cacheService.GetAsync<Guid,BookDetailsDto>(keyPrefix, _booksCacheVersionPrefix, bookId);
+
+        var cachedBook =
+            await _cacheService.GetAsync<Guid, BookDetailsDto>(keyPrefix, _booksCacheVersionPrefix, bookId);
 
         if (cachedBook != null)
         {
@@ -143,7 +170,7 @@ public class LibraryService : ILibraryService
             IsArchived = book.IsArchived,
         };
 
-        await _cacheService.SetAsync(keyPrefix, _booksCacheVersionPrefix, bookId, bookDetails, 
+        await _cacheService.SetAsync(keyPrefix, _booksCacheVersionPrefix, bookId, bookDetails,
             TimeSpan.FromMinutes(ttlMinutes));
 
         return bookDetails;
