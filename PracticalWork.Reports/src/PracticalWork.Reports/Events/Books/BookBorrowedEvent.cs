@@ -16,6 +16,6 @@ public sealed record BookBorrowedEvent(
     Guid ReaderId,
     string BookTitle,
     string ReaderName,
-    DateTime BorrowDate,
-    DateTime DueDate
+    DateOnly BorrowDate,
+    DateOnly DueDate
     ) : BaseLibraryEvent("book.borrowed");

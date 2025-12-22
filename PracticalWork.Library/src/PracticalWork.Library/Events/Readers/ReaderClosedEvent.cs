@@ -1,6 +1,6 @@
-﻿using PracticalWork.Reports.Events.Abstractions;
+﻿using PracticalWork.Library.Events.Abstractions;
 
-namespace PracticalWork.Reports.Events.Readers;
+namespace PracticalWork.Library.Events.Readers;
 
 /// <summary>
 /// Событие закрытия карточки читателя

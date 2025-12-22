@@ -1,19 +1,21 @@
-﻿using PracticalWork.Reports.Events.Abstractions;
+﻿using PracticalWork.Library.Events.Abstractions;
 
-namespace PracticalWork.Reports.Events.Books;
+namespace PracticalWork.Library.Events.Books;
 
 /// <summary>
-/// Событие возврата книги в библиотеку
+/// Событие выдачи книги читателю
 /// </summary>
 /// <param name="BookId">Уникальный идентификатор книги</param>
 /// <param name="ReaderId">Уникальный идентификатор читателя</param>
 /// <param name="BookTitle">Название книги</param>
 /// <param name="ReaderName">ФИО читателя</param>
-/// <param name="ReturnDate">Дата возврата книги</param>
-public sealed record BookReturnedEvent(
+/// <param name="BorrowDate">Дата выдачи книги</param>
+/// <param name="DueDate">Срок возврата книги</param>
+public sealed record BookBorrowedEvent(
     Guid BookId,
     Guid ReaderId,
     string BookTitle,
     string ReaderName,
-    DateOnly? ReturnDate
-    ) : BaseLibraryEvent("book.returned");
+    DateOnly BorrowDate,
+    DateOnly DueDate
+    ) : BaseLibraryEvent("book.borrowed");
