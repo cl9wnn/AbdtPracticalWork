@@ -1,6 +1,9 @@
-﻿namespace PracticalWork.Library.Abstractions.Services.Infrastructure;
+﻿using PracticalWork.Library.SharedKernel.Events;
 
-public interface IMessageBrokerProducer<in TMessage>: IDisposable
+namespace PracticalWork.Library.Abstractions.Services.Infrastructure;
+
+public interface IMessageBrokerProducer : IDisposable
 {
-    Task ProduceAsync(TMessage message, string key = null, CancellationToken cancellationToken = default);
+    Task ProduceAsync<TEvent>(string key, TEvent message, CancellationToken cancellationToken = default)
+        where TEvent : BaseEvent;
 }
