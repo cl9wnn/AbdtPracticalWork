@@ -1,4 +1,7 @@
-﻿using PracticalWork.Reports.Events.Abstractions;
+﻿using System.Text.Json;
+using PracticalWork.Reports.Enums;
+using PracticalWork.Reports.Events.Abstractions;
+using PracticalWork.Reports.Models;
 
 namespace PracticalWork.Reports.Events.Books;
 
@@ -18,4 +21,20 @@ public sealed record BookBorrowedEvent(
     string ReaderName,
     DateOnly BorrowDate,
     DateOnly DueDate
-    ) : BaseLibraryEvent("book.borrowed");
+    ) : BaseLibraryEvent("book.borrowed"), IActivityLoggable
+{
+    public ActivityLog ToActivityLog()
+    {
+        var metadata = JsonDocument.Parse(JsonSerializer.Serialize(new
+        {
+            BookId,
+            ReaderId,
+            BookTitle,
+            ReaderName,
+            BorrowDate,
+            DueDate
+        }));
+
+        return ActivityLog.Create(ActivityEventType.BookBorrowed, metadata);
+    }
+}

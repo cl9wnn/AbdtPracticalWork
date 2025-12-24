@@ -1,6 +1,9 @@
-﻿using PracticalWork.Reports.Events.Abstractions;
+﻿using System.Text.Json;
+using PracticalWork.Reports.Enums;
+using PracticalWork.Reports.Events.Abstractions;
+using PracticalWork.Reports.Models;
 
-namespace PracticalWork.Reports.Events.Readers;
+namespace PracticalWork.Reports.Events.Readers.Create;
 
 /// <summary>
 /// Событие создания новой карточки читателя
@@ -16,4 +19,19 @@ public sealed record ReaderCreatedEvent(
     string PhoneNumber,
     DateOnly ExpiryDate,
     DateTime CreatedAt
-    ) : BaseLibraryEvent("reader.created");
+    ) : BaseLibraryEvent("reader.created"), IActivityLoggable
+{
+    public ActivityLog ToActivityLog()
+    {
+        var metadata = JsonDocument.Parse(JsonSerializer.Serialize(new
+        {
+            ReaderId,
+            FullName,
+            PhoneNumber,
+            ExpiryDate,
+            CreatedAt
+        }));
+
+        return ActivityLog.Create(ActivityEventType.BookCreated, metadata);
+    }
+}

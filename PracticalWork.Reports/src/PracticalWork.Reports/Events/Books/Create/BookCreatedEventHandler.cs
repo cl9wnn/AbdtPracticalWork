@@ -1,21 +1,20 @@
 ﻿using Microsoft.Extensions.Logging;
+using PracticalWork.Reports.Abstractions.Storage;
 using PracticalWork.Reports.SharedKernel.Abstractions;
 
 namespace PracticalWork.Reports.Events.Books.Create;
 
 public class BookCreatedEventHandler : IEventHandler<BookCreatedEvent>
 {
-    private readonly ILogger<BookCreatedEventHandler> _logger;
+    private readonly IActivityLogRepository _activityLogRepository;
 
-    public BookCreatedEventHandler(ILogger<BookCreatedEventHandler> logger)
+    public BookCreatedEventHandler(IActivityLogRepository activityLogRepository)
     {
-        _logger = logger;
+        _activityLogRepository = activityLogRepository;
     }
 
-    public Task HandleAsync(BookCreatedEvent message, CancellationToken cancellationToken)
+    public async Task HandleAsync(BookCreatedEvent message, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BookCreatedEvent: {title}, {type}, {year}", message.Title, message.EventType,
-            message.Year);
-        return Task.CompletedTask;
+        await _activityLogRepository.Add(message.ToActivityLog(), bookId: message.BookId);
     }
 }

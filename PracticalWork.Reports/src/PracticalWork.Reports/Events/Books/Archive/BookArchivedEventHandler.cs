@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using PracticalWork.Reports.Abstractions.Storage;
 using PracticalWork.Reports.Events.Books.Create;
 using PracticalWork.Reports.SharedKernel.Abstractions;
 
@@ -6,18 +7,15 @@ namespace PracticalWork.Reports.Events.Books.Archive;
 
 public class BookArchivedEventHandler : IEventHandler<BookArchivedEvent>
 {
-    private readonly ILogger<BookArchivedEventHandler> _logger;
+    private readonly IActivityLogRepository _activityLogRepository;
 
-    public BookArchivedEventHandler(ILogger<BookArchivedEventHandler> logger)
+    public BookArchivedEventHandler(IActivityLogRepository activityLogRepository)
     {
-        _logger = logger;
+        _activityLogRepository = activityLogRepository;
     }
 
-    public Task HandleAsync(BookArchivedEvent message, CancellationToken cancellationToken)
+    public async Task HandleAsync(BookArchivedEvent message, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BookArchivedEvent: {title}, {type}, {id}", message.Title, message.EventType,
-            message.ArchivedAt);
-        
-        return Task.CompletedTask;
+        await _activityLogRepository.Add(message.ToActivityLog(), bookId: message.BookId);
     }
 }
