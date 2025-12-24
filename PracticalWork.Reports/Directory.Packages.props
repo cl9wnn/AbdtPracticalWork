@@ -9,6 +9,7 @@
   <ItemGroup>
     <!-- Packages -->
     <PackageVersion Include="Confluent.Kafka" Version="2.12.0" />
+    <PackageVersion Include="CsvHelper" Version="33.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Http.Features" Version="6.0.0-preview.4.21253.5" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="9.0.8" />
     <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.8" />

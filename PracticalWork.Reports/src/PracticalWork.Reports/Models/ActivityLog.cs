@@ -22,4 +22,14 @@ public sealed class ActivityLog
     /// Дополнительная информация
     /// </summary>
     public JsonDocument Metadata { get; set; }
+
+    public static ActivityLog Create(ActivityEventType eventType ,JsonDocument metadata)
+    {
+        return new ActivityLog
+        {
+            EventType = eventType, 
+            EventDate = DateTime.UtcNow, 
+            Metadata = metadata
+        };
+    }
 }

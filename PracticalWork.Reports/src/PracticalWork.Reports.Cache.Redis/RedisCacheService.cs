@@ -32,8 +32,31 @@ public class RedisCacheService : ICacheService
         _prefix = configuration["App:Redis:RedisCachePrefix"] ?? "";
     }
 
-    /// <inheritdoc cref="ICacheService.SetAsync{TKey, TValue}"/>
-    public async Task SetAsync<TKey, TValue>(string keyPrefix, string cacheVersionPrefix, TKey id, TValue value,
+    /// <inheritdoc cref="ICacheService.SetAsync{TValue}"/>
+    public async Task SetAsync<TValue>(string keyPrefix, string cacheVersionPrefix, TValue value, TimeSpan? ttl = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
+        var cacheVersion = await GetVersionAsync(cacheVersionPrefix, cancellationToken);
+        var key = $"{keyPrefix}:{cacheVersion}";
+
+        var serializedData = JsonSerializer.Serialize(value, _jsonSerializerOptions);
+        var options = new DistributedCacheEntryOptions();
+
+        if (ttl.HasValue)
+        {
+            options.SetSlidingExpiration(ttl.Value);
+        }
+
+        await _cache.SetStringAsync(key, serializedData, options, token: cancellationToken);
+    }
+
+    /// <inheritdoc cref="ICacheService.SetByIdAsync{TKey, TValue}"/>
+    public async Task SetByIdAsync<TKey, TValue>(string keyPrefix, string cacheVersionPrefix, TKey id, TValue value,
         TimeSpan? ttl = null, CancellationToken cancellationToken = default)
     {
         if (value == null)
@@ -43,7 +66,7 @@ public class RedisCacheService : ICacheService
 
         var cacheVersion = await GetVersionAsync(cacheVersionPrefix, cancellationToken);
         var key = BuildKey(keyPrefix, cacheVersion, id);
-        
+
         var serializedData = JsonSerializer.Serialize(value, _jsonSerializerOptions);
         var options = new DistributedCacheEntryOptions();
 
@@ -56,17 +79,18 @@ public class RedisCacheService : ICacheService
     }
 
     /// <inheritdoc cref="ICacheService.SetByModelAsync{TModel, TValue}"/>
-    public async Task SetByModelAsync<TModel, TValue>(string keyPrefix, string cacheVersionPrefix, TModel model, TValue value,
+    public async Task SetByModelAsync<TModel, TValue>(string keyPrefix, string cacheVersionPrefix, TModel model,
+        TValue value,
         TimeSpan? ttl = null, CancellationToken cancellationToken = default)
     {
         if (value == null)
         {
             throw new ArgumentNullException(nameof(value));
         }
-        
+
         var cacheVersion = await GetVersionAsync(cacheVersionPrefix, cancellationToken);
         var hashedKey = BuildKeyFromModel(keyPrefix, cacheVersion, model);
-        
+
         var serializedData = JsonSerializer.Serialize(value, _jsonSerializerOptions);
         var options = new DistributedCacheEntryOptions();
 
@@ -77,9 +101,25 @@ public class RedisCacheService : ICacheService
 
         await _cache.SetStringAsync(hashedKey, serializedData, options, token: cancellationToken);
     }
-    
-    /// <inheritdoc cref="ICacheService.GetAsync{TKey, TValue}"/>
-    public async Task<TValue> GetAsync<TKey, TValue>(
+
+    public async Task<TValue> GetAsync<TValue>(string keyPrefix, string cacheVersionPrefix,
+        CancellationToken cancellationToken = default)
+    {
+        var cacheVersion = await GetVersionAsync(cacheVersionPrefix, cancellationToken);
+        var key = $"{keyPrefix}:{cacheVersion}";
+        
+        var cachedData = await _cache.GetStringAsync(key, token: cancellationToken);
+
+        if (string.IsNullOrEmpty(cachedData))
+        {
+            return default;
+        }
+
+        return JsonSerializer.Deserialize<TValue>(cachedData, _jsonSerializerOptions);
+    }
+
+    /// <inheritdoc cref="ICacheService.GetByIdAsync{TKey, TValue}"/>
+    public async Task<TValue> GetByIdAsync<TKey, TValue>(
         string keyPrefix,
         string cacheVersionPrefix,
         TKey id,
@@ -87,7 +127,7 @@ public class RedisCacheService : ICacheService
     {
         var cacheVersion = await GetVersionAsync(cacheVersionPrefix, cancellationToken);
         var key = BuildKey(keyPrefix, cacheVersion, id);
-        
+
         var cachedData = await _cache.GetStringAsync(key, token: cancellationToken);
 
         if (string.IsNullOrEmpty(cachedData))
@@ -101,14 +141,14 @@ public class RedisCacheService : ICacheService
     /// <inheritdoc cref="ICacheService.GetByModelAsync{TModel, TValue}"/>
     public async Task<TValue> GetByModelAsync<TModel, TValue>(
         string keyPrefix,
-        string cacheVersionPrefix, 
+        string cacheVersionPrefix,
         TModel model,
         CancellationToken cancellationToken = default)
     {
         var cacheVersion = await GetVersionAsync(cacheVersionPrefix, cancellationToken);
         var hashedKey = BuildKeyFromModel(keyPrefix, cacheVersion, model);
 
-        
+
         var cachedData = await _cache.GetStringAsync(hashedKey, token: cancellationToken);
 
         if (string.IsNullOrEmpty(cachedData))
@@ -138,7 +178,7 @@ public class RedisCacheService : ICacheService
 
         return (int)await db.StringIncrementAsync(redisKey);
     }
-    
+
     /// <summary>
     /// Вычисляет хэш для заданной строки и возвращает его в виде hex-представления.
     /// </summary>
@@ -148,13 +188,13 @@ public class RedisCacheService : ICacheService
     {
         var inputBytes = Encoding.UTF8.GetBytes(input);
         var hashBytes = MD5.HashData(inputBytes);
-        
+
         var sb = new StringBuilder();
         foreach (var bytes in hashBytes)
         {
             sb.Append(bytes.ToString("x2"));
         }
-        
+
         return sb.ToString();
     }
 

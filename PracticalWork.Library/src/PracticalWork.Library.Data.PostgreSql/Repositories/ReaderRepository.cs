@@ -11,7 +11,7 @@ using PracticalWork.Library.SharedKernel.Abstractions;
 namespace PracticalWork.Library.Data.PostgreSql.Repositories;
 
 /// <summary>
-/// Репозиторий для работы с с карточками читателей
+/// Репозиторий для работы с карточками читателей
 /// </summary>
 public class ReaderRepository: IReaderRepository
 {

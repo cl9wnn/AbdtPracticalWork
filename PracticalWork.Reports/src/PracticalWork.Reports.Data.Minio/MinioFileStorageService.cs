@@ -24,7 +24,7 @@ public class MinioFileStorageService : IFileStorageService
             .Build();
     }
 
-    /// <inheritdoc cref="IFileStorageService.UploadFileAsync"/>
+    /// <inheritdoc cref="IFileStorageService.UploadFileAsync(string, Stream, string, CancellationToken)"/>
     public async Task<string> UploadFileAsync(string path, Stream stream, string contentType,
         CancellationToken cancellationToken = default)
     {
@@ -42,7 +42,22 @@ public class MinioFileStorageService : IFileStorageService
         var filePath = $"{_minioOptions.Endpoint}/{_minioOptions.BucketName}/{path}";
         
         return filePath;
+    }
+    
+    /// <inheritdoc cref="IFileStorageService.UploadFileAsync(string, byte[], string, CancellationToken)"/>
+    public async Task<string> UploadFileAsync(
+        string path,
+        byte[] content,
+        string contentType,
+        CancellationToken cancellationToken = default)
+    {
+        await using var stream = new MemoryStream(content);
 
+        return await UploadFileAsync(
+            path,
+            stream,
+            contentType,
+            cancellationToken);
     }
 
     /// <inheritdoc cref="IFileStorageService.GetFilePathAsync"/>

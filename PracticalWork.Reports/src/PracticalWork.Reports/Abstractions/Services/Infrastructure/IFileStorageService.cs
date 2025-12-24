@@ -6,7 +6,7 @@
 public interface IFileStorageService
 {
     /// <summary>
-    /// Сохраняет файл в хранилище.
+    /// Сохраняет файл из потока в хранилище.
     /// </summary>
     /// <param name="path">Путь или ключ, по которому будет сохранён файл</param>
     /// <param name="stream">Поток с содержимым файла</param>
@@ -14,6 +14,17 @@ public interface IFileStorageService
     /// <param name="cancellationToken">Токен отмены операции</param>
     /// <returns>Полный URL или путь к сохранённому файлу</returns>
     Task<string> UploadFileAsync(string path, Stream stream, string contentType,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Сохраняет файл из байтов в хранилище.
+    /// </summary>
+    /// <param name="path">Путь или ключ, по которому будет сохранён файл</param>
+    /// <param name="content">Массив байтов с содержимым файла</param>
+    /// <param name="contentType">MIME-тип файла</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Полный URL или путь к сохранённому файлу</returns>
+    Task<string> UploadFileAsync(string path, byte[] content, string contentType,
         CancellationToken cancellationToken = default);
 
     /// <summary>

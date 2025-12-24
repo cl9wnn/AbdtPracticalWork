@@ -7,6 +7,19 @@ public interface ICacheService
 {
     /// <summary>
     /// Сохраняет значение в кэше по заданному ключу.
+    /// <remarks></remarks>
+    /// </summary>
+    /// <param name="keyPrefix">Префикс ключа для кэша</param>
+    /// <param name="cacheVersionPrefix">Префикс версии кэша</param>
+    /// <param name="value">Значение, сохраняющееся в кэш</param>
+    /// <param name="ttl">Время жизни (Time-To-Live). Если не указано — кэш бессрочный</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <typeparam name="TValue">Тип сохраняемого объекта из кэша</typeparam>
+    Task SetAsync<TValue>(string keyPrefix, string cacheVersionPrefix, TValue value, TimeSpan? ttl = null,
+        CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    /// Сохраняет значение в кэше по заданному ключу и идентификатору.
     /// </summary>
     /// <param name="keyPrefix">Префикс ключа для кэша</param>
     /// <param name="cacheVersionPrefix">Префикс версии кэша</param>
@@ -16,10 +29,10 @@ public interface ICacheService
     /// <param name="cancellationToken">Токен отмены операции</param>
     /// <typeparam name="TValue">Тип сохраняемого объекта из кэша</typeparam>
     /// <typeparam name="TKey">Тип идентификатора</typeparam>
-    Task SetAsync<TKey, TValue>(string keyPrefix, string cacheVersionPrefix, TKey id, TValue value,
+    Task SetByIdAsync<TKey, TValue>(string keyPrefix, string cacheVersionPrefix, TKey id, TValue value,
         TimeSpan? ttl = null,
         CancellationToken cancellationToken = default);
-
+    
     /// <summary>
     /// Сохраняет значение в кэше по заданному ключу и объекту.
     /// </summary>
@@ -34,9 +47,20 @@ public interface ICacheService
     Task SetByModelAsync<TModel, TValue>(string keyPrefix, string cacheVersionPrefix, TModel model, TValue value,
         TimeSpan? ttl = null,
         CancellationToken cancellationToken = default);
-
+    
     /// <summary>
     /// Получает значение из кэша по ключу.
+    /// </summary>
+    /// <param name="keyPrefix">Префикс ключа для кэша</param>
+    /// <param name="cacheVersionPrefix">Префикс версии кэша</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <typeparam name="TValue">Тип возвращаемого объекта из кэша</typeparam>
+    /// <returns>Значение из кэша</returns>
+    Task<TValue> GetAsync<TValue>(string keyPrefix, string cacheVersionPrefix,
+        CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    /// Получает значение из кэша по ключу и идентификатору.
     /// </summary>
     /// <param name="keyPrefix">Префикс ключа для кэша</param>
     /// <param name="cacheVersionPrefix">Префикс версии кэша</param>
@@ -45,7 +69,7 @@ public interface ICacheService
     /// <typeparam name="TValue">Тип возвращаемого объекта из кэша</typeparam>
     /// <typeparam name="TKey">Тип идентификатора</typeparam>
     /// <returns>Значение из кэша</returns>
-    Task<TValue> GetAsync<TKey, TValue>(string keyPrefix, string cacheVersionPrefix, TKey id,
+    Task<TValue> GetByIdAsync<TKey, TValue>(string keyPrefix, string cacheVersionPrefix, TKey id,
         CancellationToken cancellationToken = default);
 
     /// <summary>

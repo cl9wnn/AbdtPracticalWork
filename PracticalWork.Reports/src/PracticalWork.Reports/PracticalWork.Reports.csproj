@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="CsvHelper" />
     <PackageReference Include="JetBrains.Annotations" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
@@ -12,8 +13,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PracticalWork.Reports.SharedKernel\PracticalWork.Reports.SharedKernel.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Abstractions\Storage\" />
   </ItemGroup>
 </Project>
