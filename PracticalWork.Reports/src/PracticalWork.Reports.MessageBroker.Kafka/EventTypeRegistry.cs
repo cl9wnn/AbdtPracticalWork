@@ -20,6 +20,7 @@ public sealed class EventTypeRegistry : IEventTypeRegistry
         ["reader.closed"] = typeof(ReaderClosedEvent)
     };
 
+    /// <inheritdoc cref="IEventTypeRegistry.GetEventType"/>
     public Type GetEventType(string eventType)
     {
         if (!_types.TryGetValue(eventType, out var type))

@@ -8,6 +8,9 @@ using PracticalWork.Reports.Models;
 
 namespace PracticalWork.Reports.Data.PostgreSql.Repositories;
 
+/// <summary>
+/// Репозиторий для работы с логами активности
+/// </summary>
 public class ActivityLogRepository : IActivityLogRepository
 {
     private readonly AppDbContext _appDbContext;
@@ -16,7 +19,8 @@ public class ActivityLogRepository : IActivityLogRepository
     {
         _appDbContext = dbContext;
     }
-
+ 
+    /// <inheritdoc cref="IActivityLogRepository.Add"/>
     public async Task<Guid> Add(ActivityLog activityLog, Guid? bookId = null, Guid? readerId = null)
     {
         var activityLogEntity = activityLog.ToActivityLogEntity(bookId, readerId);
@@ -27,6 +31,7 @@ public class ActivityLogRepository : IActivityLogRepository
         return activityLogEntity.Id;
     }
 
+    /// <inheritdoc cref="IActivityLogRepository.GetActivityLogs"/>
     public async Task<IReadOnlyList<ActivityLog>> GetActivityLogs(ActivityLogFilterDto filter, PaginationDto pagination)
     {
         var query = BuildActivityLogsQuery(filter);
@@ -40,6 +45,7 @@ public class ActivityLogRepository : IActivityLogRepository
             .ToListAsync();
     }
 
+    /// <inheritdoc cref="IActivityLogRepository.GetActivityLogsByPeriodAsync"/>
     public async Task<IReadOnlyList<ActivityLog>> GetActivityLogsByPeriodAsync(DateOnly from, DateOnly to,
         ActivityEventType eventType)
     {

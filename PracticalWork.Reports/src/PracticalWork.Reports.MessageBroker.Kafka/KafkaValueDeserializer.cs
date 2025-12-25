@@ -5,6 +5,9 @@ using PracticalWork.Reports.SharedKernel.Events;
 
 namespace PracticalWork.Reports.MessageBroker.Kafka;
 
+/// <summary>
+/// Десериализатор для преобразования байтового массива из Kafka в объекты событий
+/// </summary>
 public sealed class KafkaValueDeserializer : IDeserializer<BaseEvent>
 {
     private readonly IEventTypeRegistry _registry;

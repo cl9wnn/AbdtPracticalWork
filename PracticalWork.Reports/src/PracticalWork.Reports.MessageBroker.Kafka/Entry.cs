@@ -7,6 +7,9 @@ namespace PracticalWork.Reports.MessageBroker.Kafka;
 
 public static class Entry
 {
+    /// <summary>
+    /// Добавления зависимостей для работы с Kafka
+    /// </summary>
     public static IServiceCollection AddKafkaConsumers(this IServiceCollection serviceCollection,
         IConfiguration configuration)
     {

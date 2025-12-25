@@ -10,6 +10,9 @@ using PracticalWork.Reports.Options;
 
 namespace PracticalWork.Reports.Services;
 
+/// <summary>
+/// Сервис по работе с отчетами
+/// </summary>
 public class ReportService : IReportService
 {
     private readonly IReportRepository _reportRepository;
@@ -35,6 +38,7 @@ public class ReportService : IReportService
         _reportsCacheVersionPrefix = options.Value.ReportsCacheVersionPrefix;
     }
 
+    /// <inheritdoc cref="IReportService.Generate"/>
     public async Task<Report> Generate(GenerateReportDto dto)
     {
         var logs = await _activityLogRepository.GetActivityLogsByPeriodAsync(dto.PeriodFrom,
@@ -63,6 +67,7 @@ public class ReportService : IReportService
         return report;
     }
 
+    /// <inheritdoc cref="IReportService.GetAll"/>
     public async Task<IReadOnlyCollection<Report>> GetAll()
     {
         var keyPrefix = _cacheOptions.Value.ReportsListCache.KeyPrefix;
@@ -82,6 +87,7 @@ public class ReportService : IReportService
         return reports;
     }
 
+    /// <inheritdoc cref="IReportService.GetDownloadUrl"/>
     public async Task<string> GetDownloadUrl(string reportName)
     {
         var report = await _reportRepository.GetByName(reportName);

@@ -5,6 +5,7 @@ using PracticalWork.Reports.SharedKernel.Abstractions;
 
 namespace PracticalWork.Reports.Events.Books.Archive;
 
+
 public class BookArchivedEventHandler : IEventHandler<BookArchivedEvent>
 {
     private readonly IActivityLogRepository _activityLogRepository;
@@ -14,6 +15,7 @@ public class BookArchivedEventHandler : IEventHandler<BookArchivedEvent>
         _activityLogRepository = activityLogRepository;
     }
 
+    /// <inheritdoc cref="IEventHandler{T}.HandleAsync"/>
     public async Task HandleAsync(BookArchivedEvent message, CancellationToken cancellationToken)
     {
         await _activityLogRepository.Add(message.ToActivityLog(), bookId: message.BookId);

@@ -30,6 +30,8 @@ public class ReportsController: Controller
     /// <summary>
     /// Получение логов активности
     /// </summary>
+    /// <param name="request">Запрос на получение логов активности, содержащий параметры фильтрации и пагинации</param>
+    /// <returns>Страница с логами активности</returns>
     [HttpGet("activity")]
     [ProducesResponseType(typeof(PagedResponse<GetActivityLogsResponse>), 200)]
     [ProducesResponseType(500)]
@@ -48,6 +50,8 @@ public class ReportsController: Controller
     /// <summary>
     /// Генерация отчета в формате CSV
     /// </summary>
+    /// <param name="request">Запрос на генерацию отчета</param>
+    /// <returns>Метаданные сгенерированного отчета</returns>
     [HttpPost("generate")]
     [ProducesResponseType(typeof(GenerateReportResponse), 200)]
     [ProducesResponseType(404)]
@@ -62,6 +66,7 @@ public class ReportsController: Controller
     /// <summary>
     /// Получение списка отчетов
     /// </summary>
+    /// <returns>Список отчетов</returns>
     [HttpGet]
     [ProducesResponseType(typeof(IReadOnlyList<GetReportResponse>), 200)]
     [ProducesResponseType(500)]
@@ -74,7 +79,8 @@ public class ReportsController: Controller
     /// <summary>
     /// Получение signed URL для скачивания отчета
     /// </summary>
-    /// <param name="reportName"></param>
+    /// <param name="reportName">Наименование отчета</param>
+    /// <returns>Signed URL на скачивание отчета</returns>
     [HttpGet("{reportName}/download")]
     [ProducesResponseType(typeof(DownloadReportResponse), 200)]
     [ProducesResponseType(404)]

@@ -8,6 +8,9 @@ using PracticalWork.Reports.Models;
 
 namespace PracticalWork.Reports.Services;
 
+/// <summary>
+/// Сервис для генерации csv таблицы по логам активностей
+/// </summary>
 public sealed class ActivityLogCsvExportService
     : ICsvExportService<ActivityLog>
 {

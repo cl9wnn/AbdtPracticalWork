@@ -12,6 +12,7 @@ public class ReaderCreatedEventHandler: IEventHandler<ReaderCreatedEvent>
         _activityLogRepository = activityLogRepository;
     }
 
+    /// <inheritdoc cref="IEventHandler{T}.HandleAsync"/>
     public async Task HandleAsync(ReaderCreatedEvent message, CancellationToken cancellationToken)
     {
         await _activityLogRepository.Add(message.ToActivityLog(), readerId: message.ReaderId);

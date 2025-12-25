@@ -8,6 +8,9 @@ using PracticalWork.Reports.SharedKernel.Events;
 
 namespace PracticalWork.Reports.MessageBroker.Kafka;
 
+/// <summary>
+/// Сервис-потребитель для получения и обработки сообщений из Kafka
+/// </summary>
 public sealed class KafkaConsumer : BackgroundService
 {
     private readonly IConsumer<string, BaseEvent> _consumer;

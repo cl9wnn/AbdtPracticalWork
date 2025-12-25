@@ -13,6 +13,7 @@ public class BookReturnedEventHandler: IEventHandler<BookReturnedEvent>
         _activityLogRepository = activityLogRepository;
     }
 
+    /// <inheritdoc cref="IEventHandler{T}.HandleAsync"/>
     public async Task HandleAsync(BookReturnedEvent message, CancellationToken cancellationToken)
     {
         await _activityLogRepository.Add(message.ToActivityLog(), bookId: message.BookId, readerId: message.ReaderId);

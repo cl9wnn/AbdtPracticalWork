@@ -5,6 +5,9 @@ using PracticalWork.Reports.Models;
 
 namespace PracticalWork.Reports.Services;
 
+/// <summary>
+/// Сервис для работы с логами активностей
+/// </summary>
 public class ActivityLogService: IActivityLogService
 {
     private readonly IActivityLogRepository _activityLogRepository;
@@ -13,6 +16,8 @@ public class ActivityLogService: IActivityLogService
     {
         _activityLogRepository = activityLogRepository;
     }
+    
+    /// <inheritdoc cref="IActivityLogService.GetPagedActivityLogs"/>
     public async Task<PageDto<ActivityLog>> GetPagedActivityLogs(ActivityLogFilterDto filter, PaginationDto pagination)
     {
         var activityLogs = await _activityLogRepository.GetActivityLogs(filter, pagination);

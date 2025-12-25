@@ -12,6 +12,7 @@ public class BookBorrowedEventHandler: IEventHandler<BookBorrowedEvent>
         _activityLogRepository = activityLogRepository;
     }
     
+    /// <inheritdoc cref="IEventHandler{T}.HandleAsync"/>
     public async Task HandleAsync(BookBorrowedEvent message, CancellationToken cancellationToken)
     {
         await _activityLogRepository.Add(message.ToActivityLog(), bookId: message.BookId, readerId: message.ReaderId);
