@@ -7,6 +7,9 @@ using PracticalWork.Library.SharedKernel.Events;
 
 namespace PracticalWork.Library.MessageBroker.Kafka;
 
+/// <summary>
+/// Сервис-отправитель для отправки сообщений из Kafka
+/// </summary>
 public class KafkaProducer : IMessageBrokerProducer
 {
     private readonly string _topic;
