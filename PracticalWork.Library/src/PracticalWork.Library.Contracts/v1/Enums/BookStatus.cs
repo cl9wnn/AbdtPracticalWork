@@ -5,13 +5,19 @@
 /// </summary>
 public enum BookStatus
 {
-    /// <summary>Книга доступна для выдачи</summary>
+    /// <summary>
+    /// Книга доступна для выдачи
+    /// </summary>
     /// <remarks>Значение по умолчанию</remarks>
     Available = 0,
 
-    /// <summary>Книга выдана читателю</summary>
+    /// <summary>
+    /// Книга выдана читателю
+    /// </summary>
     Borrow = 10,
 
-    /// <summary>Книга переведена в архив</summary>
+    /// <summary>
+    /// Книга переведена в архив
+    /// </summary>
     Archived = 20
 }

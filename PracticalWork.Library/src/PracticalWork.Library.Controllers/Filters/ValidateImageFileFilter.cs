@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using PracticalWork.Library.Exceptions;
-using ValidationException = FluentValidation.ValidationException;
 
 namespace PracticalWork.Library.Controllers.Filters;
 

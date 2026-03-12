@@ -23,6 +23,12 @@ public sealed class ActivityLog
     /// </summary>
     public JsonDocument Metadata { get; set; }
 
+    /// <summary>
+    /// Создание лога активности
+    /// </summary>
+    /// <param name="eventType">Тип активности лога</param>
+    /// <param name="metadata">Дополнительная информация</param>
+    /// <returns>Новый экземпляр лога активности</returns>
     public static ActivityLog Create(ActivityEventType eventType ,JsonDocument metadata)
     {
         return new ActivityLog

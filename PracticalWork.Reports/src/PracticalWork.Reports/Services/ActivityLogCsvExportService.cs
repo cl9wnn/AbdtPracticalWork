@@ -14,6 +14,7 @@ namespace PracticalWork.Reports.Services;
 public sealed class ActivityLogCsvExportService
     : ICsvExportService<ActivityLog>
 {
+    /// <inheritdoc cref="ICsvExportService{T}.Generate"/>
     public byte[] Generate(IEnumerable<ActivityLog> logs)
     {
         var rows = logs.Select(x => new ActivityLogReportRow

@@ -27,7 +27,9 @@ public class LibraryController : Controller
         _libraryService = libraryService;
     }
 
-    /// <summary> Получение списка книг библиотеки</summary>
+    /// <summary>
+    /// Получение списка книг библиотеки
+    /// </summary>
     [HttpGet("books")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(PagedResponse<GetLibraryBookResponse>), 200)]
@@ -44,7 +46,9 @@ public class LibraryController : Controller
             result.Items.ToLibraryBookResponseList()));
     }
 
-    /// <summary> Выдача книги</summary>
+    /// <summary>
+    /// Выдача книги
+    /// </summary>
     [HttpPost("borrow")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(BorrowBookResponse), 200)]
@@ -58,7 +62,9 @@ public class LibraryController : Controller
         return Ok(new BorrowBookResponse(result));
     }
 
-    /// <summary> Возврат книги</summary>
+    /// <summary>
+    /// Возврат книги
+    /// </summary>
     [HttpPost("return")]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
@@ -71,7 +77,9 @@ public class LibraryController : Controller
         return Ok();
     }
 
-    /// <summary> Получение деталей книги по ее идентификатору</summary>
+    /// <summary>
+    /// Получение деталей книги по ее идентификатору
+    /// </summary>
     [HttpGet("books/{id:guid}/details")]
     [EntityExists<IBookService, Book>]
     [Produces("application/json")]
@@ -86,7 +94,9 @@ public class LibraryController : Controller
         return Ok(result.ToBookDetailsResponse());
     }
 
-    /// <summary> Получение деталей книги по ее названию</summary>
+    /// <summary>
+    /// Получение деталей книги по ее названию
+    /// </summary>
     [HttpGet("books/{title}/details")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(BookDetailsResponse), 200)]

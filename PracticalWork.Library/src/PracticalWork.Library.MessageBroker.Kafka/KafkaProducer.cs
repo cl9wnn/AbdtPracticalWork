@@ -31,6 +31,7 @@ public class KafkaProducer : IMessageBrokerProducer
         _topic = options.Value.Topic;
     }
 
+    /// <inheritdoc cref="IMessageBrokerProducer.ProduceAsync{TEvent}"/>
     public async Task ProduceAsync<TEvent>(string key, TEvent message, CancellationToken cancellationToken = default)
         where TEvent : BaseEvent
     {
@@ -51,6 +52,10 @@ public class KafkaProducer : IMessageBrokerProducer
         }
     }
 
+    /// <summary>
+    /// Высвобождает ресурсы, используемые продюсером сообщений.
+    /// Перед высвобождением ресурсов выполняет принудительную отправку всех буферизированных сообщений.
+    /// </summary>
     public void Dispose()
     {
         _producer.Flush(TimeSpan.FromSeconds(10));

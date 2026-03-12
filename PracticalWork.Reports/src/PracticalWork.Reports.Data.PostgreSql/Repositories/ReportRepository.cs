@@ -9,7 +9,7 @@ using PracticalWork.Reports.Models;
 namespace PracticalWork.Reports.Data.PostgreSql.Repositories;
 
 /// <summary>
-/// 
+/// Репозиторий для работы с отчетами
 /// </summary>
 public class ReportRepository : IReportRepository
 {

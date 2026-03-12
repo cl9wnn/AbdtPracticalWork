@@ -1,13 +1,17 @@
-﻿namespace PracticalWork.Library.Options;
+﻿namespace PracticalWork.Library.Options.Cache;
 
 /// <summary>
 /// Настройки кэширования для функциональности карточек читателей
 /// </summary>
 public class ReadersCacheOptions
 {
-    /// <summary> Общий префикс для инвалидации кэша</summary>
+    /// <summary>
+    /// Общий префикс для инвалидации кэша
+    /// </summary>
     public string ReadersCacheVersionPrefix { get; set; }  
     
-    /// <summary>Настройки кэширования для списка взятых читателем книг</summary>
+    /// <summary>
+    /// Настройки кэширования для списка взятых читателем книг
+    /// </summary>
     public CacheEntryOptions ReadersBooksCache { get; set; }
 }

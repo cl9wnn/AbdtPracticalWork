@@ -5,7 +5,9 @@ using PracticalWork.Reports.SharedKernel.Abstractions;
 
 namespace PracticalWork.Reports.Events.Books.Archive;
 
-
+/// <summary>
+/// Обработчик события архивации книги в библиотеке
+/// </summary>
 public class BookArchivedEventHandler : IEventHandler<BookArchivedEvent>
 {
     private readonly IActivityLogRepository _activityLogRepository;

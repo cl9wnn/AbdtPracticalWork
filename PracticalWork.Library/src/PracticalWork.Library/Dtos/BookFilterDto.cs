@@ -8,16 +8,24 @@ namespace PracticalWork.Library.Dtos;
 /// </summary>
 public class BookFilterDto
 {
-    /// <summary>Категория книги</summary>
+    /// <summary>
+    /// Категория книги
+    /// </summary>
     public BookCategory? Category { get; set; }
     
-    /// <summary>Автор книги</summary>
+    /// <summary>
+    /// Автор книги
+    /// </summary>
     [CanBeNull]
     public string Author { get; set; }
     
-    /// <summary>Статус книги</summary>
+    /// <summary>
+    /// Статус книги
+    /// </summary>
     public BookStatus? Status { get; set; }
     
-    /// <summary>Доступность книги</summary>
+    /// <summary>
+    /// Доступность книги
+    /// </summary>
     public bool? AvailableOnly { get; set; }
 }

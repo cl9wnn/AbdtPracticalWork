@@ -3,7 +3,7 @@ using PracticalWork.Reports.Enums;
 using PracticalWork.Reports.Events.Abstractions;
 using PracticalWork.Reports.Models;
 
-namespace PracticalWork.Reports.Events.Books;
+namespace PracticalWork.Reports.Events.Books.Borrow;
 
 /// <summary>
 /// Событие выдачи книги читателю

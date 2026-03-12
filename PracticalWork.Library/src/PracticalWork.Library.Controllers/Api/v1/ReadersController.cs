@@ -25,7 +25,9 @@ public class ReadersController: Controller
         _readerService = readerService;
     }
 
-    /// <summary> Создание новой карточки читателя</summary>
+    /// <summary>
+    /// Создание новой карточки читателя
+    /// </summary>
     [HttpPost]
     [Produces("application/json")]
     [ProducesResponseType(typeof(CreateReaderResponse), 200)]
@@ -38,7 +40,9 @@ public class ReadersController: Controller
         return Ok(new CreateReaderResponse(result));
     }
     
-    /// <summary> Продление срока действия карточки читателя</summary>
+    /// <summary>
+    /// Продление срока действия карточки читателя
+    /// </summary>
     [HttpPost("{id:guid}/extend")]
     [EntityExists<IReaderService, Reader>]
     [ProducesResponseType(200)]   
@@ -52,7 +56,9 @@ public class ReadersController: Controller
         return Ok();
     }
 
-    /// <summary> Закрытие карточки читателя</summary>
+    /// <summary>
+    /// Закрытие карточки читателя
+    /// </summary>
     [HttpPost("{id:guid}/close")]
     [EntityExists<IReaderService, Reader>]
     [ProducesResponseType(200)]  
@@ -66,7 +72,9 @@ public class ReadersController: Controller
         return Ok();
     }
 
-    /// <summary> Получение взятых книг</summary>
+    /// <summary>
+    /// Получение взятых книг
+    /// </summary>
     [HttpGet("{id:guid}/books")]
     [EntityExists<IReaderService, Reader>]
     [Produces("application/json")]

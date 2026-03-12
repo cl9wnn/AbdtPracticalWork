@@ -5,15 +5,23 @@
 /// </summary>
 public class BookListDto
 {
-    /// <summary>Название книги</summary>
+    /// <summary>
+    /// Название книги
+    /// </summary>
     public string Title { get; set; } 
     
-    /// <summary>Список авторов</summary>
+    /// <summary>
+    /// Список авторов
+    /// </summary>
     public IReadOnlyList<string> Authors { get; set; }
     
-    /// <summary>Описание книги</summary>
+    /// <summary>
+    /// Описание книги
+    /// </summary>
     public string Description { get; set; }
     
-    /// <summary>Год издания книги</summary>
+    /// <summary>
+    /// Год издания книги
+    /// </summary>
     public int Year { get; set; }
 }

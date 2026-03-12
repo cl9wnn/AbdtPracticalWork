@@ -3,7 +3,7 @@
 namespace PracticalWork.Reports.Abstractions.Storage;
 
 /// <summary>
-/// Контракт репозитория для работы с 
+/// Контракт репозитория для работы с отчетами
 /// </summary>
 public interface IReportRepository
 {

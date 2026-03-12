@@ -171,7 +171,9 @@ public sealed class BookRepository : IBookRepository
             .ToList();
     }
     
-    /// <summary>Построение запроса для поиска книг по фильтрации</summary>
+    /// <summary>
+    /// Построение запроса для поиска книг по фильтрации
+    /// </summary>
     private IQueryable<AbstractBookEntity> BuildBooksQuery(BookFilterDto filter, bool includeIssuance)
     {
         IQueryable<AbstractBookEntity> query = filter.Category switch

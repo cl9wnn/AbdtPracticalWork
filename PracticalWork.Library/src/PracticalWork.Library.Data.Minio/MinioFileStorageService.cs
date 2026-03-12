@@ -91,7 +91,9 @@ public class MinioFileStorageService : IFileStorageService
         }
     }
     
-    /// <summary>Создает бакет, если еще не создан</summary>
+    /// <summary>
+    /// Создает бакет, если еще не создан
+    /// </summary>
     private async Task EnsureBucketExistsAsync(string bucketName, CancellationToken cancellationToken = default)
     {
         var existsArgs = new BucketExistsArgs()

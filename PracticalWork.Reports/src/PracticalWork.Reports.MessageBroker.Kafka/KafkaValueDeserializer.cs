@@ -17,6 +17,13 @@ public sealed class KafkaValueDeserializer : IDeserializer<BaseEvent>
         _registry = registry;
     }
 
+    /// <summary>
+    /// Десериализует данные из брокера сообщений в соответствующий тип события
+    /// </summary>
+    /// <param name="data">Байтовые данные сообщения, полученные от брокера</param>
+    /// <param name="isNull">Указывает, является ли сообщение null</param>
+    /// <param name="context">Контекст сериализации, содержащий информацию о топике/партиции</param>
+    /// <returns>Десериализованный объект события, унаследованный от <see cref="BaseEvent"/></returns>
     public BaseEvent Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)
     {
         if (isNull || data.IsEmpty)

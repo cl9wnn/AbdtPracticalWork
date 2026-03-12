@@ -5,9 +5,13 @@
 /// </summary>
 public class PaginationDto
 {
-    /// <summary>Номер страницы</summary>
+    /// <summary>
+    /// Номер страницы
+    /// </summary>
     public int Page { get; set; }
     
-    /// <summary>Размер страницы</summary>
+    /// <summary>
+    /// Размер страницы
+    /// </summary>
     public int PageSize { get; set; }
 }

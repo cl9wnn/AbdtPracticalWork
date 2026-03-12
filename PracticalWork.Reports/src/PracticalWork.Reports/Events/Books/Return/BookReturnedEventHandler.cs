@@ -4,6 +4,9 @@ using PracticalWork.Reports.SharedKernel.Abstractions;
 
 namespace PracticalWork.Reports.Events.Books.Return;
 
+/// <summary>
+/// Обработчик события возврата книги в библиотеку
+/// </summary>
 public class BookReturnedEventHandler: IEventHandler<BookReturnedEvent>
 {
     private readonly IActivityLogRepository _activityLogRepository;

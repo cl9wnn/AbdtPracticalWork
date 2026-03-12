@@ -4,6 +4,9 @@ using PracticalWork.Reports.SharedKernel.Abstractions;
 
 namespace PracticalWork.Reports.Events.Readers.Close;
 
+/// <summary>
+/// Обработчик события закрытия карточки читателя
+/// </summary>
 public class ReaderClosedEventHandler: IEventHandler<ReaderClosedEvent>
 {
     private readonly IActivityLogRepository _activityLogRepository;

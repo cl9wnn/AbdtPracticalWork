@@ -3,6 +3,9 @@ using PracticalWork.Reports.SharedKernel.Abstractions;
 
 namespace PracticalWork.Reports.Events.Books.Borrow;
 
+/// <summary>
+/// Обработчик события выдачи книги читателю
+/// </summary>
 public class BookBorrowedEventHandler: IEventHandler<BookBorrowedEvent>
 {
     private readonly IActivityLogRepository _activityLogRepository;

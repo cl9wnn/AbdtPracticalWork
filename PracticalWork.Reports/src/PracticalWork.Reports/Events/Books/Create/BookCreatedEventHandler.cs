@@ -4,6 +4,9 @@ using PracticalWork.Reports.SharedKernel.Abstractions;
 
 namespace PracticalWork.Reports.Events.Books.Create;
 
+/// <summary>
+/// Обработчик события создания новой книги в библиотеке
+/// </summary>
 public class BookCreatedEventHandler : IEventHandler<BookCreatedEvent>
 {
     private readonly IActivityLogRepository _activityLogRepository;

@@ -60,7 +60,9 @@ public class ActivityLogRepository : IActivityLogRepository
             .ToListAsync();
     }
 
-    /// <summary>Построение запроса для поиска логов активности по фильтрации</summary>
+    /// <summary>
+    /// Построение запроса для поиска логов активности по фильтрации
+    /// </summary>
     private IQueryable<ActivityLogEntity> BuildActivityLogsQuery(ActivityLogFilterDto filter)
     {
         IQueryable<ActivityLogEntity> query = _appDbContext.ActivityLogs;

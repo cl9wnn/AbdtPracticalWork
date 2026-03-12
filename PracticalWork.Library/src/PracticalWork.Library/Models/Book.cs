@@ -8,37 +8,59 @@ namespace PracticalWork.Library.Models;
 /// </summary>
 public sealed class Book
 {
-    /// <summary>Название книги</summary>
+    /// <summary>
+    /// Название книги
+    /// </summary>
     public string Title { get; set; }
 
-    /// <summary>Авторы</summary>
+    /// <summary>
+    /// Авторы
+    /// </summary>
     public IReadOnlyList<string> Authors { get; set; }
 
-    /// <summary>Краткое описание книги</summary>
+    /// <summary>
+    /// Краткое описание книги
+    /// </summary>
     public string Description { get; set; }
 
-    /// <summary>Год издания</summary>
+    /// <summary>
+    /// Год издания
+    /// </summary>
     public int Year { get; set; }
 
-    /// <summary>Категория</summary>
+    /// <summary>
+    /// Категория
+    /// </summary>
     public BookCategory Category { get; set; }
 
-    /// <summary>Статус</summary>
+    /// <summary>
+    /// Статус
+    /// </summary>
     public BookStatus Status { get; set; }
 
-    /// <summary>Путь к изображению обложки</summary>
+    /// <summary>
+    /// Путь к изображению обложки
+    /// </summary>
     public string CoverImagePath { get; set; }
 
-    /// <summary>В архиве</summary>
+    /// <summary>
+    /// В архиве
+    /// </summary>
     public bool IsArchived { get; set; }
 
-    /// <summary>Проверка перевода в архив</summary>
+    /// <summary>
+    /// Проверка перевода в архив
+    /// </summary>
     public bool CanBeArchived() => Status != BookStatus.Borrow;
 
-    /// <summary>Проверка выдачи на руки</summary>
+    /// <summary>
+    /// Проверка выдачи на руки
+    /// </summary>
     public bool CanBeBorrowed() => !IsArchived && Status == BookStatus.Available;
 
-    /// <summary>Перевод в архив</summary>
+    /// <summary>
+    /// Перевод в архив
+    /// </summary>
     public void Archive()
     {
         if (Status == BookStatus.Archived && IsArchived)
@@ -55,7 +77,9 @@ public sealed class Book
         Status = BookStatus.Archived;
     }
     
-    /// <summary>Выдача книги на руки читателю</summary>
+    /// <summary>
+    /// Выдача книги на руки читателю
+    /// </summary>
     public void Borrow()
     {
         if (Status == BookStatus.Borrow)
@@ -71,7 +95,9 @@ public sealed class Book
         Status = BookStatus.Borrow;
     }
     
-    /// <summary>Возврат книги в библиотеку</summary>
+    /// <summary>
+    /// Возврат книги в библиотеку
+    /// </summary>
     public void Return()
     {
         if (Status != BookStatus.Borrow)

@@ -8,6 +8,7 @@ using PracticalWork.Library.Events.Books;
 using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.Models;
 using PracticalWork.Library.Options;
+using PracticalWork.Library.Options.Cache;
 
 namespace PracticalWork.Library.Services;
 
@@ -36,13 +37,17 @@ public sealed class BookService : IBookService
         _booksCacheVersionPrefix = options.Value.BooksCacheVersionPrefix;
     }
 
-    /// <summary> Получение книги по ее идентификатору </summary>
+    /// <summary>
+    /// Получение книги по ее идентификатору
+    /// </summary>
     public async Task<Book> GetById(Guid id)
     {
         return await _bookRepository.GetById(id);
     }
 
-    /// <summary> Проверка существования книги </summary>
+    /// <summary>
+    /// Проверка существования книги
+    /// </summary>
     public async Task Exists(Guid id)
     {
         var exists = await _bookRepository.Exists(id);

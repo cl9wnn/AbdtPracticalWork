@@ -7,6 +7,7 @@ using PracticalWork.Library.Events.Readers;
 using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.Models;
 using PracticalWork.Library.Options;
+using PracticalWork.Library.Options.Cache;
 
 namespace PracticalWork.Library.Services;
 
@@ -31,13 +32,17 @@ public class ReaderService : IReaderService
         _readersBooksVersionPrefix = options.Value.ReadersCacheVersionPrefix;
     }
 
-    /// <summary> Получение карточки читателя по её идентификатору </summary>
+    /// <summary>
+    /// Получение карточки читателя по её идентификатору
+    /// </summary>
     public async Task<Reader> GetById(Guid id)
     {
         return await _readerRepository.GetById(id);
     }
 
-    /// <summary> Проверка существования карточки читателя </summary>
+    /// <summary>
+    /// Проверка существования карточки читателя
+    /// </summary>
     public async Task Exists(Guid id)
     {
         var exists = await _readerRepository.Exists(id);

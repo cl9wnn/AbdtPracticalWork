@@ -1,5 +1,5 @@
-﻿using PracticalWork.Reports.Events.Books;
-using PracticalWork.Reports.Events.Books.Archive;
+﻿using PracticalWork.Reports.Events.Books.Archive;
+using PracticalWork.Reports.Events.Books.Borrow;
 using PracticalWork.Reports.Events.Books.Create;
 using PracticalWork.Reports.Events.Books.Return;
 using PracticalWork.Reports.Events.Readers.Close;
@@ -8,6 +8,9 @@ using PracticalWork.Reports.SharedKernel.Events;
 
 namespace PracticalWork.Reports.MessageBroker.Kafka;
 
+/// <summary>
+/// Реестр для сопоставления строковых типов событий с типами .NET
+/// </summary>
 public sealed class EventTypeRegistry : IEventTypeRegistry
 {
     private readonly Dictionary<string, Type> _types = new()

@@ -1,7 +1,7 @@
 ﻿namespace PracticalWork.Reports.SharedKernel.Events;
 
 /// <summary>
-///  Реестр для сопоставления строковых типов событий с типами .NET
+///  Контракт реестра для сопоставления строковых типов событий с типами .NET
 /// </summary>
 public interface IEventTypeRegistry
 {
@@ -9,6 +9,6 @@ public interface IEventTypeRegistry
     /// Возвращает тип события по его строковому типу из JSON
     /// </summary>
     /// <param name="eventType">Строковый тип события</param>
-    /// <returns></returns>
+    /// <returns>Тип события в .NET</returns>
     Type GetEventType(string eventType);
 }

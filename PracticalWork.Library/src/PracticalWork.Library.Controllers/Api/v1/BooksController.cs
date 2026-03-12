@@ -28,7 +28,9 @@ public class BooksController : Controller
         _bookService = bookService;
     }
 
-    /// <summary> Создание новой книги</summary>
+    /// <summary>
+    /// Создание новой книги
+    /// </summary>
     [HttpPost]
     [Produces("application/json")]
     [ProducesResponseType(typeof(CreateBookResponse), 200)]
@@ -41,7 +43,9 @@ public class BooksController : Controller
         return Ok(new CreateBookResponse(result));
     }
 
-    /// <summary> Редактирование книги </summary>
+    /// <summary>
+    /// Редактирование книги
+    /// </summary>
     [HttpPut("{id:guid}")]
     [EntityExists<IBookService, Book>]
     [ProducesResponseType(200)]
@@ -55,7 +59,9 @@ public class BooksController : Controller
         return Ok();
     }
 
-    /// <summary> Перевод книги в архив</summary>
+    /// <summary>
+    /// Перевод книги в архив
+    /// </summary>
     [HttpPost("{id:guid}/archive")]
     [EntityExists<IBookService, Book>]
     [Produces("application/json")]
@@ -70,7 +76,9 @@ public class BooksController : Controller
         return Ok(result.ToArchiveBookResponse());
     }
 
-    /// <summary> Получение списка книг</summary>
+    /// <summary>
+    /// Получение списка книг
+    /// </summary>
     [HttpGet]
     [Produces("application/json")]
     [ProducesResponseType(typeof(PagedResponse<GetBookResponse>), 200)]
@@ -87,7 +95,9 @@ public class BooksController : Controller
             result.Items.ToBookResponseList()));
     }
 
-    /// <summary> Добавление деталей книги</summary>
+    /// <summary>
+    /// Добавление деталей книги
+    /// </summary>
     [HttpPost("{id:guid}/details")]
     [EntityExists<IBookService, Book>]
     [ValidateImageFile(5 * 1024 * 1024)]

@@ -3,6 +3,9 @@ using PracticalWork.Reports.SharedKernel.Abstractions;
 
 namespace PracticalWork.Reports.Events.Readers.Create;
 
+/// <summary>
+/// Обработчик события создания новой карточки читателя
+/// </summary>
 public class ReaderCreatedEventHandler: IEventHandler<ReaderCreatedEvent>
 {
     private readonly IActivityLogRepository _activityLogRepository;

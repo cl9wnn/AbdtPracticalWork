@@ -8,14 +8,20 @@ namespace PracticalWork.Reports.SharedKernel.Abstractions;
 /// </summary>
 public interface IEntity
 {
-    /// <summary> Идентификатор сущности </summary>
+    /// <summary>
+    /// Идентификатор сущности
+    /// </summary>
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     Guid Id { get; set; }
 
-    /// <summary> Дата создания </summary>
+    /// <summary>
+    /// Дата создания
+    /// </summary>
     DateTime CreatedAt { get; set; }
 
-    /// <summary> Дата обновления </summary>
+    /// <summary>
+    /// Дата обновления
+    /// </summary>
     DateTime? UpdatedAt { get; set; }
 }
