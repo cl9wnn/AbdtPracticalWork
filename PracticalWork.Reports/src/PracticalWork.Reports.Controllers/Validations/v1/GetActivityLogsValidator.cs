@@ -8,7 +8,7 @@ public class GetActivityLogsValidator: AbstractValidator<GetActivityLogsRequest>
     public GetActivityLogsValidator()
     {
         RuleFor(x => x.EventDate)
-            .LessThanOrEqualTo(DateTime.UtcNow)
+            .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow))
             .When(x => x.EventDate.HasValue)
             .WithMessage("Дата активности должна быть не позднее текущего времени!");
         

@@ -49,11 +49,8 @@ public class ActivityLogRepository : IActivityLogRepository
     public async Task<IReadOnlyList<ActivityLog>> GetActivityLogsByPeriodAsync(DateOnly from, DateOnly to,
         ActivityEventType eventType)
     {
-        var fromDate = from.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
-        var toDate = to.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
-
         return await _appDbContext.ActivityLogs
-            .Where(x => x.EventDate >= fromDate && x.EventDate <= toDate && x.EventType == eventType)
+            .Where(x => x.EventDate >= from && x.EventDate <= to && x.EventType == eventType)
             .OrderBy(x => x.EventDate)
             .Select(a => a.ToActivityLog())
             .AsNoTracking()
@@ -74,7 +71,7 @@ public class ActivityLogRepository : IActivityLogRepository
 
         if (filter.EventDate.HasValue)
         {
-            var date = filter.EventDate.Value.Date;
+            var date = filter.EventDate.Value;
 
             query = query.Where(x =>
                 x.EventDate >= date &&

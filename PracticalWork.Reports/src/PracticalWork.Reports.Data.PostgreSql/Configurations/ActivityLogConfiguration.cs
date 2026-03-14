@@ -26,8 +26,7 @@ public class ActivityLogConfiguration : EntityConfigurationBase<ActivityLogEntit
         builder.Property(x => x.ReaderId)
             .HasColumnType("uuid");
         
-        builder.HasIndex(x => x.EventDate);
-        builder.HasIndex(x => x.EventType);
+        builder.HasIndex(x => new { x.EventDate, x.EventType});
         builder.HasIndex(x => x.BookId);
         builder.HasIndex(x => x.ReaderId);
     }

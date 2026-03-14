@@ -15,5 +15,5 @@ public class ActivityLogFilterDto
     /// <summary>
     /// Дата события
     /// </summary>
-    public DateTime? EventDate { get; set; }
+    public DateOnly? EventDate { get; set; }
 }

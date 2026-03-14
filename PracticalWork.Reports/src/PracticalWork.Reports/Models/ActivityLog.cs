@@ -16,7 +16,7 @@ public sealed class ActivityLog
     /// <summary>
     /// Дата события 
     /// </summary>
-    public DateTime EventDate { get; set; }
+    public DateOnly EventDate { get; set; }
 
     /// <summary>
     /// Дополнительная информация
@@ -34,7 +34,7 @@ public sealed class ActivityLog
         return new ActivityLog
         {
             EventType = eventType, 
-            EventDate = DateTime.UtcNow, 
+            EventDate = DateOnly.FromDateTime(DateTime.UtcNow), 
             Metadata = metadata
         };
     }

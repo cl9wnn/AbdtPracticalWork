@@ -8,7 +8,7 @@ public sealed class ActivityLogReportRow
     /// <summary>
     /// Дата события
     /// </summary>
-    public DateTime EventDate { get; init; }
+    public DateOnly EventDate { get; init; }
     
     /// <summary>
     /// ТИп события
