@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <PreserveCompilationContext>true</PreserveCompilationContext>
+        <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PracticalWork.Library\PracticalWork.Library.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentEmail.Smtp" />
+      <PackageReference Include="FluentEmail.Razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="Templates\**\*.cshtml" CopyToOutputDirectory="Always" />
+    </ItemGroup>
+</Project>

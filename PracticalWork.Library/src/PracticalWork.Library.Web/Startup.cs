@@ -8,6 +8,7 @@ using PracticalWork.Library.Data.PostgreSql;
 using PracticalWork.Library.Web.Configuration;
 using System.Text.Json.Serialization;
 using PracticalWork.Library.MessageBroker.Kafka;
+using PracticalWork.Library.Notification.Email;
 using PracticalWork.Library.SharedKernel.Events;
 using PracticalWork.Library.SharedKernel.Exceptions;
 
@@ -59,6 +60,7 @@ public class Startup
         services.AddCache(Configuration);
         services.AddMinioFileStorage(Configuration);
         services.AddKafkaProducer(Configuration);
+        services.AddEmailService(Configuration);
     }
 
     [UsedImplicitly]

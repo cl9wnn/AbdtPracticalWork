@@ -1,0 +1,115 @@
+﻿@model PracticalWork.Library.Dtos.ReturnReminderEmailMessageDto
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+</head>
+
+<body style="font-family: Arial; background:#f8f9fa; padding:20px;">
+
+    <!-- Обращение -->
+    <p style="font-size:16px; color:#333333;">
+        Уважаемый(ая) @Model.ReaderFullName!
+    </p>
+
+    <p style="font-size:14px; color:#495057;">
+        Напоминаем вам о необходимости возврата книги в библиотеку.
+    </p>
+
+    <!-- Информация о книге -->
+    <div style="
+        border:1px solid #dee2e6;
+        background:#ffffff;
+        padding:20px;
+        margin-top:15px;
+        margin-bottom:15px;
+    ">
+
+        <div style="
+            font-size:18px;
+            font-weight:bold;
+            color:#2c3e50;
+            margin-bottom:15px;
+        ">
+            Информация о книге:
+        </div>
+
+        <div style="margin-bottom:8px;">
+            <span style="font-weight:bold; color:#495057;">Название:</span>
+            <span style="color:#6c757d;">@Model.BookTitle</span>
+        </div>
+
+        <div style="margin-bottom:8px;">
+            <span style="font-weight:bold; color:#495057;">Автор(ы):</span>
+            <span style="color:#6c757d;">@Model.BookAuthors</span>
+        </div>
+
+        <div style="margin-bottom:8px;">
+            <span style="font-weight:bold; color:#495057;">Срок возврата:</span>
+            <span style="color:#28a745; font-weight:bold; font-size:16px;">
+                @Model.ReturnDate.ToString("dd.MM.yyyy")
+            </span>
+        </div>
+
+        <div style="margin-bottom:8px;">
+            <span style="font-weight:bold; color:#495057;">Осталось дней:</span>
+            <span style="color:#6c757d;">@Model.DaysLeft</span>
+        </div>
+
+    </div>
+
+    <p style="font-size:14px; color:#495057;">
+        Пожалуйста, верните книгу до указанной даты.
+    </p>
+
+    <!-- Контакты -->
+    <div style="margin-top:15px;">
+        <div style="font-weight:bold; color:#2c3e50; margin-bottom:8px;">
+            Контакты библиотеки:
+        </div>
+
+        <ul style="
+            font-family:Arial;
+            font-size:14px;
+            color:#495057;
+            padding-left:20px;
+        ">
+            <li style="margin-bottom:5px;">
+                <span style="color:#007bff;">Адрес:</span> @Model.LibraryAddress
+            </li>
+            <li style="margin-bottom:5px;">
+                <span style="color:#007bff;">Телефон:</span> @Model.LibraryPhone
+            </li>
+            <li style="margin-bottom:5px;">
+                <span style="color:#007bff;">Часы работы:</span> @Model.WorkingHours
+            </li>
+        </ul>
+    </div>
+
+    <!-- Подпись -->
+    <p style="
+        font-family:Arial;
+        font-size:14px;
+        color:#6c757d;
+        font-style:italic;
+        margin-top:20px;
+    ">
+        С уважением,<br/>
+        Администрация библиотеки
+    </p>
+
+    <!-- Футер -->
+    <div style="
+        font-family:Arial;
+        font-size:12px;
+        color:#adb5bd;
+        text-align:center;
+        margin-top:30px;
+    ">
+        ---<br/>
+        Это письмо было отправлено автоматически.<br/>
+        Если вы уже вернули книгу, проигнорируйте это сообщение.
+    </div>
+
+</body>
+</html>

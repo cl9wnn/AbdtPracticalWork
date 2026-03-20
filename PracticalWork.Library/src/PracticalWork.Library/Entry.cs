@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using PracticalWork.Library.Abstractions.Services.Domain;
 using PracticalWork.Library.Options;
+using PracticalWork.Library.Options.Cache;
+using PracticalWork.Library.Options.Email;
 using PracticalWork.Library.Services;
 
 namespace PracticalWork.Library;
@@ -15,7 +17,7 @@ public static class Entry
     {
         services.Configure<BooksCacheOptions>(configuration.GetSection("App:BooksCache"));
         services.Configure<ReadersCacheOptions>(configuration.GetSection("App:ReadersCache"));
-
+        services.Configure<EmailTemplateSettings>(configuration.GetSection("App:EmailTemplateSettings"));
         services.AddScoped<IBookService, BookService>();
         services.AddScoped<IReaderService, ReaderService>();
         services.AddScoped<ILibraryService, LibraryService>();

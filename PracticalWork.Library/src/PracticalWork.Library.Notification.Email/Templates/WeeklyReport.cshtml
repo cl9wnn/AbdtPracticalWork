@@ -1,0 +1,169 @@
+﻿@model PracticalWork.Library.Dtos.WeeklyReportEmailMessageDto
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+</head>
+
+<body style="font-family: Arial; background:#f8f9fa; padding:20px;">
+
+<!-- Заголовок -->
+<div style="
+        font-size:22px;
+        font-weight:bold;
+        color:#2c3e50;
+        margin-bottom:15px;
+    ">
+    Еженедельный отчет библиотеки за период
+    @Model.StartDate.ToString("dd.MM.yyyy") -
+    @Model.EndDate.ToString("dd.MM.yyyy")
+</div>
+
+<!-- Период -->
+<div style="
+        font-size:16px;
+        color:#495057;
+        margin-bottom:20px;
+    ">
+    Период:
+    @Model.StartDate.ToString("dd.MM.yyyy")
+    -
+    @Model.EndDate.ToString("dd.MM.yyyy")
+</div>
+
+<!-- Статистика -->
+<div style="
+        background:#ffffff;
+        padding:30px;
+        border-radius:0 0 8px 8px;
+    ">
+
+    <!-- Заголовок блока -->
+    <div style="
+            font-size:20px;
+            font-weight:bold;
+            color:#2c3e50;
+            border-bottom:2px solid #dee2e6;
+            padding-bottom:10px;
+            margin-bottom:20px;
+        ">
+        Основная статистика
+    </div>
+
+    <!-- Строки статистики -->
+
+    <div class="stat-item" style="
+            display:flex;
+            justify-content:space-between;
+            padding:15px 0;
+            border-bottom:1px dashed #e9ecef;
+        ">
+        <span style="font-size:16px; color:#495057;">Новые книги</span>
+        <span style="font-size:18px; font-weight:bold; color:#2c3e50;">
+            @Model.NewBooksCount
+        </span>
+    </div>
+
+    <div class="stat-item" style="
+            display:flex;
+            justify-content:space-between;
+            padding:15px 0;
+            border-bottom:1px dashed #e9ecef;
+        ">
+        <span style="font-size:16px; color:#495057;">Новые читатели</span>
+        <span style="font-size:18px; font-weight:bold; color:#2c3e50;">
+            @Model.NewReadersCount
+        </span>
+    </div>
+
+    <div class="stat-item" style="
+            display:flex;
+            justify-content:space-between;
+            padding:15px 0;
+            border-bottom:1px dashed #e9ecef;
+        ">
+        <span style="font-size:16px; color:#495057;">Выдано книг</span>
+        <span style="font-size:18px; font-weight:bold; color:#2c3e50;">
+            @Model.IssuedBooksCount
+        </span>
+    </div>
+
+    <div class="stat-item" style="
+            display:flex;
+            justify-content:space-between;
+            padding:15px 0;
+            border-bottom:1px dashed #e9ecef;
+        ">
+        <span style="font-size:16px; color:#495057;">Возвращено книг</span>
+        <span style="font-size:18px; font-weight:bold; color:#2c3e50;">
+            @Model.ReturnedBooksCount
+        </span>
+    </div>
+
+    <div class="stat-item" style="
+            display:flex;
+            justify-content:space-between;
+            padding:15px 0;
+        ">
+        <span style="font-size:16px; color:#495057;">Просроченные выдачи</span>
+        <span style="font-size:18px; font-weight:bold; color:#dc3545;">
+            @Model.OverdueBooksCount
+        </span>
+    </div>
+
+</div>
+
+<!-- Кнопка скачивания -->
+<div style="margin-top:25px;">
+    <a href="@Model.ReportDownloadLink" style="
+            background:#28a745;
+            color:#ffffff;
+            font-size:16px;
+            font-weight:bold;
+            padding:12px 24px;
+            border-radius:4px;
+            text-decoration:none;
+            display:inline-block;
+        ">
+        Скачать полный отчет
+    </a>
+</div>
+
+<!-- Примечание -->
+<div style="
+        font-size:14px;
+        color:#6c757d;
+        font-style:italic;
+        margin-top:25px;
+    ">
+    Отчет сгенерирован автоматически:
+    @Model.GeneratedAt.ToString("dd.MM.yyyy HH:mm")
+</div>
+
+<!-- Подпись -->
+<p style="
+        font-family:Arial;
+        font-size:14px;
+        color:#495057;
+        margin-top:20px;
+    ">
+    С уважением,<br/>
+    Система библиотеки
+</p>
+
+<!-- Футер -->
+<div style="
+        font-family:Arial;
+        font-size:12px;
+        color:#adb5bd;
+        text-align:center;
+        padding:20px;
+        border-top:1px solid #dee2e6;
+        margin-top:30px;
+    ">
+    Это автоматически сгенерированное сообщение.<br/>
+    Для получения дополнительной информации обратитесь в систему
+</div>
+
+</body>
+</html>

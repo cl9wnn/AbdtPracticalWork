@@ -4,6 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,6 +34,7 @@
     <ProjectReference Include="..\PracticalWork.Library.Data.Minio\PracticalWork.Library.Data.Minio.csproj" />
     <ProjectReference Include="..\PracticalWork.Library.Data.PostgreSql\PracticalWork.Library.Data.PostgreSql.csproj" />
     <ProjectReference Include="..\PracticalWork.Library.MessageBroker.Kafka\PracticalWork.Library.MessageBroker.Kafka.csproj" />
+    <ProjectReference Include="..\PracticalWork.Library.Notification.Email\PracticalWork.Library.Notification.Email.csproj" />
     <ProjectReference Include="..\PracticalWork.Library.SharedKernel\PracticalWork.Library.SharedKernel.csproj" />
     <ProjectReference Include="..\PracticalWork.Library\PracticalWork.Library.csproj" />
   </ItemGroup>
