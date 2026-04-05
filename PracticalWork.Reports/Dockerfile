@@ -19,6 +19,8 @@ COPY src/PracticalWork.Reports.Data.Minio/PracticalWork.Reports.Data.Minio.cspro
 COPY utils/PracticalWork.Reports.Data.PostgreSql.Migrator/PracticalWork.Reports.Data.PostgreSql.Migrator.csproj utils/PracticalWork.Reports.Data.PostgreSql.Migrator/
 
 COPY PracticalWork.Reports.sln .
+COPY Directory.Packages.props .
+COPY Directory.Build.props .
 
 RUN dotnet restore PracticalWork.Reports.sln
 

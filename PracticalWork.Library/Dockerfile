@@ -20,6 +20,8 @@ COPY src/PracticalWork.Library.Notification.Email/PracticalWork.Library.Notifica
 COPY utils/PracticalWork.Library.Data.PostgreSql.Migrator/PracticalWork.Library.Data.PostgreSql.Migrator.csproj utils/PracticalWork.Library.Data.PostgreSql.Migrator/
 
 COPY PracticalWork.Library.sln .
+COPY Directory.Packages.props .
+COPY Directory.Build.props .
 
 RUN dotnet restore PracticalWork.Library.sln
 
