@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticalWork.Library.Messa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticalWork.Library.Notification.Email", "src\PracticalWork.Library.Notification.Email\PracticalWork.Library.Notification.Email.csproj", "{D299422F-D05C-4501-A7D4-99B35D7A8FCD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticalWork.Library.BackgroundJobs.Quartz", "src\PracticalWork.Library.BackgroundJobs.Quartz\PracticalWork.Library.BackgroundJobs.Quartz.csproj", "{5B4BD75D-B5F2-432F-96C8-87975FB3A610}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +92,10 @@ Global
 		{D299422F-D05C-4501-A7D4-99B35D7A8FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D299422F-D05C-4501-A7D4-99B35D7A8FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D299422F-D05C-4501-A7D4-99B35D7A8FCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B4BD75D-B5F2-432F-96C8-87975FB3A610}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B4BD75D-B5F2-432F-96C8-87975FB3A610}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B4BD75D-B5F2-432F-96C8-87975FB3A610}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B4BD75D-B5F2-432F-96C8-87975FB3A610}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,6 +113,7 @@ Global
 		{DD16BE4D-1264-4DF0-9E14-21D11C438840} = {7E366027-D18D-45C9-928C-D527C6271DC9}
 		{01DBBF73-F13B-49D8-B3E4-347BE32B572B} = {5EF1ADE2-5A1C-434E-83B7-32EFF5DF0A11}
 		{D299422F-D05C-4501-A7D4-99B35D7A8FCD} = {5EF1ADE2-5A1C-434E-83B7-32EFF5DF0A11}
+		{5B4BD75D-B5F2-432F-96C8-87975FB3A610} = {5EF1ADE2-5A1C-434E-83B7-32EFF5DF0A11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C42A2C9B-25DC-4CF3-8FF1-E3CE64B080D6}

@@ -7,9 +7,9 @@ using PracticalWork.Library.Data.Minio;
 using PracticalWork.Library.Data.PostgreSql;
 using PracticalWork.Library.Web.Configuration;
 using System.Text.Json.Serialization;
+using PracticalWork.Library.BackgroundJobs.Quartz;
 using PracticalWork.Library.MessageBroker.Kafka;
 using PracticalWork.Library.Notification.Email;
-using PracticalWork.Library.SharedKernel.Events;
 using PracticalWork.Library.SharedKernel.Exceptions;
 
 namespace PracticalWork.Library.Web;
@@ -61,6 +61,7 @@ public class Startup
         services.AddMinioFileStorage(Configuration);
         services.AddKafkaProducer(Configuration);
         services.AddEmailService(Configuration);
+        services.AddQuartz(Configuration);
     }
 
     [UsedImplicitly]
