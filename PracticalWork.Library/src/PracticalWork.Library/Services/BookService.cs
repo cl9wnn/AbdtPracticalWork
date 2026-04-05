@@ -121,6 +121,65 @@ public sealed class BookService : IBookService
         };
     }
 
+    /// <inheritdoc cref="IBookService.ArchiveOldBooks"/>
+    public async Task<ArchiveReportDto> ArchiveOldBooks(int yearsWithoutBorrow, int maxBooksPerRun)
+    {
+        var startTime = DateTime.UtcNow;
+        var thresholdDate = startTime.AddYears(-yearsWithoutBorrow);
+        
+        var booksForArchiving = await _bookRepository.GetBooksForArchiving(thresholdDate, maxBooksPerRun);
+        
+        var report = new ArchiveReportDto();
+        report.TotalProcessed = booksForArchiving.Count;
+
+        foreach (var (id, book) in booksForArchiving)
+        {
+            try
+            {
+                if (!book.CanBeArchived())
+                {
+                    report.Skipped++;
+                    report.SkippedDetails.Add(new ArchiveSkipDetailDto
+                    {
+                        BookId = id,
+                        Reason = $"Книга \"{book.Title}\" не может быть архивирована, так как выдана читателю."
+                    });
+
+                    continue;
+                }
+
+                book.Archive();
+
+                await _bookRepository.Update(id, book);
+
+                var bookArchivedEvent = new BookArchivedEvent(
+                    BookId: id,
+                    Title: book.Title,
+                    ArchivedAt: DateTime.UtcNow
+                );
+
+                await _kafkaProducer.ProduceAsync(bookArchivedEvent.EventId.ToString(), bookArchivedEvent);
+
+                report.SuccessfullyArchived++;
+            }
+            catch (Exception ex)
+            {
+                report.Skipped++;
+
+                report.SkippedDetails.Add(new ArchiveSkipDetailDto
+                {
+                    BookId = id,
+                    Reason = $"Не удалось архивировать книгу \"{book.Title}\". Сообщение об ошибке {ex.Message}"
+                });
+            }
+        }
+
+        await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
+        report.ExecutionTimeMs = (long)(DateTime.UtcNow - startTime).TotalMilliseconds;
+
+        return report;
+    }
+
     /// <inheritdoc cref="IBookService.GetBooksPage"/>
     public async Task<PageDto<BookListDto>> GetBooksPage(BookFilterDto filter, PaginationDto pagination)
     {

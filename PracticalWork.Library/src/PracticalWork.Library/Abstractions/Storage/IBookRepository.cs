@@ -31,4 +31,12 @@ public interface IBookRepository: IEntityRepository<Guid, Book>
     /// <param name="pagination">Параметры пагинации</param>
     /// <returns>Список не архивных книг из библиотеки</returns>
     Task<IReadOnlyList<LibraryBookDto>> GetLibraryBooks(BookFilterDto filter, PaginationDto pagination);
+    
+    /// <summary>
+    /// Получение списка старых книг, подлежащих архивации
+    /// </summary>
+    /// <param name="thresholdDate"></param>
+    /// <param name="limit"></param>
+    /// <returns></returns>
+    Task<IReadOnlyList<(Guid, Book)>> GetBooksForArchiving(DateTime thresholdDate, int limit);
 }

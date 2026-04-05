@@ -29,6 +29,18 @@ public interface IBookService : IEntityService<Book>
     /// <param name="bookId">Идентификатор книги</param>
     /// <returns>Информация об архивированной книге</returns>
     Task<ArchivedBookDto> ArchiveBook(Guid bookId);
+    
+    /// <summary>
+    /// Архивирование старых книг
+    /// </summary>
+    /// <param name="yearsWithoutBorrow">
+    /// Количество лет, в течение которых книга не выдавалась, чтобы считаться
+    /// кандидатом на архивацию</param>
+    /// <param name="maxBooksPerRun">
+    /// Максимальное количество книг для обработки за один запуск
+    /// </param>
+    /// <returns>Отчет об итогах архивации книг</returns>
+    Task<ArchiveReportDto> ArchiveOldBooks(int yearsWithoutBorrow, int maxBooksPerRun);
 
     /// <summary>
     /// Получение списка книг с учетом фильтров и пагинации

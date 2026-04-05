@@ -170,7 +170,28 @@ public sealed class BookRepository : IBookRepository
             .Select(x => x.Book.ToLibraryBookDto(x.ActiveBorrow))
             .ToList();
     }
-    
+
+    /// <inheritdoc cref="IBookRepository.GetBooksForArchiving"/>
+    public async Task<IReadOnlyList<(Guid, Book)>> GetBooksForArchiving(DateTime thresholdDate, int limit)
+    {
+        return await _appDbContext.Books
+            .Include(b => b.IssuanceRecords)
+            .Where(b =>
+                b.Status == BookStatus.Available &&
+                (
+                    !b.IssuanceRecords.Any() ||
+                    b.IssuanceRecords
+                        .Max(r => r.BorrowDate) < DateOnly.FromDateTime(thresholdDate)
+                )
+            )
+            .Take(limit)
+            .Select(b => new ValueTuple<Guid, Book>(
+                b.Id,
+                b.ToBook()
+            ))
+            .ToListAsync();
+    }
+
     /// <summary>
     /// Построение запроса для поиска книг по фильтрации
     /// </summary>
