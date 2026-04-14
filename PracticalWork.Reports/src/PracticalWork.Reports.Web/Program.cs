@@ -28,12 +28,7 @@ public class Program
     public static async Task RunWebApplication(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        builder.Configuration.Sources.Clear();
-        builder.Configuration
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true, reloadOnChange: false);
-
+        
         var startup = new Startup(builder.Configuration);
 
         startup.ConfigureServices(builder.Services);
