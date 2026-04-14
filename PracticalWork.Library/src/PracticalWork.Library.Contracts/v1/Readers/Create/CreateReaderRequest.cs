@@ -5,5 +5,6 @@
 /// </summary>
 /// <param name="FullName">ФИО читателя</param>
 /// <param name="PhoneNumber">Номер телефона читателя</param>
+/// <param name="Email">Электронная почта читателя</param>
 /// <param name="ExpiryDate">Дата окончания действия карточки</param>
-public sealed record CreateReaderRequest(string FullName, string PhoneNumber, DateOnly ExpiryDate);
+public sealed record CreateReaderRequest(string FullName, string PhoneNumber, string Email, DateOnly ExpiryDate);

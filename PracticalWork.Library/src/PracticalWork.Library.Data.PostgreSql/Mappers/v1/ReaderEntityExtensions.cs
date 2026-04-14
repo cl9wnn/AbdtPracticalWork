@@ -11,6 +11,7 @@ public static class ReaderEntityExtensions
         {
             FullName = entity.FullName,
             PhoneNumber = entity.PhoneNumber,
+            Email = entity.Email,
             ExpiryDate = entity.ExpiryDate,
             IsActive = entity.IsActive
         };

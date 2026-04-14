@@ -10,6 +10,7 @@ public static class ReadersExtensions
         {
            FullName = request.FullName,
            PhoneNumber = request.PhoneNumber,
+           Email = request.Email,
            ExpiryDate = request.ExpiryDate,
         };
 }

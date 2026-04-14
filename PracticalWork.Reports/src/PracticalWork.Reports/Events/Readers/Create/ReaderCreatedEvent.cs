@@ -11,12 +11,14 @@ namespace PracticalWork.Reports.Events.Readers.Create;
 /// <param name="ReaderId">Уникальный идентификатор читателя</param>
 /// <param name="FullName">Полное имя читателя</param>
 /// <param name="PhoneNumber">Номер телефона читателя</param>
+/// <param name="Email">Электронная почта читателя</param>
 /// <param name="ExpiryDate">Дата окончания действия карточки</param>
 /// <param name="CreatedAt">Дата и время создания карточки</param>
 public sealed record ReaderCreatedEvent(
     Guid ReaderId,
     string FullName,
     string PhoneNumber,
+    string Email,
     DateOnly ExpiryDate,
     DateTime CreatedAt
     ) : BaseLibraryEvent("reader.created"), IActivityLoggable
@@ -28,6 +30,7 @@ public sealed record ReaderCreatedEvent(
             ReaderId,
             FullName,
             PhoneNumber,
+            Email,
             ExpiryDate,
             CreatedAt
         }));

@@ -71,6 +71,7 @@ public class ReaderService : IReaderService
             ReaderId: readerId,
             FullName: reader.FullName,
             PhoneNumber: reader.PhoneNumber,
+            Email: reader.Email,
             ExpiryDate: reader.ExpiryDate,
             CreatedAt: DateTime.UtcNow
         );

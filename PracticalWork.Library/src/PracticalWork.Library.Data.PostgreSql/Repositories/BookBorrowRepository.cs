@@ -95,6 +95,7 @@ public class BookBorrowRepository: IBookBorrowRepository
             Id = bookBorrowEntity.ReaderId,
             FullName = bookBorrowEntity.Reader.FullName,
             PhoneNumber = bookBorrowEntity.Reader.PhoneNumber,
+            Email = bookBorrowEntity.Reader.Email
         };
     }
 }

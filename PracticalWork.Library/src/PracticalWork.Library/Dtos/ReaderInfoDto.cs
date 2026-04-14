@@ -19,4 +19,9 @@ public class ReaderInfoDto
     /// Номер телефона читателя
     /// </summary>
     public string PhoneNumber { get; set; }
+    
+    /// <summary>
+    /// Электронная почта читателя
+    /// </summary>
+    public string Email { get; set; }
 }

@@ -15,6 +15,11 @@ public class CreateReaderRequestValidator: AbstractValidator<CreateReaderRequest
             .NotEmpty().WithMessage("Номер телефона не должен быть пустым.")
             .Matches(@"^(\+7|8)\d{10}$").WithMessage("Неверный формат номера телефона.");
         
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email обязателен для заполнения.")
+            .EmailAddress().WithMessage("Неверный формат email адреса.")
+            .MaximumLength(128).WithMessage("Email не должен превышать 128 символов.");
+        
         RuleFor(x => x.ExpiryDate)
             .NotEmpty().WithMessage("Дата окончания срока действия карточки обязательна")
             .GreaterThan(DateOnly.FromDateTime(DateTime.UtcNow))

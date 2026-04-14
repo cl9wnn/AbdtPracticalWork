@@ -66,6 +66,7 @@ public class ReaderRepository: IReaderRepository
             CreatedAt = DateTime.UtcNow,
             FullName = reader.FullName,
             PhoneNumber = reader.PhoneNumber,
+            Email = reader.Email,
             ExpiryDate = reader.ExpiryDate,
             IsActive = reader.IsActive,
         };

@@ -19,6 +19,11 @@ public sealed class ReaderEntity : EntityBase
     public string PhoneNumber { get; set; }
 
     /// <summary>
+    /// Электронная почта читателя
+    /// </summary>
+    public string Email { get; set; }
+    
+    /// <summary>
     /// Дата окончания действия карточки
     /// </summary>
     public DateOnly ExpiryDate { get; set; }

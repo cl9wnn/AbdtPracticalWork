@@ -17,10 +17,15 @@ internal sealed class ReaderConfiguration : EntityConfigurationBase<ReaderEntity
             .HasMaxLength(12)
             .IsRequired();
 
+        builder.Property(p => p.Email)
+            .HasMaxLength(128)
+            .IsRequired();
+        
         builder.HasMany(c => c.BorrowedRecords)
             .WithOne(r => r.Reader)
             .HasForeignKey(p => p.ReaderId);
 
         builder.HasIndex(r => r.PhoneNumber).IsUnique();
+        builder.HasIndex(r => r.Email).IsUnique();
     }
 }
