@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PracticalWork.Library.BackgroundJobs.Quartz.Interfaces;
+using PracticalWork.Library.BackgroundJobs.Quartz.Listeners;
 using PracticalWork.Library.BackgroundJobs.Quartz.Options;
 using Quartz;
 
@@ -14,7 +16,8 @@ public static class Entry
     {
         services.Configure<JobSettings>(configuration.GetSection("App:JobSettings"));    
         var jobSettings = configuration.GetSection("App:JobSettings").Get<JobSettings>();
-
+        services.AddSingleton<LoggingJobListener>();
+        
         var jobTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(x => x.GetTypes())
             .Where(t => typeof(ILibraryJob).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
@@ -22,6 +25,8 @@ public static class Entry
         
         services.AddQuartz(q =>
         {
+            q.AddJobListener<LoggingJobListener>();
+
             foreach (var jobType in jobTypes)
             {
                 var jobConfig = jobSettings!.Jobs[jobType.Name];

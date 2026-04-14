@@ -1,6 +1,6 @@
 ﻿using Quartz;
 
-namespace PracticalWork.Library.BackgroundJobs.Quartz;
+namespace PracticalWork.Library.BackgroundJobs.Quartz.Interfaces;
 
 /// <summary>
 /// Интерфейс для всех фоновых задач в системе управления библиотекой

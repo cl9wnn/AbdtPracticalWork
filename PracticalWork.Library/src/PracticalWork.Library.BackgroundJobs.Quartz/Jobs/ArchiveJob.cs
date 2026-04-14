@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PracticalWork.Library.Abstractions.Services.Domain;
+using PracticalWork.Library.BackgroundJobs.Quartz.Interfaces;
 using PracticalWork.Library.Options.Archive;
 using Quartz;
 
@@ -40,8 +41,6 @@ public class ArchiveJob : ILibraryJob
     /// <param name="context">Контекст выполнения фоновой задачи</param>
     public async Task Execute(IJobExecutionContext context)
     {
-        _logger.LogInformation("Archive Job running...");
-        
         var archiveSettings = _archiveSettings.Value;
 
         var report = await _bookService.ArchiveOldBooks(
