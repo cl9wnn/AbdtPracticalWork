@@ -20,7 +20,7 @@ namespace PracticalWork.Library.Data.PostgreSql.Migrations
 
             migrationBuilder.Sql(
                 @"UPDATE ""Readers"" 
-                SET ""Email"" = ""Id""::text || '.mail.ru'");
+                SET ""Email"" = ""Id""::text || '@mail.ru'");
             
             migrationBuilder.CreateIndex(
                 name: "IX_Readers_Email",

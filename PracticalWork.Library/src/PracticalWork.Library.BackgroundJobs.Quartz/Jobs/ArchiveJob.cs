@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using PracticalWork.Library.Abstractions.Services.Domain;
 using PracticalWork.Library.BackgroundJobs.Quartz.Interfaces;
-using PracticalWork.Library.Options.Archive;
+using PracticalWork.Library.Options.Jobs;
 using Quartz;
 
 namespace PracticalWork.Library.BackgroundJobs.Quartz.Jobs;

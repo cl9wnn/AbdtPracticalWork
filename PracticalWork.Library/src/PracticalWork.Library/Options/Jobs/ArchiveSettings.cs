@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Library.Options.Archive;
+﻿namespace PracticalWork.Library.Options.Jobs;
 
 /// <summary>
 /// Настройки автоматической архивации старых книг в библиотеке

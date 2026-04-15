@@ -39,4 +39,10 @@ public interface IBookBorrowRepository
     /// <returns>Краткая информация о читателе</returns>
     Task<ReaderInfoDto> GetReaderInfoByBorrowedBookId(Guid borrowedBookId);
 
+    /// <summary>
+    /// Получение списка активных выдач книг, срок возврата которых наступает через n дней 
+    /// </summary>
+    /// <param name="days">Количество дней до возврата книги</param>
+    /// <returns></returns>
+    Task<IReadOnlyList<BorrowedBookDto>> GetBorrowsDueInDays(int days);
 }

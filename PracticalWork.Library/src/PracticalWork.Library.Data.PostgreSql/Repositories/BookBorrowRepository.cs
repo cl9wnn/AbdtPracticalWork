@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PracticalWork.Library.Abstractions.Storage;
 using PracticalWork.Library.Data.PostgreSql.Entities;
+using PracticalWork.Library.Data.PostgreSql.Mappers.v1;
 using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Enums;
 using PracticalWork.Library.Exceptions;
@@ -97,5 +98,20 @@ public class BookBorrowRepository: IBookBorrowRepository
             PhoneNumber = bookBorrowEntity.Reader.PhoneNumber,
             Email = bookBorrowEntity.Reader.Email
         };
+    }
+    
+    /// <inheritdoc cref="IBookBorrowRepository.GetBorrowsDueInDays"/>
+    public async Task<IReadOnlyList<BorrowedBookDto>> GetBorrowsDueInDays(int days)
+    {
+        var targetDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(days);
+        
+        return await _dbContext.BookBorrows
+            .Include(x => x.Reader)
+            .Include(x => x.Book)
+            .Where(x =>
+                x.Status == BookIssueStatus.Issued &&
+                x.DueDate == targetDate)
+            .Select(x => x.ToBorrowedBookDto())
+            .ToListAsync();
     }
 }
