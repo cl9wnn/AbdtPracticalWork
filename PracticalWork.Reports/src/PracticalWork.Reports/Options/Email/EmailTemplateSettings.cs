@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Library.Options.Email;
+﻿namespace PracticalWork.Reports.Options.Email;
 
 /// <summary>
 /// Настройки шаблонов email сообщений в системе библиотеки.
@@ -7,7 +7,7 @@
 public class EmailTemplateSettings
 {
     /// <summary>
-    /// Настройки шаблона для email напоминаний о возврате книг
+    /// Настройки шаблона для email с еженедельными отчетами
     /// </summary>
-    public ReturnReminderTemplate ReturnReminder { get; set; } = new();
+    public WeeklyReportTemplate WeeklyReport { get; set; } = new();
 }

@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Reports.Options;
+﻿namespace PracticalWork.Reports.Options.Cache;
 
 /// <summary>
 ///  Универсальные настройки для записи в кэше

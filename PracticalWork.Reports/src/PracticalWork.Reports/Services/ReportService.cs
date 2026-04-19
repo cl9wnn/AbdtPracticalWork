@@ -7,6 +7,7 @@ using PracticalWork.Reports.Enums;
 using PracticalWork.Reports.Exceptions;
 using PracticalWork.Reports.Models;
 using PracticalWork.Reports.Options;
+using PracticalWork.Reports.Options.Cache;
 
 namespace PracticalWork.Reports.Services;
 

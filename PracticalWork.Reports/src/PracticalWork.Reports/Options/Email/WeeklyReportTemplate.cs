@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Library.Options.Email;
+﻿namespace PracticalWork.Reports.Options.Email;
 
 /// <summary>
 /// Шаблон для email с еженедельными отчетами библиотеки

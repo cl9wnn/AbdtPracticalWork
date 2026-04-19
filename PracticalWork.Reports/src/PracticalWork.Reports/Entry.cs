@@ -10,6 +10,7 @@ using PracticalWork.Reports.Events.Readers.Close;
 using PracticalWork.Reports.Events.Readers.Create;
 using PracticalWork.Reports.Models;
 using PracticalWork.Reports.Options;
+using PracticalWork.Reports.Options.Cache;
 using PracticalWork.Reports.Services;
 using PracticalWork.Reports.SharedKernel.Abstractions;
 

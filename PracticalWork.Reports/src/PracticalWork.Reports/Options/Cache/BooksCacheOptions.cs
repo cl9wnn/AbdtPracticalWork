@@ -1,4 +1,4 @@
-﻿namespace PracticalWork.Reports.Options;
+﻿namespace PracticalWork.Reports.Options.Cache;
 
 /// <summary>
 /// Настройки кэширования для функциональности отчетов книг
