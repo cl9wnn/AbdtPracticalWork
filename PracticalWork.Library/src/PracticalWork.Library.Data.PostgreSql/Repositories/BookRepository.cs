@@ -175,7 +175,6 @@ public sealed class BookRepository : IBookRepository
     public async Task<IReadOnlyList<(Guid, Book)>> GetBooksForArchiving(DateTime thresholdDate, int limit)
     {
         return await _appDbContext.Books
-            .Include(b => b.IssuanceRecords)
             .Where(b =>
                 b.Status == BookStatus.Available &&
                 (

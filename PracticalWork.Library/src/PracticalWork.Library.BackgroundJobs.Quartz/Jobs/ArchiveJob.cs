@@ -10,7 +10,6 @@ namespace PracticalWork.Library.BackgroundJobs.Quartz.Jobs;
 /// <summary>
 /// Фоновая задача для автоматической архивации старых книг
 /// </summary>
-/// <remarks>Выполняется 1-го числа каждого месяца в 3:00 по МСК</remarks>
 public class ArchiveJob : ILibraryJob
 {
     private readonly ILogger<ArchiveJob> _logger;
@@ -32,8 +31,7 @@ public class ArchiveJob : ILibraryJob
     /// <summary>
     /// Описание задачи для отображения в интерфейсе управления
     /// </summary>
-    public string Description { get; } = "Задача для автоматической архивации старых книг." +
-                                         "Начинает выполнение 1-го числа каждого месяца в 3:00 по МСК";
+    public string Description { get; } = "Задача для автоматической архивации старых книг.";
     
     /// <summary>
     /// Выполнение фоновой задачи по архивации книг

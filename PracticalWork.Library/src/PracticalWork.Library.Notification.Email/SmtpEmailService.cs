@@ -1,4 +1,5 @@
-﻿using FluentEmail.Core;
+﻿using System.Net.Mail;
+using FluentEmail.Core;
 using FluentEmail.Core.Models;
 using Microsoft.Extensions.Logging;
 using PracticalWork.Library.Abstractions.Services.Infrastructure;
@@ -41,7 +42,7 @@ public class SmtpEmailService: IEmailService
             {
                 _logger.LogError("Возникла ошибка при отправке письма на адрес {to}. Ошибка: {errors}", to,
                     string.Join(",\n ", result.ErrorMessages));
-                throw new Exception(string.Join(",\n ", result.ErrorMessages));
+                throw new SmtpException(string.Join(",\n ", result.ErrorMessages));
             }
         }
         catch (Exception ex)
@@ -73,7 +74,7 @@ public class SmtpEmailService: IEmailService
             {
                 _logger.LogError("Возникла ошибка при рассылке писем. Ошибка: {errors}",
                     string.Join(",\n ", result.ErrorMessages));
-                throw new Exception(string.Join(",\n ", result.ErrorMessages));
+                throw new SmtpException(string.Join(",\n ", result.ErrorMessages));
             }
         }
         catch (Exception ex)

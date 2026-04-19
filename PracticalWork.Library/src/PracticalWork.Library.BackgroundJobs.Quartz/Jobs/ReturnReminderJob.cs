@@ -13,7 +13,6 @@ namespace PracticalWork.Library.BackgroundJobs.Quartz.Jobs;
 /// <summary>
 /// Фоновая задача для автоматического напоминания читателей о возврате книг
 /// </summary>
-/// <remarks>Выполняется ежедневно в 9:00 по МСК</remarks>
 public class ReturnReminderJob : ILibraryJob
 {
     private readonly ILogger<ReturnReminderJob> _logger;
@@ -36,13 +35,12 @@ public class ReturnReminderJob : ILibraryJob
     /// <summary>
     /// Уникальное имя задачи
     /// </summary>
-    public string JobName { get; } = "ReturnReminder Job";
+    public string JobName { get; } = "Return Reminder Job";
 
     /// <summary>
     /// Описание задачи для отображения в интерфейсе управления
     /// </summary>
-    public string Description { get; } = "Задача для автоматического напоминания читателям о возврате книг" +
-                                         "Выполняется ежедневно в 6.00 UTC";
+    public string Description { get; } = "Задача для автоматического напоминания читателям о возврате книг.";
 
     /// <summary>
     /// Выполнение фоновой задачи
