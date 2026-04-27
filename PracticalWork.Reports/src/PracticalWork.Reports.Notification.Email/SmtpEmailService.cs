@@ -11,12 +11,12 @@ namespace PracticalWork.Reports.Notification.Email;
 /// </summary>
 public class SmtpEmailService: IEmailService
 {
-    private readonly IFluentEmail _fluentEmail;
+    private readonly IFluentEmailFactory _fluentEmailFactory;
     private readonly ILogger<SmtpEmailService> _logger;
 
-    public SmtpEmailService(IFluentEmail fluentEmail, ILogger<SmtpEmailService> logger)
+    public SmtpEmailService(IFluentEmailFactory fluentEmailFactory, ILogger<SmtpEmailService> logger)
     {
-        _fluentEmail = fluentEmail;
+        _fluentEmailFactory = fluentEmailFactory;
         _logger = logger;
     }
     
@@ -28,7 +28,9 @@ public class SmtpEmailService: IEmailService
         {
             var templatePath = Path.Combine(AppContext.BaseDirectory, "Templates", message.TemplateName + ".cshtml");
 
-            var result = await _fluentEmail
+            var emailFactory = _fluentEmailFactory.Create();
+
+            var result = await emailFactory
                 .To(to)
                 .Subject(subject)
                 .UsingTemplateFromFile(templatePath, message)
@@ -59,8 +61,10 @@ public class SmtpEmailService: IEmailService
         try
         {
             var templatePath = Path.Combine(AppContext.BaseDirectory, "Templates", message.TemplateName + ".cshtml");
+            
+            var emailFactory = _fluentEmailFactory.Create();
 
-            var result = await _fluentEmail
+            var result = await emailFactory
                 .To(to.Select(x => new Address(x)))
                 .Subject(subject)
                 .UsingTemplateFromFile(templatePath, message)

@@ -19,7 +19,7 @@ public static class Entry
         services
             .AddFluentEmail(emailSettings!.SenderEmail)
             .AddRazorRenderer()
-            .AddSmtpSender(new SmtpClient()
+            .AddSmtpSender(() => new SmtpClient()
             {
                 Host = emailSettings.SmtpServer,
                 Port = emailSettings.SmtpPort,
