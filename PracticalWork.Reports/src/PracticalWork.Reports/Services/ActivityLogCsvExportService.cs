@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Text;
-using System.Text.Json;
 using CsvHelper;
 using PracticalWork.Reports.Abstractions.Services.Domain;
 using PracticalWork.Reports.Dtos;
@@ -12,9 +11,9 @@ namespace PracticalWork.Reports.Services;
 /// Сервис для генерации csv таблицы по логам активностей
 /// </summary>
 public sealed class ActivityLogCsvExportService
-    : ICsvExportService<ActivityLog>
+    : ITabularCsvExportService<ActivityLog>
 {
-    /// <inheritdoc cref="ICsvExportService{T}.Generate"/>
+    /// <inheritdoc cref="ITabularCsvExportService{T}.Generate"/>
     public byte[] Generate(IEnumerable<ActivityLog> logs)
     {
         var rows = logs.Select(x => new ActivityLogReportRow

@@ -18,54 +18,49 @@ public class ReportService : IReportService
 {
     private readonly IReportRepository _reportRepository;
     private readonly IActivityLogRepository _activityLogRepository;
-    private readonly ICsvExportService<ActivityLog> _csvExportService;
+    private readonly ITabularCsvExportService<ActivityLog> _tabularCsvExportService;
+    private readonly IKeyValueCsvExportService<WeeklyStatisticsDto> _keyValueCsvExportService;
     private readonly IFileStorageService _fileStorageService;
     private readonly ICacheService _cacheService;
-    private IOptions<BooksCacheOptions> _cacheOptions;
+    private readonly IOptions<BooksCacheOptions> _cacheOptions;
     private readonly string _reportsCacheVersionPrefix;
 
-    public ReportService(IReportRepository reportRepository, ICsvExportService<ActivityLog> csvExportService,
+    public ReportService(IReportRepository reportRepository, ITabularCsvExportService<ActivityLog> tabularCsvExportService,
         IFileStorageService fileStorageService, IActivityLogRepository activityLogRepository,
         ICacheService cacheService,
-        IOptions<BooksCacheOptions> options, IOptions<BooksCacheOptions> cacheOptions)
+        IOptions<BooksCacheOptions> cacheOptions,
+        IKeyValueCsvExportService<WeeklyStatisticsDto> keyValueCsvExportService)
     {
         _reportRepository = reportRepository;
-        _csvExportService = csvExportService;
+        _tabularCsvExportService = tabularCsvExportService;
         _fileStorageService = fileStorageService;
         _activityLogRepository = activityLogRepository;
         _cacheService = cacheService;
         _cacheOptions = cacheOptions;
+        _keyValueCsvExportService = keyValueCsvExportService;
 
-        _reportsCacheVersionPrefix = options.Value.ReportsCacheVersionPrefix;
+        _reportsCacheVersionPrefix = cacheOptions.Value.ReportsCacheVersionPrefix;
     }
 
-    /// <inheritdoc cref="IReportService.Generate"/>
-    public async Task<Report> Generate(GenerateReportDto dto)
+    /// <inheritdoc cref="IReportService.GenerateActivityLogsReport"/>
+    public async Task<Report> GenerateActivityLogsReport(GenerateActivityLogReportDto dto)
     {
-        var logs = await _activityLogRepository.GetActivityLogsByPeriodAsync(dto.PeriodFrom,
+        var logs = await _activityLogRepository.GetActivityLogsByPeriod(dto.PeriodFrom,
             dto.PeriodTo, dto.EventType);
 
-        var csvBytes = _csvExportService.Generate(logs);
-
+        var csvBytes = _tabularCsvExportService.Generate(logs);
         var fileName = $"report_{dto.EventType}_{dto.PeriodFrom:yyyyMMdd}-{dto.PeriodTo:yyyyMMdd}";
-        var filePath = $"{DateTime.Today.Year}/{DateTime.Today.Month}/{fileName}.csv";
+        
+        return await GenerateReport(csvBytes, fileName, dto.PeriodFrom, dto.PeriodTo);
+    }
 
-        await _fileStorageService.UploadFileAsync(filePath, csvBytes, "text/csv");
-
-        var report = new Report
-        {
-            Name = fileName,
-            FilePath = filePath,
-            Status = ReportStatus.Generated,
-            GeneratedAt = DateTime.UtcNow,
-            PeriodFrom = dto.PeriodFrom,
-            PeriodTo = dto.PeriodTo,
-        };
-
-        await _reportRepository.Add(report);
-        await _cacheService.IncrementVersionAsync(_reportsCacheVersionPrefix);
-
-        return report;
+    /// <inheritdoc cref="IReportService.GenerateWeeklyStatisticsReport"/>
+    public async Task<Report> GenerateWeeklyStatisticsReport(GenerateWeeklyReportDto dto)
+    {
+        var csvBytes = _keyValueCsvExportService.Generate(dto.WeeklyStatistics);
+        var fileName = $"weekly_report_{dto.PeriodFrom:yyyyMMdd}-{dto.PeriodTo:yyyyMMdd}";
+       
+        return await GenerateReport(csvBytes, fileName, dto.PeriodFrom, dto.PeriodTo);
     }
 
     /// <inheritdoc cref="IReportService.GetAll"/>
@@ -94,5 +89,31 @@ public class ReportService : IReportService
         var report = await _reportRepository.GetByName(reportName);
         
         return await _fileStorageService.GetFilePathAsync(report.FilePath);
+    }
+    
+    private async Task<Report> GenerateReport(
+        byte[] csvBytes,
+        string fileName,
+        DateOnly periodFrom,
+        DateOnly periodTo)
+    {
+        var filePath = $"{DateTime.Today.Year}/{DateTime.Today.Month}/{fileName}.csv";
+
+        await _fileStorageService.UploadFileAsync(filePath, csvBytes, "text/csv");
+
+        var report = new Report
+        {
+            Name = fileName,
+            FilePath = filePath,
+            Status = ReportStatus.Generated,
+            GeneratedAt = DateTime.UtcNow,
+            PeriodFrom = periodFrom,
+            PeriodTo = periodTo,
+        };
+
+        await _reportRepository.Add(report);
+        await _cacheService.IncrementVersionAsync(_reportsCacheVersionPrefix);
+
+        return report;
     }
 }

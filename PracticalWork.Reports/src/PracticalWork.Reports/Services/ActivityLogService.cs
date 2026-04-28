@@ -1,6 +1,7 @@
 ﻿using PracticalWork.Reports.Abstractions.Services.Domain;
 using PracticalWork.Reports.Abstractions.Storage;
 using PracticalWork.Reports.Dtos;
+using PracticalWork.Reports.Enums;
 using PracticalWork.Reports.Models;
 
 namespace PracticalWork.Reports.Services;
@@ -27,6 +28,22 @@ public class ActivityLogService: IActivityLogService
             PageSize = pagination.PageSize,
             Page = pagination.Page,
             Items = activityLogs
+        };
+    }
+
+    /// <inheritdoc cref="IActivityLogService.GetWeeklyStatistics"/>
+    public async Task<WeeklyStatisticsDto> GetWeeklyStatistics(DateOnly from, DateOnly to)
+    {
+        var eventTypesCountDict = 
+            await _activityLogRepository.GetActivityEventTypeCountsByPeriod(from, to);
+
+        return new WeeklyStatisticsDto
+        {
+            NewBooksCount = eventTypesCountDict.GetValueOrDefault(ActivityEventType.BookCreated),
+            NewReadersCount = eventTypesCountDict.GetValueOrDefault(ActivityEventType.ReaderCreated),
+            BorrowedBooksCount = eventTypesCountDict.GetValueOrDefault(ActivityEventType.BookBorrowed),
+            ReturnedBooksCount = eventTypesCountDict.GetValueOrDefault(ActivityEventType.BookReturned),
+            OverdueBooksCount = 0
         };
     }
 }

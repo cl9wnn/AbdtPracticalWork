@@ -45,8 +45,8 @@ public class ActivityLogRepository : IActivityLogRepository
             .ToListAsync();
     }
 
-    /// <inheritdoc cref="IActivityLogRepository.GetActivityLogsByPeriodAsync"/>
-    public async Task<IReadOnlyList<ActivityLog>> GetActivityLogsByPeriodAsync(DateOnly from, DateOnly to,
+    /// <inheritdoc cref="IActivityLogRepository.GetActivityLogsByPeriod"/>
+    public async Task<IReadOnlyList<ActivityLog>> GetActivityLogsByPeriod(DateOnly from, DateOnly to,
         ActivityEventType eventType)
     {
         return await _appDbContext.ActivityLogs
@@ -57,6 +57,22 @@ public class ActivityLogRepository : IActivityLogRepository
             .ToListAsync();
     }
 
+    /// <inheritdoc cref="IActivityLogRepository.GetActivityEventTypeCountsByPeriod"/>
+    public async Task<IReadOnlyDictionary<ActivityEventType, int>> GetActivityEventTypeCountsByPeriod (
+        DateOnly from,
+        DateOnly to)
+    {
+        return await _appDbContext.ActivityLogs
+            .Where(x => x.EventDate >= from && x.EventDate <= to)
+            .GroupBy(x => x.EventType)
+            .Select(g => new
+            {
+                EventType = g.Key,
+                Count = g.Count()
+            })
+            .ToDictionaryAsync(x => x.EventType, x => x.Count);
+    }
+    
     /// <summary>
     /// Построение запроса для поиска логов активности по фильтрации
     /// </summary>

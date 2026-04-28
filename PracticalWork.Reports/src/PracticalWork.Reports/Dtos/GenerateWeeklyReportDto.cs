@@ -1,11 +1,9 @@
-﻿using PracticalWork.Reports.Enums;
-
-namespace PracticalWork.Reports.Dtos;
+﻿namespace PracticalWork.Reports.Dtos;
 
 /// <summary>
-/// DTO для генерации отчета
+/// DTO для генерации еженедельного отчета со статистикой
 /// </summary>
-public class GenerateReportDto
+public class GenerateWeeklyReportDto
 {
     /// <summary>
     /// Начало периода отчетности
@@ -18,7 +16,7 @@ public class GenerateReportDto
     public DateOnly PeriodTo { get; set; }
     
     /// <summary>
-    /// Тип события
+    /// Данные с еженедельной статистикой
     /// </summary>
-    public ActivityEventType EventType { get; set; }
+    public WeeklyStatisticsDto WeeklyStatistics { get; set; }
 }

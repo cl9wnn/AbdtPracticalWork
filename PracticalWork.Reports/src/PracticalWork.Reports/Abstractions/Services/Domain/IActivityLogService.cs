@@ -15,4 +15,12 @@ public interface IActivityLogService
     /// <param name="pagination">Пагинация</param>
     /// <returns>Страница с отфильтрованными логами активности</returns>
     Task<PageDto<ActivityLog>> GetPagedActivityLogs(ActivityLogFilterDto filter, PaginationDto pagination);
+    
+    /// <summary>
+    /// Получение еженедельной статистики активности библиотеки
+    /// </summary>
+    /// <param name="from">Дата начала периода</param>
+    /// <param name="to">Дата конца периода</param>
+    /// <returns>Еженедельная статистика</returns>
+    Task<WeeklyStatisticsDto> GetWeeklyStatistics(DateOnly from, DateOnly to);
 }

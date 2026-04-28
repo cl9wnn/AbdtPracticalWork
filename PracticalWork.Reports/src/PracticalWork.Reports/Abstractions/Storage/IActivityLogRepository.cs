@@ -33,6 +33,14 @@ public interface IActivityLogRepository
     /// <param name="to">Дата конца периода</param>
     /// <param name="eventType">Тип события</param>
     /// <returns></returns>
-    Task<IReadOnlyList<ActivityLog>> GetActivityLogsByPeriodAsync(DateOnly from, DateOnly to,
+    Task<IReadOnlyList<ActivityLog>> GetActivityLogsByPeriod(DateOnly from, DateOnly to,
         ActivityEventType eventType);
+
+    /// <summary>
+    /// Получение количества каждого типа лога активности за определенный период времени
+    /// </summary>
+    /// <param name="from">Дата начала периода</param>
+    /// <param name="to">Дата конца периода</param>
+    /// <returns>Словарь с типом лога активности и количеством логов соответствующего типа</returns>
+    Task<IReadOnlyDictionary<ActivityEventType, int>> GetActivityEventTypeCountsByPeriod(DateOnly from, DateOnly to);
 }

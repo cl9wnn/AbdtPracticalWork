@@ -46,7 +46,7 @@ public static class ReportsExtensions
         this IEnumerable<Report> reports) =>
         reports.Select(b => b.ToGetReportResponse()).ToList();
     
-    public static GenerateReportDto ToGenerateReportDto(this GenerateReportRequest request) =>
+    public static GenerateActivityLogReportDto ToGenerateReportDto(this GenerateReportRequest request) =>
         new ()
         {
             PeriodFrom = request.PeriodFrom,

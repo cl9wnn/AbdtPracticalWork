@@ -30,7 +30,7 @@ public class WeeklyReportEmailMessageDto: IEmailTemplate
     /// <summary>
     /// Количество выданных книг
     /// </summary>
-    public int IssuedBooksCount { get; init; }
+    public int BorrowedBooksCount { get; init; }
 
     /// <summary>
     /// Количество возвращенных книг

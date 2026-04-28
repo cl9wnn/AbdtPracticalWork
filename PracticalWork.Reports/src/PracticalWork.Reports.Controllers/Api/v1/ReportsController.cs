@@ -48,7 +48,7 @@ public class ReportsController: Controller
     }
     
     /// <summary>
-    /// Генерация отчета в формате CSV
+    /// Генерация отчета в формате CSV с данными об активности
     /// </summary>
     /// <param name="request">Запрос на генерацию отчета</param>
     /// <returns>Метаданные сгенерированного отчета</returns>
@@ -59,7 +59,7 @@ public class ReportsController: Controller
     [ProducesResponseType(500)]
     public async Task<IActionResult> GenerateCsvReport([FromQuery] GenerateReportRequest request)
     {
-        var generatedReport = await _reportService.Generate(request.ToGenerateReportDto());
+        var generatedReport = await _reportService.GenerateActivityLogsReport(request.ToGenerateReportDto());
         return Ok(generatedReport.ToGenerateReportResponse());
     }
     

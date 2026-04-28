@@ -9,11 +9,18 @@ namespace PracticalWork.Reports.Abstractions.Services.Domain;
 public interface IReportService
 {
     /// <summary>
-    /// Генерация отчета
+    /// Генерация отчета с данными об активности
     /// </summary>
     /// <param name="dto">Модель с данными для генерации отчета</param>
     /// <returns>Информация о сгенерированном отчете</returns>
-    Task<Report> Generate(GenerateReportDto dto);
+    Task<Report> GenerateActivityLogsReport(GenerateActivityLogReportDto dto);
+
+    /// <summary>
+    /// Генерация отчета с еженедельной статистикой
+    /// </summary>
+    /// <param name="dto">Модель с данными для генерации отчета</param>
+    /// <returns>Информация о сгенерированном отчете</returns>
+    Task<Report> GenerateWeeklyStatisticsReport(GenerateWeeklyReportDto dto);
     
     /// <summary>
     /// Получение всех отчетов
