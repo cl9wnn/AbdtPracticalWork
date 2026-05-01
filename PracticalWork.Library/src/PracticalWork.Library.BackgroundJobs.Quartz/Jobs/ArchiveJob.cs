@@ -10,7 +10,7 @@ namespace PracticalWork.Library.BackgroundJobs.Quartz.Jobs;
 /// <summary>
 /// Фоновая задача для автоматической архивации старых книг
 /// </summary>
-public class ArchiveJob : ILibraryJob
+public class ArchiveJob : BaseJob
 {
     private readonly ILogger<ArchiveJob> _logger;
     private readonly IBookService _bookService;
@@ -23,21 +23,14 @@ public class ArchiveJob : ILibraryJob
         _archiveSettings = archiveSettings;
     }
 
-    /// <summary>
-    /// Уникальное имя задачи
-    /// </summary>
-    public string JobName { get; } = "Archive Job";
-
-    /// <summary>
-    /// Описание задачи для отображения в интерфейсе управления
-    /// </summary>
-    public string Description { get; } = "Задача для автоматической архивации старых книг.";
+    /// <inheritdoc cref="BaseJob.JobName"/>
+    public override string JobName { get; } = "Archive Job";
     
-    /// <summary>
-    /// Выполнение фоновой задачи по архивации книг
-    /// </summary>
-    /// <param name="context">Контекст выполнения фоновой задачи</param>
-    public async Task Execute(IJobExecutionContext context)
+    /// <inheritdoc cref="BaseJob.Description"/>
+    public override string Description { get; } = "Задача для автоматической архивации старых книг.";
+    
+    /// <inheritdoc cref="BaseJob.ExecuteJob"/>
+    protected override async Task ExecuteJob(IJobExecutionContext context, CancellationToken cancellationToken)
     {
         var archiveSettings = _archiveSettings.Value;
 

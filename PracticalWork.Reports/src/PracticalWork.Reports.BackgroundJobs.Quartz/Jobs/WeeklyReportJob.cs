@@ -15,7 +15,7 @@ namespace PracticalWork.Reports.BackgroundJobs.Quartz.Jobs;
 /// Фоновая задача, создающая еженедельный отчет со статистикой для администрации
 /// </summary>
 /// <remarks>Сбор данных происходит за предыдущую неделю (с понедельника по воскресенье)</remarks>
-public class WeeklyReportJob : ILibraryJob
+public class WeeklyReportJob : BaseJob
 {
     private readonly ILogger<WeeklyReportJob> _logger;
     private readonly IActivityLogService _activityLogService;
@@ -37,21 +37,14 @@ public class WeeklyReportJob : ILibraryJob
         _weeklyReportTemplate = emailTemplateSettings.Value.WeeklyReport;
     }
     
-    /// <summary>
-    /// Уникальное имя задачи
-    /// </summary>
-    public string JobName { get; } = "Weekly Report Job";
+    /// <inheritdoc cref="BaseJob.JobName"/>
+    public override string JobName { get; } = "Weekly Report Job";
     
-    /// <summary>
-    /// Описание задачи для отображения в интерфейсе управления
-    /// </summary>
-    public string Description { get; } = "Задача, создающая еженедельный отчет со статистикой для администрации";
+    /// <inheritdoc cref="BaseJob.Description"/>
+    public override string Description { get; } = "Задача, создающая еженедельный отчет со статистикой для администрации";
     
-    /// <summary>
-    /// Выполнение фоновой задачи
-    /// </summary>
-    /// <param name="context">Контекст выполнения фоновой задачи</param>
-    public async Task Execute(IJobExecutionContext context)
+    /// <inheritdoc cref="BaseJob.ExecuteJob"/>
+    protected override async Task ExecuteJob(IJobExecutionContext context, CancellationToken ct)
     {
         var today = DateOnly.FromDateTime(DateTime.UtcNow.Date);
         var from = today.AddDays(-((int)today.DayOfWeek + 6)); // прошлый понедельник
@@ -87,7 +80,7 @@ public class WeeklyReportJob : ILibraryJob
                 GeneratedAt = DateTime.UtcNow,
             };
             
-            await _emailService.SendBulkAsync(_weeklyReportTemplate.AdminEmails, messageSubject, message);
+            await _emailService.SendBulkAsync(_weeklyReportTemplate.AdminEmails, messageSubject, message, ct);
 
             _logger.LogInformation("Еженедельный отчет сгенерирован. " +
                                    "Письма со статистикой успешно отправлены на почты администраторов.");

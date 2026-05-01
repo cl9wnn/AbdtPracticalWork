@@ -13,7 +13,7 @@ namespace PracticalWork.Library.BackgroundJobs.Quartz.Jobs;
 /// <summary>
 /// Фоновая задача для автоматического напоминания читателей о возврате книг
 /// </summary>
-public class ReturnReminderJob : ILibraryJob
+public class ReturnReminderJob : BaseJob
 {
     private readonly ILogger<ReturnReminderJob> _logger;
     private readonly IBookBorrowRepository _bookBorrowRepository;
@@ -32,21 +32,14 @@ public class ReturnReminderJob : ILibraryJob
         _returnReminderTemplate = emailTemplateSettings.Value.ReturnReminder;
     }
 
-    /// <summary>
-    /// Уникальное имя задачи
-    /// </summary>
-    public string JobName { get; } = "Return Reminder Job";
+    /// <inheritdoc cref="BaseJob.JobName"/>
+    public override string JobName { get; } = "Return Reminder Job";
 
-    /// <summary>
-    /// Описание задачи для отображения в интерфейсе управления
-    /// </summary>
-    public string Description { get; } = "Задача для автоматического напоминания читателям о возврате книг.";
+    /// <inheritdoc cref="BaseJob.Description"/>
+    public override string Description { get; } = "Задача для автоматического напоминания читателям о возврате книг.";
 
-    /// <summary>
-    /// Выполнение фоновой задачи
-    /// </summary>
-    /// <param name="context">Контекст выполнения фоновой задачи</param>
-    public async Task Execute(IJobExecutionContext context)
+    /// <inheritdoc cref="BaseJob.ExecuteJob"/>
+    protected override async Task ExecuteJob(IJobExecutionContext context, CancellationToken ct)
     {
         var activeBorrows = await
             _bookBorrowRepository.GetBorrowsDueInDays(_returnReminderTemplate.DaysBeforeDueDate);
