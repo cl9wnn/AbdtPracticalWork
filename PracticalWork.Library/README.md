@@ -10,14 +10,16 @@ PracticalWork.Library
 
 ## Исполняемые модули
 
-1. PracticalWork.Library.Web - ASP.NET 8 WebApi
-2. PracticalWork.Library.Data.PostgreSql.Migrator - запуск миграций
+1. **PracticalWork.Library.Web** - ASP.NET 10
+2. **PracticalWork.Library.Data.PostgreSql.Migrator** - запуск миграций
 
 ## Интеграции
-1. База данных - PostgreSQL
-2. Распределенный кэш - Redis
-3. Хранение файлов - MinIO
-4. Межсервисная коммуникация - Kafka
+1. **База данных** - PostgreSQL
+2. **Распределенный кэш** - Redis
+3. **Хранение файлов** - MinIO
+4. **Межсервисная коммуникация** - Kafka
+5. **Email-нотификация**: smtp4dev 
+6. **Планировщик фоновых задач**: Quartz.NET
 
 ## Примеры запросов API
 
@@ -78,3 +80,10 @@ curl -X 'GET' 'http://localhost:8080/api/v1/books' -H 'accept: application/json'
 ```
 curl -X 'GET' 'http://localhost:8080/api/v1/library/books?AvailableOnly=true&Page=2&PageSize=5' -H 'accept: application/json'
 ```
+## Фоновые задачи
+
+### Автоматическое напоминание о возврате книг читателям по email
+**Триггер**: ежедневно в 6:00 UTC
+
+### Автоматическая архивация старых книг
+**Триггер**: первое число каждого месяца в 00:00 UTC

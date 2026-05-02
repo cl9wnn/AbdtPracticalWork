@@ -6,18 +6,20 @@ PracticalWork.Reports
 
 ## Назначение 
 
-Система управления отчетами с помощью API: возможность генерации отчетов в формате CSV, получения списка отчетов с информацией об активностях библиотеки.
+Система управления отчетами с помощью API: возможность генерации отчетов в формате CSV, получения списка отчетов с информацией об активностях и статистикой библиотеки.
 
 ## Исполняемые модули
 
-1. PracticalWork.Library.Web - ASP.NET 8 WebApi
-2. PracticalWork.Library.Data.PostgreSql.Migrator - запуск миграций
+1. **PracticalWork.Library.Web** - ASP.NET 10
+2. **PracticalWork.Library.Data.PostgreSql.Migrator** - запуск миграций
 
 ## Интеграции
-1. База данных - PostgreSQL
-2. Распределенный кэш - Redis
-3. Хранение файлов - MinIO
-4. Межсервисная коммуникация - Kafka
+1. **База данных** - PostgreSQL
+2. **Распределенный кэш** - Redis
+3. **Хранение файлов** - MinIO
+4. **Межсервисная коммуникация** - Kafka
+5. **Email-нотификация**: smtp4dev 
+6. **Планировщик фоновых задач**: Quartz.NET
 
 ## Примеры запросов API
 
@@ -46,3 +48,9 @@ curl -X 'GET' 'http://localhost:8082/api/v1/reports?EventType=BookCreated&Page=2
 ```
 curl -X 'POST' 'http://localhost:8082/api/v1/reports/generate?PeriodFrom=2025.12.21&PeriodTo=2025.12.24&EventType=BookCreated' -H 'accept: text/plain' -d ''
 ```
+
+## Фоновые задачи
+
+### Еженедельный отчет со статистикой для администрации
+**Триггер**: каждый понедельник в 5:00 UTC
+
