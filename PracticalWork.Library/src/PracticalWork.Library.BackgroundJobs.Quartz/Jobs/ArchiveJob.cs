@@ -36,7 +36,8 @@ public class ArchiveJob : BaseJob
 
         var report = await _bookService.ArchiveOldBooks(
             archiveSettings.YearsWithoutBorrow,
-            archiveSettings.MaxBooksPerRun);
+            archiveSettings.MaxBooksPerRun,
+            cancellationToken);
 
         _logger.LogInformation("""
                                Плановая архивация завершена:

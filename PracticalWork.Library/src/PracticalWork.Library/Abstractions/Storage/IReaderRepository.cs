@@ -13,12 +13,14 @@ public interface IReaderRepository: IEntityRepository<Guid, Reader>
     /// Проверка существования карточки читателя по номеру телефона
     /// </summary>
     /// <param name="phoneNumber">Идентификатор сущности</param>
-    Task<bool> Exists(string phoneNumber);
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    Task<bool> Exists(string phoneNumber, CancellationToken cancellationToken = default);
     
     /// <summary>
     /// Получение списка всех взятых читателем книг 
     /// </summary>
     /// <param name="readerId">Идентификатор карточки читателя</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
     /// <returns>Список взятых читателем книг</returns>
-    Task<IReadOnlyList<BorrowedBookDto>> GetBorrowedBooks(Guid readerId);
+    Task<IReadOnlyList<BorrowedBookDto>> GetBorrowedBooks(Guid readerId, CancellationToken cancellationToken = default);
 }

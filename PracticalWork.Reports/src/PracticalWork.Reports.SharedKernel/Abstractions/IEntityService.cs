@@ -10,12 +10,14 @@ public interface IEntityService<TDto>
     /// Возвращает объект по его идентификатору.
     /// </summary>
     /// <param name="id">Идентификатор объекта</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
     /// <returns>Объект</returns>
-    Task<TDto> GetById(Guid id);
-    
+    Task<TDto> GetById(Guid id, CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Проверяет существование объекта по ID.
     /// </summary>
     /// <param name="id">Идентификатор объекта</param>
-    Task Exists(Guid id);
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    Task Exists(Guid id, CancellationToken cancellationToken = default);
 }

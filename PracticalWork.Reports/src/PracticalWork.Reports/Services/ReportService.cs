@@ -43,63 +43,67 @@ public class ReportService : IReportService
     }
 
     /// <inheritdoc cref="IReportService.GenerateActivityLogsReport"/>
-    public async Task<Report> GenerateActivityLogsReport(GenerateActivityLogReportDto dto)
+    public async Task<Report> GenerateActivityLogsReport(GenerateActivityLogReportDto dto, 
+        CancellationToken cancellationToken)
     {
         var logs = await _activityLogRepository.GetActivityLogsByPeriod(dto.PeriodFrom,
-            dto.PeriodTo, dto.EventType);
+            dto.PeriodTo, dto.EventType, cancellationToken);
 
         var csvBytes = _tabularCsvExportService.Generate(logs);
         var fileName = $"report_{dto.EventType}_{dto.PeriodFrom:yyyyMMdd}-{dto.PeriodTo:yyyyMMdd}";
         
-        return await GenerateReport(csvBytes, fileName, dto.PeriodFrom, dto.PeriodTo);
+        return await GenerateReport(csvBytes, fileName, dto.PeriodFrom, dto.PeriodTo, cancellationToken);
     }
 
     /// <inheritdoc cref="IReportService.GenerateWeeklyStatisticsReport"/>
-    public async Task<Report> GenerateWeeklyStatisticsReport(GenerateWeeklyReportDto dto)
+    public async Task<Report> GenerateWeeklyStatisticsReport(GenerateWeeklyReportDto dto, 
+        CancellationToken cancellationToken)
     {
         var csvBytes = _keyValueCsvExportService.Generate(dto.WeeklyStatistics);
         var fileName = $"weekly_report_{dto.PeriodFrom:yyyyMMdd}-{dto.PeriodTo:yyyyMMdd}";
        
-        return await GenerateReport(csvBytes, fileName, dto.PeriodFrom, dto.PeriodTo);
+        return await GenerateReport(csvBytes, fileName, dto.PeriodFrom, dto.PeriodTo, cancellationToken);
     }
 
     /// <inheritdoc cref="IReportService.GetAll"/>
-    public async Task<IReadOnlyCollection<Report>> GetAll()
+    public async Task<IReadOnlyCollection<Report>> GetAll(CancellationToken cancellationToken)
     {
         var keyPrefix = _cacheOptions.Value.ReportsListCache.KeyPrefix;
         var ttlMinutes = _cacheOptions.Value.ReportsListCache.TtlMinutes;
 
-        var cachedReports = await _cacheService.GetAsync<IReadOnlyList<Report>>(keyPrefix, _reportsCacheVersionPrefix);
+        var cachedReports = await _cacheService.GetAsync<IReadOnlyList<Report>>(keyPrefix, _reportsCacheVersionPrefix, 
+            cancellationToken);
 
         if (cachedReports != null)
         {
             return cachedReports;
         }
 
-        var reports = await _reportRepository.GetAll();
+        var reports = await _reportRepository.GetAll(cancellationToken);
         await _cacheService.SetAsync(keyPrefix, _reportsCacheVersionPrefix, reports,
-            TimeSpan.FromMinutes(ttlMinutes));
+            TimeSpan.FromMinutes(ttlMinutes), cancellationToken);
 
         return reports;
     }
 
     /// <inheritdoc cref="IReportService.GetDownloadUrl"/>
-    public async Task<string> GetDownloadUrl(string reportName)
+    public async Task<string> GetDownloadUrl(string reportName, CancellationToken cancellationToken)
     {
-        var report = await _reportRepository.GetByName(reportName);
+        var report = await _reportRepository.GetByName(reportName, cancellationToken);
         
-        return await _fileStorageService.GetFilePathAsync(report.FilePath);
+        return await _fileStorageService.GetFilePathAsync(report.FilePath, cancellationToken);
     }
     
     private async Task<Report> GenerateReport(
         byte[] csvBytes,
         string fileName,
         DateOnly periodFrom,
-        DateOnly periodTo)
+        DateOnly periodTo,
+        CancellationToken cancellationToken)
     {
         var filePath = $"{DateTime.Today.Year}/{DateTime.Today.Month}/{fileName}.csv";
 
-        await _fileStorageService.UploadFileAsync(filePath, csvBytes, "text/csv");
+        await _fileStorageService.UploadFileAsync(filePath, csvBytes, "text/csv", cancellationToken);
 
         var report = new Report
         {
@@ -111,8 +115,8 @@ public class ReportService : IReportService
             PeriodTo = periodTo,
         };
 
-        await _reportRepository.Add(report);
-        await _cacheService.IncrementVersionAsync(_reportsCacheVersionPrefix);
+        await _reportRepository.Add(report, cancellationToken);
+        await _cacheService.IncrementVersionAsync(_reportsCacheVersionPrefix, cancellationToken);
 
         return report;
     }

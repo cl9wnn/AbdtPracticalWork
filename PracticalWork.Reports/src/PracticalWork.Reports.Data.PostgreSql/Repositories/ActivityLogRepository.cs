@@ -21,18 +21,20 @@ public class ActivityLogRepository : IActivityLogRepository
     }
  
     /// <inheritdoc cref="IActivityLogRepository.Add"/>
-    public async Task<Guid> Add(ActivityLog activityLog, Guid? bookId = null, Guid? readerId = null)
+    public async Task<Guid> Add(ActivityLog activityLog,  CancellationToken cancellationToken,
+        Guid? bookId = null, Guid? readerId = null)
     {
         var activityLogEntity = activityLog.ToActivityLogEntity(bookId, readerId);
 
         _appDbContext.ActivityLogs.Add(activityLogEntity);
-        await _appDbContext.SaveChangesAsync();
+        await _appDbContext.SaveChangesAsync(cancellationToken);
 
         return activityLogEntity.Id;
     }
 
     /// <inheritdoc cref="IActivityLogRepository.GetActivityLogs"/>
-    public async Task<IReadOnlyList<ActivityLog>> GetActivityLogs(ActivityLogFilterDto filter, PaginationDto pagination)
+    public async Task<IReadOnlyList<ActivityLog>> GetActivityLogs(ActivityLogFilterDto filter, PaginationDto pagination,
+        CancellationToken cancellationToken)
     {
         var query = BuildActivityLogsQuery(filter);
 
@@ -42,25 +44,26 @@ public class ActivityLogRepository : IActivityLogRepository
             .Take(pagination.PageSize)
             .Select(b => b.ToActivityLog())
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
     }
 
     /// <inheritdoc cref="IActivityLogRepository.GetActivityLogsByPeriod"/>
     public async Task<IReadOnlyList<ActivityLog>> GetActivityLogsByPeriod(DateOnly from, DateOnly to,
-        ActivityEventType eventType)
+        ActivityEventType eventType,  CancellationToken cancellationToken)
     {
         return await _appDbContext.ActivityLogs
             .Where(x => x.EventDate >= from && x.EventDate <= to && x.EventType == eventType)
             .OrderBy(x => x.EventDate)
             .Select(a => a.ToActivityLog())
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
     }
 
     /// <inheritdoc cref="IActivityLogRepository.GetActivityEventTypeCountsByPeriod"/>
     public async Task<IReadOnlyDictionary<ActivityEventType, int>> GetActivityEventTypeCountsByPeriod (
         DateOnly from,
-        DateOnly to)
+        DateOnly to,
+        CancellationToken cancellationToken)
     {
         return await _appDbContext.ActivityLogs
             .Where(x => x.EventDate >= from && x.EventDate <= to)
@@ -70,7 +73,8 @@ public class ActivityLogRepository : IActivityLogRepository
                 EventType = g.Key,
                 Count = g.Count()
             })
-            .ToDictionaryAsync(x => x.EventType, x => x.Count);
+            .ToDictionaryAsync(x => x.EventType, x => x.Count,
+                cancellationToken: cancellationToken);
     }
     
     /// <summary>

@@ -21,29 +21,29 @@ public class ReportRepository : IReportRepository
     }
 
     /// <inheritdoc cref="IReportRepository.Add"/>
-    public async Task<Guid> Add(Report report)
+    public async Task<Guid> Add(Report report, CancellationToken cancellationToken)
     {
         var reportEntity = report.ToReportEntity();
         _appDbContext.Reports.Add(reportEntity);
-        await _appDbContext.SaveChangesAsync();
+        await _appDbContext.SaveChangesAsync(cancellationToken);
 
         return reportEntity.Id;
     }
 
     /// <inheritdoc cref="IReportRepository.GetAll"/>
-    public async Task<IReadOnlyList<Report>> GetAll()
+    public async Task<IReadOnlyList<Report>> GetAll(CancellationToken cancellationToken)
     {
         return await _appDbContext.Reports
             .Select(r => r.ToReport())
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
     }
 
     /// <inheritdoc cref="IReportRepository.GetByName"/>
-    public async Task<Report> GetByName(string reportName)
+    public async Task<Report> GetByName(string reportName, CancellationToken cancellationToken)
     {
         var readerEntity = await _appDbContext.Reports
-            .FirstOrDefaultAsync(r => r.Name == reportName);
+            .FirstOrDefaultAsync(r => r.Name == reportName, cancellationToken: cancellationToken);
 
         if (readerEntity == null)
         {

@@ -40,17 +40,17 @@ public sealed class BookService : IBookService
     /// <summary>
     /// Получение книги по ее идентификатору
     /// </summary>
-    public async Task<Book> GetById(Guid id)
+    public async Task<Book> GetById(Guid id, CancellationToken cancellationToken)
     {
-        return await _bookRepository.GetById(id);
+        return await _bookRepository.GetById(id, cancellationToken);
     }
 
     /// <summary>
     /// Проверка существования книги
     /// </summary>
-    public async Task Exists(Guid id)
+    public async Task Exists(Guid id, CancellationToken cancellationToken)
     {
-        var exists = await _bookRepository.Exists(id);
+        var exists = await _bookRepository.Exists(id, cancellationToken);
 
         if (!exists)
         {
@@ -59,12 +59,12 @@ public sealed class BookService : IBookService
     }
 
     /// <inheritdoc cref="IBookService.CreateBook"/>
-    public async Task<Guid> CreateBook(Book book)
+    public async Task<Guid> CreateBook(Book book, CancellationToken cancellationToken)
     {
         book.Status = BookStatus.Available;
 
-        var bookId = await _bookRepository.Add(book);
-        await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
+        var bookId = await _bookRepository.Add(book, cancellationToken);
+        await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix, cancellationToken);
 
         var bookCreatedEvent = new BookCreatedEvent(
             BookId: bookId,
@@ -75,15 +75,15 @@ public sealed class BookService : IBookService
             CreatedAt: DateTime.UtcNow
         );
 
-        await _kafkaProducer.ProduceAsync(bookCreatedEvent.EventId.ToString(), bookCreatedEvent);
+        await _kafkaProducer.ProduceAsync(bookCreatedEvent.EventId.ToString(), bookCreatedEvent, cancellationToken);
 
         return bookId;
     }
 
     /// <inheritdoc cref="IBookService.UpdateBook"/>
-    public async Task UpdateBook(Guid id, Book updatedBook)
+    public async Task UpdateBook(Guid id, Book updatedBook, CancellationToken cancellationToken)
     {
-        var book = await _bookRepository.GetById(id);
+        var book = await _bookRepository.GetById(id, cancellationToken);
 
         if (book.IsArchived)
         {
@@ -91,19 +91,19 @@ public sealed class BookService : IBookService
         }
 
         book.ChangeInformation(updatedBook.Title, updatedBook.Authors, updatedBook.Description, updatedBook.Year);
-        await _bookRepository.Update(id, book);
+        await _bookRepository.Update(id, book, cancellationToken);
 
-        await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
+        await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix, cancellationToken);
     }
 
     /// <inheritdoc cref="IBookService.ArchiveBook"/>
-    public async Task<ArchivedBookDto> ArchiveBook(Guid id)
+    public async Task<ArchivedBookDto> ArchiveBook(Guid id, CancellationToken cancellationToken)
     {
-        var book = await _bookRepository.GetById(id);
+        var book = await _bookRepository.GetById(id, cancellationToken);
         book.Archive();
 
-        await _bookRepository.Update(id, book);
-        await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
+        await _bookRepository.Update(id, book, cancellationToken);
+        await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix, cancellationToken);
 
         var bookArchivedEvent = new BookArchivedEvent(
              BookId: id,
@@ -111,7 +111,7 @@ public sealed class BookService : IBookService
              ArchivedAt: DateTime.UtcNow
         );
 
-        await _kafkaProducer.ProduceAsync(bookArchivedEvent.EventId.ToString(), bookArchivedEvent);
+        await _kafkaProducer.ProduceAsync(bookArchivedEvent.EventId.ToString(), bookArchivedEvent, cancellationToken);
         
         return new ArchivedBookDto
         {
@@ -122,12 +122,14 @@ public sealed class BookService : IBookService
     }
 
     /// <inheritdoc cref="IBookService.ArchiveOldBooks"/>
-    public async Task<ArchiveReportDto> ArchiveOldBooks(int yearsWithoutBorrow, int maxBooksPerRun)
+    public async Task<ArchiveReportDto> ArchiveOldBooks(int yearsWithoutBorrow, int maxBooksPerRun, 
+        CancellationToken cancellationToken)
     {
         var startTime = DateTime.UtcNow;
         var thresholdDate = startTime.AddYears(-yearsWithoutBorrow);
         
-        var booksForArchiving = await _bookRepository.GetBooksForArchiving(thresholdDate, maxBooksPerRun);
+        var booksForArchiving = await _bookRepository.GetBooksForArchiving(thresholdDate,
+            maxBooksPerRun, cancellationToken);
         
         var report = new ArchiveReportDto
         {
@@ -138,7 +140,7 @@ public sealed class BookService : IBookService
         {
             try
             {
-                await ArchiveBook(id);
+                await ArchiveBook(id, cancellationToken);
                 report.SuccessfullyArchived++;
             }
             catch (Exception ex)
@@ -159,7 +161,8 @@ public sealed class BookService : IBookService
     }
 
     /// <inheritdoc cref="IBookService.GetBooksPage"/>
-    public async Task<PageDto<BookListDto>> GetBooksPage(BookFilterDto filter, PaginationDto pagination)
+    public async Task<PageDto<BookListDto>> GetBooksPage(BookFilterDto filter, PaginationDto pagination,
+        CancellationToken cancellationToken)
     {
         var keyPrefix = _cacheOptions.Value.BooksListCache.KeyPrefix;
         var ttlMinutes = _cacheOptions.Value.BooksListCache.TtlMinutes;
@@ -167,7 +170,7 @@ public sealed class BookService : IBookService
 
         var cachedBooks =
             await _cacheService.GetByModelAsync<SearchBooksDto, IReadOnlyList<BookListDto>>(keyPrefix,
-                _booksCacheVersionPrefix, searchDto);
+                _booksCacheVersionPrefix, searchDto, cancellationToken);
 
         if (cachedBooks != null)
         {
@@ -179,9 +182,9 @@ public sealed class BookService : IBookService
             };
         }
 
-        var books = await _bookRepository.GetBooks(filter, pagination);
+        var books = await _bookRepository.GetBooks(filter, pagination, cancellationToken);
         await _cacheService.SetByModelAsync(keyPrefix, _booksCacheVersionPrefix, searchDto, books,
-            TimeSpan.FromMinutes(ttlMinutes));
+            TimeSpan.FromMinutes(ttlMinutes), cancellationToken);
 
         return new PageDto<BookListDto>
         {
@@ -193,15 +196,15 @@ public sealed class BookService : IBookService
 
     /// <inheritdoc cref="IBookService.AddBookDetails"/>
     public async Task AddBookDetails(Guid id, string description, Stream coverImageStream,
-        string contentType)
+        string contentType, CancellationToken cancellationToken)
     {
-        var book = await _bookRepository.GetById(id);
+        var book = await _bookRepository.GetById(id, cancellationToken);
 
         var filePath = $"{DateTime.Today.Year}/{DateTime.Today.Month}/{id}{contentType}";
         book.UpdateDetails(description, filePath);
 
-        await _fileStorageService.UploadFileAsync(filePath, coverImageStream, contentType);
-        await _bookRepository.Update(id, book);
-        await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
+        await _fileStorageService.UploadFileAsync(filePath, coverImageStream, contentType, cancellationToken);
+        await _bookRepository.Update(id, book, cancellationToken);
+        await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix, cancellationToken);
     }
 }

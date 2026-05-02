@@ -35,17 +35,17 @@ public class ReaderService : IReaderService
     /// <summary>
     /// Получение карточки читателя по её идентификатору
     /// </summary>
-    public async Task<Reader> GetById(Guid id)
+    public async Task<Reader> GetById(Guid id, CancellationToken cancellationToken)
     {
-        return await _readerRepository.GetById(id);
+        return await _readerRepository.GetById(id, cancellationToken);
     }
 
     /// <summary>
     /// Проверка существования карточки читателя
     /// </summary>
-    public async Task Exists(Guid id)
+    public async Task Exists(Guid id, CancellationToken cancellationToken)
     {
-        var exists = await _readerRepository.Exists(id);
+        var exists = await _readerRepository.Exists(id, cancellationToken);
 
         if (!exists)
         {
@@ -54,18 +54,18 @@ public class ReaderService : IReaderService
     }
 
     /// <inheritdoc cref="IReaderService.CreateReader"/>
-    public async Task<Guid> CreateReader(Reader reader)
+    public async Task<Guid> CreateReader(Reader reader, CancellationToken cancellationToken)
     {
         reader.IsActive = true;
 
-        var iExists = await _readerRepository.Exists(reader.PhoneNumber);
+        var iExists = await _readerRepository.Exists(reader.PhoneNumber, cancellationToken);
 
         if (iExists)
         {
             throw new ReaderServiceException("Карточка по такому номеру телефона уже существует!");
         }
         
-        var readerId = await _readerRepository.Add(reader);
+        var readerId = await _readerRepository.Add(reader, cancellationToken);
 
         var readerCreatedEvent = new ReaderCreatedEvent(
             ReaderId: readerId,
@@ -76,24 +76,24 @@ public class ReaderService : IReaderService
             CreatedAt: DateTime.UtcNow
         );
         
-        await _kafkaProducer.ProduceAsync(readerCreatedEvent.EventId.ToString(), readerCreatedEvent);
+        await _kafkaProducer.ProduceAsync(readerCreatedEvent.EventId.ToString(), readerCreatedEvent, cancellationToken);
         
         return readerId;
     }
 
     /// <inheritdoc cref="IReaderService.ExtendReader"/>
-    public async Task ExtendReader(Guid readerId, DateOnly newExpiryDate)
+    public async Task ExtendReader(Guid readerId, DateOnly newExpiryDate, CancellationToken cancellationToken)
     {
-        var reader = await _readerRepository.GetById(readerId);
+        var reader = await _readerRepository.GetById(readerId, cancellationToken);
         reader.Extend(newExpiryDate);
-        await _readerRepository.Update(readerId, reader);
+        await _readerRepository.Update(readerId, reader, cancellationToken);
     }
 
     /// <inheritdoc cref="IReaderService.CloseReader"/>
-    public async Task CloseReader(Guid readerId)
+    public async Task CloseReader(Guid readerId, CancellationToken cancellationToken)
     {
-        var reader = await _readerRepository.GetById(readerId);
-        var borrowedBooks = await _readerRepository.GetBorrowedBooks(readerId);
+        var reader = await _readerRepository.GetById(readerId, cancellationToken);
+        var borrowedBooks = await _readerRepository.GetBorrowedBooks(readerId, cancellationToken);
 
         if (borrowedBooks.Any())
         {
@@ -102,7 +102,7 @@ public class ReaderService : IReaderService
 
         reader.Close();
 
-        await _readerRepository.Update(readerId, reader);
+        await _readerRepository.Update(readerId, reader, cancellationToken);
         
         var readerClosedEvent = new ReaderClosedEvent(
             ReaderId: readerId,
@@ -110,27 +110,27 @@ public class ReaderService : IReaderService
             ClosedAt: DateTime.UtcNow
         );
         
-        await _kafkaProducer.ProduceAsync(readerClosedEvent.EventId.ToString(), readerClosedEvent);
+        await _kafkaProducer.ProduceAsync(readerClosedEvent.EventId.ToString(), readerClosedEvent, cancellationToken);
     }
 
     /// <inheritdoc cref="IReaderService.GetBorrowedBooks"/>
-    public async Task<IReadOnlyList<BorrowedBookDto>> GetBorrowedBooks(Guid readerId)
+    public async Task<IReadOnlyList<BorrowedBookDto>> GetBorrowedBooks(Guid readerId, CancellationToken cancellationToken)
     {
         var keyPrefix = _options.Value.ReadersBooksCache.KeyPrefix;
         var ttlMinutes = _options.Value.ReadersBooksCache.TtlMinutes;
 
         var cachedBorrowedBooks = 
             await _cacheService.GetAsync<Guid, IReadOnlyList<BorrowedBookDto>>(keyPrefix, _readersBooksVersionPrefix,
-            readerId);
+            readerId, cancellationToken);
 
         if (cachedBorrowedBooks != null)
         {
             return cachedBorrowedBooks;
         }
 
-        var borrowedBooks = await _readerRepository.GetBorrowedBooks(readerId);
+        var borrowedBooks = await _readerRepository.GetBorrowedBooks(readerId, cancellationToken);
         await _cacheService.SetAsync(keyPrefix, _readersBooksVersionPrefix, readerId, borrowedBooks,
-            TimeSpan.FromMinutes(ttlMinutes));
+            TimeSpan.FromMinutes(ttlMinutes), cancellationToken);
 
         return borrowedBooks;
     }

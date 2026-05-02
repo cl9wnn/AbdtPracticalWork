@@ -22,7 +22,7 @@ public class BookBorrowRepository: IBookBorrowRepository
     }
     
     /// <inheritdoc cref="IBookBorrowRepository.Create"/>
-    public async Task<Guid> Create(Guid bookId, Guid readerId, Borrow bookBorrow)
+    public async Task<Guid> Create(Guid bookId, Guid readerId, Borrow bookBorrow, CancellationToken cancellationToken)
     {
         var bookBorrowEntity = new BookBorrowEntity
         {
@@ -35,17 +35,18 @@ public class BookBorrowRepository: IBookBorrowRepository
         };
         
         await _dbContext.BookBorrows
-            .AddAsync(bookBorrowEntity);
-        await _dbContext.SaveChangesAsync();
+            .AddAsync(bookBorrowEntity, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
         
         return bookBorrowEntity.Id;
     }
 
     /// <inheritdoc cref="IBookBorrowRepository.GetActiveBorrowByBookId"/>
-    public async Task<Borrow> GetActiveBorrowByBookId(Guid bookId)
+    public async Task<Borrow> GetActiveBorrowByBookId(Guid bookId, CancellationToken cancellationToken)
     {
         var bookBorrowEntity = await _dbContext.BookBorrows
-            .FirstOrDefaultAsync(b => b.BookId == bookId && b.Status == BookIssueStatus.Issued);
+            .FirstOrDefaultAsync(b => b.BookId == bookId && b.Status == BookIssueStatus.Issued,
+                cancellationToken: cancellationToken);
 
         if (bookBorrowEntity == null)
         {
@@ -62,10 +63,11 @@ public class BookBorrowRepository: IBookBorrowRepository
     }
 
     /// <inheritdoc cref="IBookBorrowRepository.Update"/>
-    public async Task Update(Guid bookId, Borrow bookBorrow)
+    public async Task Update(Guid bookId, Borrow bookBorrow, CancellationToken cancellationToken)
     {
         var bookBorrowEntity = await _dbContext.BookBorrows
-            .FirstOrDefaultAsync(b => b.BookId == bookId && b.Status == BookIssueStatus.Issued);
+            .FirstOrDefaultAsync(b => b.BookId == bookId && b.Status == BookIssueStatus.Issued,
+                cancellationToken: cancellationToken);
         
         if (bookBorrow == null)
         {
@@ -76,15 +78,16 @@ public class BookBorrowRepository: IBookBorrowRepository
         bookBorrowEntity.Status = bookBorrow.Status;
         bookBorrowEntity.UpdatedAt = DateTime.UtcNow;
         
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc cref="IBookBorrowRepository.GetReaderInfoByBorrowedBookId"/>
-    public async Task<ReaderInfoDto> GetReaderInfoByBorrowedBookId(Guid bookId)
+    public async Task<ReaderInfoDto> GetReaderInfoByBorrowedBookId(Guid bookId, CancellationToken cancellationToken)
     {
         var bookBorrowEntity = await _dbContext.BookBorrows
             .Include(bookBorrowEntity => bookBorrowEntity.Reader)
-            .FirstOrDefaultAsync(b => b.BookId == bookId && b.Status == BookIssueStatus.Issued);
+            .FirstOrDefaultAsync(b => b.BookId == bookId && b.Status == BookIssueStatus.Issued, 
+                cancellationToken: cancellationToken);
 
         if (bookBorrowEntity == null)
         {
@@ -101,7 +104,7 @@ public class BookBorrowRepository: IBookBorrowRepository
     }
     
     /// <inheritdoc cref="IBookBorrowRepository.GetBorrowsDueInDays"/>
-    public async Task<IReadOnlyList<BorrowedBookDto>> GetBorrowsDueInDays(int days)
+    public async Task<IReadOnlyList<BorrowedBookDto>> GetBorrowsDueInDays(int days, CancellationToken cancellationToken)
     {
         var targetDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(days);
         
@@ -112,6 +115,6 @@ public class BookBorrowRepository: IBookBorrowRepository
                 x.Status == BookIssueStatus.Issued &&
                 x.DueDate == targetDate)
             .Select(x => x.ToBorrowedBookDto())
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
     }
 }

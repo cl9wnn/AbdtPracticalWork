@@ -18,6 +18,7 @@ public class BookBorrowedEventHandler: IEventHandler<BookBorrowedEvent>
     /// <inheritdoc cref="IEventHandler{T}.HandleAsync"/>
     public async Task HandleAsync(BookBorrowedEvent message, CancellationToken cancellationToken)
     {
-        await _activityLogRepository.Add(message.ToActivityLog(), bookId: message.BookId, readerId: message.ReaderId);
+        await _activityLogRepository.Add(message.ToActivityLog(), cancellationToken,
+            bookId: message.BookId, readerId: message.ReaderId);
     }
 }

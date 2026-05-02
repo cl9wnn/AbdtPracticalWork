@@ -48,7 +48,8 @@ public class LibraryService : ILibraryService
     }
 
     /// <inheritdoc cref="ILibraryService.GetLibraryBooksPage"/>
-    public async Task<PageDto<LibraryBookDto>> GetLibraryBooksPage(BookFilterDto filter, PaginationDto pagination)
+    public async Task<PageDto<LibraryBookDto>> GetLibraryBooksPage(BookFilterDto filter, PaginationDto pagination,
+        CancellationToken cancellationToken)
     {
         var keyPrefix = _booksCacheOptions.Value.LibraryBooksCache.KeyPrefix;
         var ttlMinutes = _booksCacheOptions.Value.LibraryBooksCache.TtlMinutes;
@@ -56,7 +57,7 @@ public class LibraryService : ILibraryService
 
         var cachedBooks =
             await _cacheService.GetByModelAsync<SearchBooksDto, IReadOnlyList<LibraryBookDto>>(keyPrefix,
-                _booksCacheVersionPrefix, searchDto);
+                _booksCacheVersionPrefix, searchDto, cancellationToken);
 
         if (cachedBooks != null)
         {
@@ -68,9 +69,9 @@ public class LibraryService : ILibraryService
             };
         }
 
-        var books = await _bookRepository.GetLibraryBooks(filter, pagination);
+        var books = await _bookRepository.GetLibraryBooks(filter, pagination, cancellationToken);
         await _cacheService.SetByModelAsync(keyPrefix, _booksCacheVersionPrefix, searchDto, books,
-            TimeSpan.FromMinutes(ttlMinutes));
+            TimeSpan.FromMinutes(ttlMinutes), cancellationToken);
 
         return new PageDto<LibraryBookDto>
         {
@@ -81,10 +82,10 @@ public class LibraryService : ILibraryService
     }
 
     /// <inheritdoc cref="ILibraryService.BorrowBook"/>
-    public async Task<Guid> BorrowBook(Guid bookId, Guid readerId)
+    public async Task<Guid> BorrowBook(Guid bookId, Guid readerId, CancellationToken cancellationToken)
     {
-        var book = await _bookRepository.GetById(bookId);
-        var reader = await _readerRepository.GetById(readerId);
+        var book = await _bookRepository.GetById(bookId, cancellationToken);
+        var reader = await _readerRepository.GetById(readerId, cancellationToken);
 
         if (!reader.IsValid())
         {
@@ -94,11 +95,11 @@ public class LibraryService : ILibraryService
         book.Borrow();
         var borrow = Borrow.Create();
 
-        var borrowBookId = await _bookBorrowRepository.Create(bookId, readerId, borrow);
-        await _bookRepository.Update(bookId, book);
+        var borrowBookId = await _bookBorrowRepository.Create(bookId, readerId, borrow, cancellationToken);
+        await _bookRepository.Update(bookId, book, cancellationToken);
 
-        await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
-        await _cacheService.IncrementVersionAsync(_readersCacheVersionPrefix);
+        await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix, cancellationToken);
+        await _cacheService.IncrementVersionAsync(_readersCacheVersionPrefix, cancellationToken);
 
         var bookBorrowedEvent = new BookBorrowedEvent(
             BookId: bookId,
@@ -109,26 +110,26 @@ public class LibraryService : ILibraryService
             DueDate: borrow.DueDate
         );
 
-        await _kafkaProducer.ProduceAsync(bookBorrowedEvent.EventId.ToString(), bookBorrowedEvent);
+        await _kafkaProducer.ProduceAsync(bookBorrowedEvent.EventId.ToString(), bookBorrowedEvent, cancellationToken);
 
         return borrowBookId;
     }
 
     /// <inheritdoc cref="ILibraryService.ReturnBook"/>
-    public async Task ReturnBook(Guid bookId)
+    public async Task ReturnBook(Guid bookId, CancellationToken cancellationToken)
     {
-        var borrow = await _bookBorrowRepository.GetActiveBorrowByBookId(bookId);
-        var reader = await _bookBorrowRepository.GetReaderInfoByBorrowedBookId(bookId);
-        var book = await _bookRepository.GetById(bookId);
+        var borrow = await _bookBorrowRepository.GetActiveBorrowByBookId(bookId, cancellationToken);
+        var reader = await _bookBorrowRepository.GetReaderInfoByBorrowedBookId(bookId, cancellationToken);
+        var book = await _bookRepository.GetById(bookId, cancellationToken);
 
         borrow.ReturnBook();
         book.Return();
 
-        await _bookBorrowRepository.Update(bookId, borrow);
-        await _bookRepository.Update(bookId, book);
+        await _bookBorrowRepository.Update(bookId, borrow, cancellationToken);
+        await _bookRepository.Update(bookId, book, cancellationToken);
 
-        await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix);
-        await _cacheService.IncrementVersionAsync(_readersCacheVersionPrefix);
+        await _cacheService.IncrementVersionAsync(_booksCacheVersionPrefix, cancellationToken);
+        await _cacheService.IncrementVersionAsync(_readersCacheVersionPrefix, cancellationToken);
 
         var bookReturnedEvent = new BookReturnedEvent(
              BookId: bookId,
@@ -138,25 +139,25 @@ public class LibraryService : ILibraryService
              ReturnDate: borrow.ReturnDate
         );
         
-        await _kafkaProducer.ProduceAsync(bookReturnedEvent.EventId.ToString(), bookReturnedEvent);
+        await _kafkaProducer.ProduceAsync(bookReturnedEvent.EventId.ToString(), bookReturnedEvent, cancellationToken);
     }
 
     /// <inheritdoc cref="ILibraryService.GetBookDetailsById"/>
-    public async Task<BookDetailsDto> GetBookDetailsById(Guid bookId)
+    public async Task<BookDetailsDto> GetBookDetailsById(Guid bookId, CancellationToken cancellationToken)
     {
         var keyPrefix = _booksCacheOptions.Value.BookDetailsCache.KeyPrefix;
         var ttlMinutes = _booksCacheOptions.Value.BookDetailsCache.TtlMinutes;
 
         var cachedBook =
-            await _cacheService.GetAsync<Guid, BookDetailsDto>(keyPrefix, _booksCacheVersionPrefix, bookId);
+            await _cacheService.GetAsync<Guid, BookDetailsDto>(keyPrefix, _booksCacheVersionPrefix, bookId, cancellationToken);
 
         if (cachedBook != null)
         {
             return cachedBook;
         }
 
-        var book = await _bookRepository.GetById(bookId);
-        var coverImagePathUrl = await _fileStorageService.GetFilePathAsync(book.CoverImagePath);
+        var book = await _bookRepository.GetById(bookId, cancellationToken);
+        var coverImagePathUrl = await _fileStorageService.GetFilePathAsync(book.CoverImagePath, cancellationToken);
 
         var bookDetails = new BookDetailsDto
         {
@@ -172,16 +173,16 @@ public class LibraryService : ILibraryService
         };
 
         await _cacheService.SetAsync(keyPrefix, _booksCacheVersionPrefix, bookId, bookDetails,
-            TimeSpan.FromMinutes(ttlMinutes));
+            TimeSpan.FromMinutes(ttlMinutes), cancellationToken);
 
         return bookDetails;
     }
 
     /// <inheritdoc cref="ILibraryService.GetBookDetailsByTitle"/>
-    public async Task<BookDetailsDto> GetBookDetailsByTitle(string title)
+    public async Task<BookDetailsDto> GetBookDetailsByTitle(string title, CancellationToken cancellationToken)
     {
-        var book = await _bookRepository.GetByTitle(title);
-        var coverImagePathUrl = await _fileStorageService.GetFilePathAsync(book.CoverImagePath);
+        var book = await _bookRepository.GetByTitle(title, cancellationToken);
+        var coverImagePathUrl = await _fileStorageService.GetFilePathAsync(book.CoverImagePath, cancellationToken);
         book.CoverImagePath = coverImagePathUrl;
 
         return book;

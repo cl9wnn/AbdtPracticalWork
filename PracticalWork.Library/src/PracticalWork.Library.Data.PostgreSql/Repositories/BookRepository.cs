@@ -23,7 +23,7 @@ public sealed class BookRepository : IBookRepository
     }
 
     /// <inheritdoc cref="IEntityRepository{Guid,Book}.GetById"/>
-    public async Task<Book> GetById(Guid id)
+    public async Task<Book> GetById(Guid id, CancellationToken cancellationToken)
     {
         var bookEntity = await _appDbContext.Books
             .FindAsync(id);
@@ -37,10 +37,10 @@ public sealed class BookRepository : IBookRepository
     }
     
     /// <inheritdoc cref="IBookRepository.GetByTitle"/>
-    public async Task<BookDetailsDto> GetByTitle(string title)
+    public async Task<BookDetailsDto> GetByTitle(string title, CancellationToken cancellationToken)
     {
         var bookEntity = await _appDbContext.Books
-            .FirstOrDefaultAsync(b => b.Title == title);
+            .FirstOrDefaultAsync(b => b.Title == title, cancellationToken: cancellationToken);
         
         if (bookEntity == null)
         {
@@ -51,7 +51,7 @@ public sealed class BookRepository : IBookRepository
     }
 
     /// <inheritdoc cref="IEntityRepository{Guid,Book}.Add"/>
-    public async Task<Guid> Add(Book book)
+    public async Task<Guid> Add(Book book, CancellationToken cancellationToken)
     {
         AbstractBookEntity entity = book.Category switch
         {
@@ -69,13 +69,13 @@ public sealed class BookRepository : IBookRepository
         entity.CreatedAt = DateTime.UtcNow;
 
         _appDbContext.Add(entity);
-        await _appDbContext.SaveChangesAsync();
+        await _appDbContext.SaveChangesAsync(cancellationToken);
 
         return entity.Id;
     }
 
     /// <inheritdoc cref="IEntityRepository{Guid,Book}.Update"/>
-    public async Task<Book> Update(Guid id, Book book)
+    public async Task<Book> Update(Guid id, Book book, CancellationToken cancellationToken)
     {
         var bookEntity = await _appDbContext.Books
             .FindAsync(id);
@@ -97,13 +97,13 @@ public sealed class BookRepository : IBookRepository
             bookEntity.CoverImagePath = book.CoverImagePath;
         }
         
-        await _appDbContext.SaveChangesAsync();
+        await _appDbContext.SaveChangesAsync(cancellationToken);
         
         return bookEntity.ToBook();
     }
 
     /// <inheritdoc cref="IEntityRepository{Guid,Book}.Delete"/>
-    public async Task Delete(Guid id)
+    public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
         var bookEntity = await _appDbContext.Books
             .FindAsync(id);
@@ -114,28 +114,29 @@ public sealed class BookRepository : IBookRepository
         }
 
         _appDbContext.Books.Remove(bookEntity);
-        await _appDbContext.SaveChangesAsync();
+        await _appDbContext.SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc cref="IEntityRepository{Guid,Book}.GetAll"/>
-    public async Task<ICollection<Book>> GetAll()
+    public async Task<ICollection<Book>> GetAll(CancellationToken cancellationToken)
     {
         var bookEntities = await _appDbContext.Books
             .Select(b => b.ToBook())
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
 
         return bookEntities;
     }
 
     /// <inheritdoc cref="IEntityRepository{Guid,Book}.Exists"/>
-    public async Task<bool> Exists(Guid id)
+    public async Task<bool> Exists(Guid id, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Books.AnyAsync(b => b.Id == id);
+        return await _appDbContext.Books.AnyAsync(b => b.Id == id, cancellationToken: cancellationToken);
     }
 
     /// <inheritdoc cref="IBookRepository.GetBooks"/>
-    public async Task<IReadOnlyList<BookListDto>> GetBooks(BookFilterDto filter, PaginationDto pagination)
+    public async Task<IReadOnlyList<BookListDto>> GetBooks(BookFilterDto filter, PaginationDto pagination,
+        CancellationToken cancellationToken)
     {
         var query = BuildBooksQuery(filter, includeIssuance: false);
         
@@ -145,11 +146,12 @@ public sealed class BookRepository : IBookRepository
             .Take(pagination.PageSize)
             .Select(b => b.ToBookListDto())
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
     }
 
     /// <inheritdoc cref="IBookRepository.GetLibraryBooks"/>
-    public async Task<IReadOnlyList<LibraryBookDto>> GetLibraryBooks(BookFilterDto filter, PaginationDto pagination)
+    public async Task<IReadOnlyList<LibraryBookDto>> GetLibraryBooks(BookFilterDto filter, PaginationDto pagination,
+        CancellationToken cancellationToken)
     {
         var query = BuildBooksQuery(filter, includeIssuance: true);
 
@@ -164,7 +166,7 @@ public sealed class BookRepository : IBookRepository
                     .FirstOrDefault(r => r.Status == BookIssueStatus.Issued) 
             })
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
 
         return bookEntities
             .Select(x => x.Book.ToLibraryBookDto(x.ActiveBorrow))
@@ -172,7 +174,8 @@ public sealed class BookRepository : IBookRepository
     }
 
     /// <inheritdoc cref="IBookRepository.GetBooksForArchiving"/>
-    public async Task<IReadOnlyList<(Guid, Book)>> GetBooksForArchiving(DateTime thresholdDate, int limit)
+    public async Task<IReadOnlyList<(Guid, Book)>> GetBooksForArchiving(DateTime thresholdDate, int limit, 
+        CancellationToken cancellationToken)
     {
         return await _appDbContext.Books
             .Where(b =>
@@ -188,7 +191,7 @@ public sealed class BookRepository : IBookRepository
                 b.Id,
                 b.ToBook()
             ))
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
     }
 
     /// <summary>

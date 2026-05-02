@@ -39,17 +39,17 @@ public class ReturnReminderJob : BaseJob
     public override string Description { get; } = "Задача для автоматического напоминания читателям о возврате книг.";
 
     /// <inheritdoc cref="BaseJob.ExecuteJob"/>
-    protected override async Task ExecuteJob(IJobExecutionContext context, CancellationToken ct)
+    protected override async Task ExecuteJob(IJobExecutionContext context, CancellationToken cancellationToken)
     {
         var activeBorrows = await
-            _bookBorrowRepository.GetBorrowsDueInDays(_returnReminderTemplate.DaysBeforeDueDate);
+            _bookBorrowRepository.GetBorrowsDueInDays(_returnReminderTemplate.DaysBeforeDueDate, cancellationToken);
         
         var success = 0;
         var failed = 0;
 
         foreach (var borrow in activeBorrows)
         {
-            var readerInfo = await _bookBorrowRepository.GetReaderInfoByBorrowedBookId(borrow.BookId);
+            var readerInfo = await _bookBorrowRepository.GetReaderInfoByBorrowedBookId(borrow.BookId, cancellationToken);
             var messageSubject = string.Format(_returnReminderTemplate.SubjectTemplate, borrow.Title);
             
             try
@@ -68,7 +68,7 @@ public class ReturnReminderJob : BaseJob
                     WorkingHours = _returnReminderTemplate.WorkingHours,
                 };
 
-                await _emailService.SendAsync(readerInfo.Email, messageSubject, message);
+                await _emailService.SendAsync(readerInfo.Email, messageSubject, message, cancellationToken);
 
                 _logger.LogInformation(
                     "Письмо успешно отправлено на почту {email}. Книга для возврата - {bookId}",

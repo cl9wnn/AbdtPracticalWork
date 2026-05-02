@@ -23,7 +23,7 @@ public class ReaderRepository: IReaderRepository
     }
     
     /// <inheritdoc cref="IEntityRepository{Guid,Reader}.GetById"/>
-    public async Task<Reader> GetById(Guid id)
+    public async Task<Reader> GetById(Guid id, CancellationToken cancellationToken)
     {
         var readerEntity = await _appDbContext.Readers
             .FindAsync(id);
@@ -37,29 +37,29 @@ public class ReaderRepository: IReaderRepository
     }
 
     /// <inheritdoc cref="IReaderRepository.GetBorrowedBooks"/>
-    public async Task<IReadOnlyList<BorrowedBookDto>> GetBorrowedBooks(Guid readerId)
+    public async Task<IReadOnlyList<BorrowedBookDto>> GetBorrowedBooks(Guid readerId, CancellationToken cancellationToken)
     {
         var borrowedBooks = await _appDbContext.BookBorrows
             .Include(b => b.Book)
             .Where(b => b.ReaderId == readerId && b.Status == BookIssueStatus.Issued)
             .AsNoTracking()
             .Select(b => b.ToBorrowedBookDto())
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
 
         return borrowedBooks;
     }
     
     /// <inheritdoc cref="IEntityRepository{Guid,Reader}.GetAll"/>
-    public async Task<ICollection<Reader>> GetAll()
+    public async Task<ICollection<Reader>> GetAll(CancellationToken cancellationToken)
     {
         return await _appDbContext.Readers
             .Select(r => r.ToReader())
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
     }
     
     /// <inheritdoc cref="IEntityRepository{Guid,Reader}.Add"/>
-    public async Task<Guid> Add(Reader reader)
+    public async Task<Guid> Add(Reader reader, CancellationToken cancellationToken)
     {
         var readerEntity = new ReaderEntity
         {
@@ -72,13 +72,13 @@ public class ReaderRepository: IReaderRepository
         };
         
          _appDbContext.Readers.Add(readerEntity);
-        await _appDbContext.SaveChangesAsync();
+        await _appDbContext.SaveChangesAsync(cancellationToken);
         
         return readerEntity.Id;
     }
 
     /// <inheritdoc cref="IEntityRepository{Guid,Reader}.Update"/>
-    public async Task<Reader> Update(Guid id, Reader reader)
+    public async Task<Reader> Update(Guid id, Reader reader, CancellationToken cancellationToken)
     {
         var readerEntity = await _appDbContext.Readers
             .FindAsync(id);
@@ -91,13 +91,13 @@ public class ReaderRepository: IReaderRepository
         readerEntity.ExpiryDate = reader.ExpiryDate;
         readerEntity.IsActive = reader.IsActive;
         
-        await _appDbContext.SaveChangesAsync();
+        await _appDbContext.SaveChangesAsync(cancellationToken);
         
         return readerEntity.ToReader();
     }
 
     /// <inheritdoc cref="IEntityRepository{Guid,Reader}.Delete"/>
-    public async Task Delete(Guid id)
+    public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
         var readerEntity = await _appDbContext.Readers
             .FindAsync(id);
@@ -108,18 +108,19 @@ public class ReaderRepository: IReaderRepository
         }
         
         _appDbContext.Readers.Remove(readerEntity);
-        await _appDbContext.SaveChangesAsync();
+        await _appDbContext.SaveChangesAsync(cancellationToken);
     }
     
     /// <inheritdoc cref="IEntityRepository{Guid,Reader}.Exists"/>
-    public async Task<bool> Exists(Guid id)
+    public async Task<bool> Exists(Guid id, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Readers.AnyAsync(b => b.Id == id);
+        return await _appDbContext.Readers.AnyAsync(b => b.Id == id, cancellationToken: cancellationToken);
     }
 
-    /// <inheritdoc cref="IReaderRepository.Exists(string)"/>
-    public async Task<bool> Exists(string phoneNumber)
+    /// <inheritdoc cref="IReaderRepository.Exists(string, CancellationToken)"/>
+    public async Task<bool> Exists(string phoneNumber, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Readers.AnyAsync(b => b.PhoneNumber == phoneNumber);
+        return await _appDbContext.Readers.AnyAsync(b => b.PhoneNumber == phoneNumber, 
+            cancellationToken: cancellationToken);
     }
 }

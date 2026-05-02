@@ -19,6 +19,6 @@ public class ReaderClosedEventHandler: IEventHandler<ReaderClosedEvent>
     /// <inheritdoc cref="IEventHandler{T}.HandleAsync"/>
     public async Task HandleAsync(ReaderClosedEvent message, CancellationToken cancellationToken)
     {
-        await _activityLogRepository.Add(message.ToActivityLog(), readerId: message.ReaderId);
+        await _activityLogRepository.Add(message.ToActivityLog(), cancellationToken, readerId: message.ReaderId);
     }
 }

@@ -19,6 +19,7 @@ public class BookCreatedEventHandler : IEventHandler<BookCreatedEvent>
     /// <inheritdoc cref="IEventHandler{T}.HandleAsync"/>
     public async Task HandleAsync(BookCreatedEvent message, CancellationToken cancellationToken)
     {
-        await _activityLogRepository.Add(message.ToActivityLog(), bookId: message.BookId);
+        await _activityLogRepository.Add(message.ToActivityLog(), 
+            cancellationToken, bookId: message.BookId);
     }
 }

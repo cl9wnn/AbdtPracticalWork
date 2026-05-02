@@ -19,9 +19,11 @@ public class ActivityLogService: IActivityLogService
     }
     
     /// <inheritdoc cref="IActivityLogService.GetPagedActivityLogs"/>
-    public async Task<PageDto<ActivityLog>> GetPagedActivityLogs(ActivityLogFilterDto filter, PaginationDto pagination)
+    public async Task<PageDto<ActivityLog>> GetPagedActivityLogs(ActivityLogFilterDto filter, PaginationDto pagination,
+        CancellationToken cancellationToken)
     {
-        var activityLogs = await _activityLogRepository.GetActivityLogs(filter, pagination);
+        var activityLogs = await _activityLogRepository.GetActivityLogs(filter, pagination,
+            cancellationToken);
 
         return new PageDto<ActivityLog>
         {
@@ -32,10 +34,11 @@ public class ActivityLogService: IActivityLogService
     }
 
     /// <inheritdoc cref="IActivityLogService.GetWeeklyStatistics"/>
-    public async Task<WeeklyStatisticsDto> GetWeeklyStatistics(DateOnly from, DateOnly to)
+    public async Task<WeeklyStatisticsDto> GetWeeklyStatistics(DateOnly from, DateOnly to, 
+        CancellationToken cancellationToken)
     {
         var eventTypesCountDict = 
-            await _activityLogRepository.GetActivityEventTypeCountsByPeriod(from, to);
+            await _activityLogRepository.GetActivityEventTypeCountsByPeriod(from, to, cancellationToken);
 
         return new WeeklyStatisticsDto
         {

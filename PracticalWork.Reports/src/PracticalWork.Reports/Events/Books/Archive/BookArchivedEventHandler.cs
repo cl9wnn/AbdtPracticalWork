@@ -20,6 +20,6 @@ public class BookArchivedEventHandler : IEventHandler<BookArchivedEvent>
     /// <inheritdoc cref="IEventHandler{T}.HandleAsync"/>
     public async Task HandleAsync(BookArchivedEvent message, CancellationToken cancellationToken)
     {
-        await _activityLogRepository.Add(message.ToActivityLog(), bookId: message.BookId);
+        await _activityLogRepository.Add(message.ToActivityLog(), cancellationToken, bookId: message.BookId);
     }
 }

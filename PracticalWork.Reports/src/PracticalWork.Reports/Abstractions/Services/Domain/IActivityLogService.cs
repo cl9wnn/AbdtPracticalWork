@@ -7,20 +7,23 @@ namespace PracticalWork.Reports.Abstractions.Services.Domain;
 /// Контракт сервиса по работе с логами активностей
 /// </summary>
 public interface IActivityLogService
-{ 
+{
     /// <summary>
     /// Получение отфильтрованных логов активностей с пагинацией
     /// </summary>
     /// <param name="filter">Фильтр</param>
     /// <param name="pagination">Пагинация</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
     /// <returns>Страница с отфильтрованными логами активности</returns>
-    Task<PageDto<ActivityLog>> GetPagedActivityLogs(ActivityLogFilterDto filter, PaginationDto pagination);
-    
+    Task<PageDto<ActivityLog>> GetPagedActivityLogs(ActivityLogFilterDto filter, PaginationDto pagination,
+        CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Получение еженедельной статистики активности библиотеки
     /// </summary>
     /// <param name="from">Дата начала периода</param>
     /// <param name="to">Дата конца периода</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
     /// <returns>Еженедельная статистика</returns>
-    Task<WeeklyStatisticsDto> GetWeeklyStatistics(DateOnly from, DateOnly to);
+    Task<WeeklyStatisticsDto> GetWeeklyStatistics(DateOnly from, DateOnly to, CancellationToken cancellationToken = default);
 }
