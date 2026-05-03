@@ -1,8 +1,8 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PracticalWork.Library.Abstractions.Services.Domain;
 using PracticalWork.Library.Contracts.v1.Abstracts;
-using PracticalWork.Library.Contracts.v1.Books.AddDetails;
 using PracticalWork.Library.Contracts.v1.Books.Archive;
 using PracticalWork.Library.Contracts.v1.Books.Create;
 using PracticalWork.Library.Contracts.v1.Books.Get;
@@ -105,11 +105,17 @@ public class BooksController : Controller
     [ProducesResponseType(404)]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
-    public async Task<IActionResult> AddBookDetails(Guid id, [FromForm] AddBookDetailsRequest request)
+    public async Task<IActionResult> AddBookDetails(Guid id, string description, IFormFile coverImage)
     {
-        await using var imageStream = request.CoverImage.OpenReadStream();
-        var fileExtension = Path.GetExtension(request.CoverImage.FileName);
-        await _bookService.AddBookDetails(id, request.Description, imageStream, fileExtension);
+        if (!string.IsNullOrWhiteSpace(description) && description.Length > 2000)
+        {
+            return BadRequest("Описание не может превышать 2000 символов.");
+        }
+        
+        await using var imageStream = coverImage.OpenReadStream();
+        var fileExtension = Path.GetExtension(coverImage.FileName);
+        
+        await _bookService.AddBookDetails(id, description, imageStream, fileExtension);
 
         return Ok();
     }
