@@ -1,5 +1,7 @@
-﻿using PracticalWork.Reports.Abstractions.Storage;
-using PracticalWork.Reports.Events.Books.Create;
+﻿using System.Text.Json;
+using PracticalWork.Reports.Abstractions.Storage;
+using PracticalWork.Reports.Enums;
+using PracticalWork.Reports.Models;
 using PracticalWork.Reports.SharedKernel.Abstractions;
 
 namespace PracticalWork.Reports.Events.Books.Return;
@@ -19,7 +21,10 @@ public class BookReturnedEventHandler: IEventHandler<BookReturnedEvent>
     /// <inheritdoc cref="IEventHandler{T}.HandleAsync"/>
     public async Task HandleAsync(BookReturnedEvent message, CancellationToken cancellationToken)
     {
-        await _activityLogRepository.Add(message.ToActivityLog(), cancellationToken,
+        var metadata = JsonDocument.Parse(JsonSerializer.Serialize(message));
+        var activityLog = ActivityLog.Create(ActivityEventType.BookReturned, metadata);
+        
+        await _activityLogRepository.Add(activityLog, cancellationToken,
             bookId: message.BookId, readerId: message.ReaderId);
     }
 }

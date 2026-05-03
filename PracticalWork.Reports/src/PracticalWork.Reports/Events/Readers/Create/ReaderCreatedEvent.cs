@@ -1,7 +1,4 @@
-﻿using System.Text.Json;
-using PracticalWork.Reports.Enums;
-using PracticalWork.Reports.Events.Abstractions;
-using PracticalWork.Reports.Models;
+﻿using PracticalWork.Reports.Events.Abstractions;
 
 namespace PracticalWork.Reports.Events.Readers.Create;
 
@@ -21,20 +18,4 @@ public sealed record ReaderCreatedEvent(
     string Email,
     DateOnly ExpiryDate,
     DateTime CreatedAt
-    ) : BaseLibraryEvent("reader.created"), IActivityLoggable
-{
-    public ActivityLog ToActivityLog()
-    {
-        var metadata = JsonDocument.Parse(JsonSerializer.Serialize(new
-        {
-            ReaderId,
-            FullName,
-            PhoneNumber,
-            Email,
-            ExpiryDate,
-            CreatedAt
-        }));
-
-        return ActivityLog.Create(ActivityEventType.BookCreated, metadata);
-    }
-}
+) : BaseLibraryEvent("reader.created");

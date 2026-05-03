@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Text.Json;
 using PracticalWork.Reports.Abstractions.Storage;
-using PracticalWork.Reports.Events.Books.Create;
+using PracticalWork.Reports.Enums;
+using PracticalWork.Reports.Models;
 using PracticalWork.Reports.SharedKernel.Abstractions;
 
 namespace PracticalWork.Reports.Events.Books.Archive;
@@ -20,6 +21,9 @@ public class BookArchivedEventHandler : IEventHandler<BookArchivedEvent>
     /// <inheritdoc cref="IEventHandler{T}.HandleAsync"/>
     public async Task HandleAsync(BookArchivedEvent message, CancellationToken cancellationToken)
     {
-        await _activityLogRepository.Add(message.ToActivityLog(), cancellationToken, bookId: message.BookId);
+        var metadata = JsonDocument.Parse(JsonSerializer.Serialize(message));
+        var activityLog = ActivityLog.Create(ActivityEventType.BookArchived, metadata);
+        
+        await _activityLogRepository.Add(activityLog, cancellationToken, bookId: message.BookId);
     }
 }

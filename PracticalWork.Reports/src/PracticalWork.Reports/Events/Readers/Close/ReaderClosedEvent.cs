@@ -1,7 +1,4 @@
-﻿using System.Text.Json;
-using PracticalWork.Reports.Enums;
-using PracticalWork.Reports.Events.Abstractions;
-using PracticalWork.Reports.Models;
+﻿using PracticalWork.Reports.Events.Abstractions;
 
 namespace PracticalWork.Reports.Events.Readers.Close;
 
@@ -15,17 +12,4 @@ public sealed record ReaderClosedEvent(
     Guid ReaderId,
     string FullName,
     DateTime ClosedAt
-    ) : BaseLibraryEvent("reader.closed"), IActivityLoggable
-{
-    public ActivityLog ToActivityLog()
-    {
-        var metadata = JsonDocument.Parse(JsonSerializer.Serialize(new
-        {
-            ReaderId,
-            FullName,
-            ClosedAt
-        }));
-
-        return ActivityLog.Create(ActivityEventType.ReaderClosed, metadata);
-    }
-}
+) : BaseLibraryEvent("reader.closed");

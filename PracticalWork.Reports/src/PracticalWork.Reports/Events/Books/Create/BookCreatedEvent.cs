@@ -1,7 +1,4 @@
-﻿using System.Text.Json;
-using PracticalWork.Reports.Enums;
-using PracticalWork.Reports.Events.Abstractions;
-using PracticalWork.Reports.Models;
+﻿using PracticalWork.Reports.Events.Abstractions;
 
 namespace PracticalWork.Reports.Events.Books.Create;
 
@@ -21,20 +18,4 @@ public sealed record BookCreatedEvent(
     string[] Authors,
     int Year,
     DateTime CreatedAt
-) : BaseLibraryEvent("book.created"), IActivityLoggable
-{
-    public ActivityLog ToActivityLog()
-    {
-        var metadata = JsonDocument.Parse(JsonSerializer.Serialize(new
-        {
-            BookId,
-            Title,
-            Category,
-            Authors,
-            Year,
-            CreatedAt
-        }));
-
-        return ActivityLog.Create(ActivityEventType.BookCreated, metadata);
-    }
-}
+) : BaseLibraryEvent("book.created");

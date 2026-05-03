@@ -1,7 +1,4 @@
-﻿using System.Text.Json;
-using PracticalWork.Reports.Enums;
-using PracticalWork.Reports.Events.Abstractions;
-using PracticalWork.Reports.Models;
+﻿using PracticalWork.Reports.Events.Abstractions;
 
 namespace PracticalWork.Reports.Events.Books.Archive;
 
@@ -15,17 +12,4 @@ public sealed record BookArchivedEvent(
     Guid BookId,
     string Title,
     DateTime ArchivedAt
-    ) : BaseLibraryEvent("book.archived"), IActivityLoggable
-{
-    public ActivityLog ToActivityLog()
-    {
-        var metadata = JsonDocument.Parse(JsonSerializer.Serialize(new
-        {
-            BookId,
-            Title,
-            ArchivedAt
-        }));
-
-        return ActivityLog.Create(ActivityEventType.BookArchived, metadata);
-    }
-}
+    ) : BaseLibraryEvent("book.archived");

@@ -1,5 +1,7 @@
-﻿using PracticalWork.Reports.Abstractions.Storage;
-using PracticalWork.Reports.Events.Books.Return;
+﻿using System.Text.Json;
+using PracticalWork.Reports.Abstractions.Storage;
+using PracticalWork.Reports.Enums;
+using PracticalWork.Reports.Models;
 using PracticalWork.Reports.SharedKernel.Abstractions;
 
 namespace PracticalWork.Reports.Events.Readers.Close;
@@ -19,6 +21,9 @@ public class ReaderClosedEventHandler: IEventHandler<ReaderClosedEvent>
     /// <inheritdoc cref="IEventHandler{T}.HandleAsync"/>
     public async Task HandleAsync(ReaderClosedEvent message, CancellationToken cancellationToken)
     {
-        await _activityLogRepository.Add(message.ToActivityLog(), cancellationToken, readerId: message.ReaderId);
+        var metadata = JsonDocument.Parse(JsonSerializer.Serialize(message));
+        var activityLog = ActivityLog.Create(ActivityEventType.ReaderClosed, metadata);
+        
+        await _activityLogRepository.Add(activityLog, cancellationToken, readerId: message.ReaderId);
     }
 }
