@@ -1,0 +1,30 @@
+﻿<Solution>
+
+    <Folder Name="/solution Items/">
+        <File Path="README.md" />
+        <File Path="Directory.Build.props" />
+        <File Path="Directory.Packages.props" />
+    </Folder>
+
+    <Folder Name="/src/">
+
+        <Project Path="src/PracticalWork.Reports.Web/PracticalWork.Reports.Web.csproj" />
+        <Project Path="src/PracticalWork.Reports/PracticalWork.Reports.csproj" />
+        <Project Path="src/PracticalWork.Reports.Contracts/PracticalWork.Reports.Contracts.csproj" />
+        <Project Path="src/PracticalWork.Reports.Controllers/PracticalWork.Reports.Controllers.csproj" />
+    </Folder>
+
+    <Folder Name="/src/Infrastructure/">
+            <Project Path="src/PracticalWork.Reports.Data.PostgreSql/PracticalWork.Reports.Data.PostgreSql.csproj" />
+            <Project Path="src/PracticalWork.Reports.Data.Minio/PracticalWork.Reports.Data.Minio.csproj" />
+            <Project Path="src/PracticalWork.Reports.Cache.Redis/PracticalWork.Reports.Cache.Redis.csproj" />
+            <Project Path="src/PracticalWork.Reports.MessageBroker.Kafka/PracticalWork.Reports.MessageBroker.Kafka.csproj" />
+            <Project Path="src/PracticalWork.Reports.BackgroundJobs.Quartz/PracticalWork.Reports.BackgroundJobs.Quartz.csproj" />
+            <Project Path="src/PracticalWork.Reports.Notification.Email/PracticalWork.Reports.Notification.Email.csproj" />
+    </Folder>
+    
+    <Folder Name="/utils/">
+        <Project Path="utils/PracticalWork.Reports.Data.PostgreSql.Migrator/PracticalWork.Reports.Data.PostgreSql.Migrator.csproj" />
+    </Folder>
+
+</Solution>

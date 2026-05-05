@@ -20,11 +20,11 @@ COPY src/PracticalWork.Library.BackgroundJobs.Quartz/PracticalWork.Library.Backg
 COPY src/PracticalWork.Library.Notification.Email/PracticalWork.Library.Notification.Email.csproj src/PracticalWork.Library.Notification.Email/
 COPY utils/PracticalWork.Library.Data.PostgreSql.Migrator/PracticalWork.Library.Data.PostgreSql.Migrator.csproj utils/PracticalWork.Library.Data.PostgreSql.Migrator/
 
-COPY PracticalWork.Library.sln .
+COPY PracticalWork.Library.slnx .
 COPY Directory.Packages.props .
 COPY Directory.Build.props .
 
-RUN dotnet restore PracticalWork.Library.sln
+RUN dotnet restore PracticalWork.Library.slnx
 
 COPY . .
 
