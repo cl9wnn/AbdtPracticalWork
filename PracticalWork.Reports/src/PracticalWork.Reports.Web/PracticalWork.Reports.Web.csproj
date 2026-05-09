@@ -7,13 +7,7 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -29,6 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
+    <PackageReference Include="PracticalWork.Shared.Abstractions"/>
+  </ItemGroup>
+  
+  <ItemGroup>
     <ProjectReference Include="..\PracticalWork.Reports.BackgroundJobs.Quartz\PracticalWork.Reports.BackgroundJobs.Quartz.csproj" />
     <ProjectReference Include="..\PracticalWork.Reports.Cache.Redis\PracticalWork.Reports.Cache.Redis.csproj" />
     <ProjectReference Include="..\PracticalWork.Reports.Controllers\PracticalWork.Reports.Controllers.csproj" />
@@ -36,7 +37,6 @@
     <ProjectReference Include="..\PracticalWork.Reports.Data.PostgreSql\PracticalWork.Reports.Data.PostgreSql.csproj" />
     <ProjectReference Include="..\PracticalWork.Reports.MessageBroker.Kafka\PracticalWork.Reports.MessageBroker.Kafka.csproj" />
     <ProjectReference Include="..\PracticalWork.Reports.Notification.Email\PracticalWork.Reports.Notification.Email.csproj" />
-    <ProjectReference Include="..\PracticalWork.Reports.SharedKernel\PracticalWork.Reports.SharedKernel.csproj" />
     <ProjectReference Include="..\PracticalWork.Reports\PracticalWork.Reports.csproj" />
   </ItemGroup>
 

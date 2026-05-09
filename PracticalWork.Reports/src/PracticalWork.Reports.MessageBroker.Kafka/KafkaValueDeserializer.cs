@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 using Confluent.Kafka;
-using PracticalWork.Reports.SharedKernel.Events;
+using PracticalWork.Shared.Abstractions.Events;
 
 namespace PracticalWork.Reports.MessageBroker.Kafka;
 

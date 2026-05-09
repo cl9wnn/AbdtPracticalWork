@@ -3,7 +3,7 @@ using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PracticalWork.Library.Abstractions.Services.Infrastructure;
-using PracticalWork.Library.SharedKernel.Events;
+using PracticalWork.Shared.Abstractions.Events;
 
 namespace PracticalWork.Library.MessageBroker.Kafka;
 

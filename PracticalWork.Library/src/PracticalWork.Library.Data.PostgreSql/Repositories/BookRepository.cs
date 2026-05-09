@@ -6,7 +6,7 @@ using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Enums;
 using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.Models;
-using PracticalWork.Library.SharedKernel.Abstractions;
+using PracticalWork.Shared.Abstractions.Interfaces;
 
 namespace PracticalWork.Library.Data.PostgreSql.Repositories;
 
@@ -22,7 +22,7 @@ public sealed class BookRepository : IBookRepository
         _appDbContext = appDbContext;
     }
 
-    /// <inheritdoc cref="IEntityRepository{Guid,Book}.GetById"/>
+    /// <inheritdoc cref="IEntityRepository{TKey,TDto}.GetById"/>
     public async Task<Book> GetById(Guid id, CancellationToken cancellationToken)
     {
         var bookEntity = await _appDbContext.Books

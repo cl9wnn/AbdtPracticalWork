@@ -1,4 +1,4 @@
-﻿using PracticalWork.Reports.SharedKernel.Events;
+﻿using PracticalWork.Shared.Abstractions.Events;
 
 namespace PracticalWork.Reports.Events.Abstractions;
 

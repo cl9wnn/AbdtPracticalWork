@@ -2,10 +2,7 @@
 using Microsoft.Extensions.Options;
 using PracticalWork.Reports.Abstractions.Services.Domain;
 using PracticalWork.Reports.Abstractions.Services.Infrastructure;
-using PracticalWork.Reports.Abstractions.Storage;
-using PracticalWork.Reports.BackgroundJobs.Quartz.Interfaces;
 using PracticalWork.Reports.Dtos;
-using PracticalWork.Reports.Enums;
 using PracticalWork.Reports.Options.Email;
 using Quartz;
 
@@ -52,16 +49,16 @@ public class WeeklyReportJob : BaseJob
 
         try
         {
-            var statistics = await _activityLogService.GetWeeklyStatistics(from, to);
+            var statistics = await _activityLogService.GetWeeklyStatistics(from, to, ct);
             
             var report = await _reportService.GenerateWeeklyStatisticsReport(new GenerateWeeklyReportDto
             {
                 PeriodFrom = from,
                 PeriodTo = to,
                 WeeklyStatistics = statistics
-            });
+            }, ct);
             
-            var downloadUrl = await _reportService.GetDownloadUrl(report.Name);
+            var downloadUrl = await _reportService.GetDownloadUrl(report.Name, ct);
             
             var messageSubject = string.Format(_weeklyReportTemplate.SubjectTemplate,
                 from.ToString("dd.MM.yyyy"),

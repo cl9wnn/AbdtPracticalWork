@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PracticalWork.Library.Abstractions.Services.Infrastructure;
-using PracticalWork.Library.SharedKernel.Events;
 
 namespace PracticalWork.Library.MessageBroker.Kafka;
 

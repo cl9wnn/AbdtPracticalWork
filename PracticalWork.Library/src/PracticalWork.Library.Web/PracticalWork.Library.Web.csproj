@@ -36,7 +36,6 @@
     <ProjectReference Include="..\PracticalWork.Library.Data.PostgreSql\PracticalWork.Library.Data.PostgreSql.csproj" />
     <ProjectReference Include="..\PracticalWork.Library.MessageBroker.Kafka\PracticalWork.Library.MessageBroker.Kafka.csproj" />
     <ProjectReference Include="..\PracticalWork.Library.Notification.Email\PracticalWork.Library.Notification.Email.csproj" />
-    <ProjectReference Include="..\PracticalWork.Library.SharedKernel\PracticalWork.Library.SharedKernel.csproj" />
     <ProjectReference Include="..\PracticalWork.Library\PracticalWork.Library.csproj" />
   </ItemGroup>
 

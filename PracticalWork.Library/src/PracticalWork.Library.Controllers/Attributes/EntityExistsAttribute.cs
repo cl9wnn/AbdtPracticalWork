@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PracticalWork.Library.Abstractions.Services;
 using PracticalWork.Library.Controllers.Filters;
-using PracticalWork.Library.SharedKernel.Abstractions;
+using PracticalWork.Shared.Abstractions.Interfaces;
 
 namespace PracticalWork.Library.Controllers.Attributes;
 

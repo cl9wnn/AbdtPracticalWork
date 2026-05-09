@@ -2,8 +2,8 @@ services:
   library-service:
     container_name: library-service
     build:
-      context: ./PracticalWork.Library
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: PracticalWork.Library/Dockerfile
     ports:
       - "8080:8080"
     environment:
@@ -29,8 +29,8 @@ services:
   reports-service:
     container_name: reports-service
     build:
-      context: ./PracticalWork.Reports
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: PracticalWork.Reports/Dockerfile
     ports:
       - "8082:8080"
     environment:

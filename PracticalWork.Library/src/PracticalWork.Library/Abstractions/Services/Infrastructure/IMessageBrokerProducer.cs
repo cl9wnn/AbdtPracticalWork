@@ -1,4 +1,4 @@
-﻿using PracticalWork.Library.SharedKernel.Events;
+﻿using PracticalWork.Shared.Abstractions.Events;
 
 namespace PracticalWork.Library.Abstractions.Services.Infrastructure;
 

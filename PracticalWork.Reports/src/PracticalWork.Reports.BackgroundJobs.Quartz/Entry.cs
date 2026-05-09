@@ -32,8 +32,6 @@ public static class Entry
                 var jobConfig = jobSettings!.Jobs[jobType.Name];
                 var jobKey = new JobKey(jobType.Name);
                 
-                //TODO: Добавить логику таймаутов и максимального количества повторных попыток
-                
                 q.AddJob(jobType, jobKey, opts => opts
                     .WithIdentity(jobKey)
                     .UsingJobData("TimeoutMinutes", jobConfig.TimeoutMinutes)

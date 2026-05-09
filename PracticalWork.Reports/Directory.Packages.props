@@ -66,4 +66,8 @@
         <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4" />
         <PackageVersion Include="CsvHelper" Version="33.1.0" />
     </ItemGroup>
+
+    <ItemGroup Label="Own PracticalWork packages">
+        <PackageVersion Include="PracticalWork.Shared.Abstractions" Version="1.0.0" />
+    </ItemGroup>
 </Project>

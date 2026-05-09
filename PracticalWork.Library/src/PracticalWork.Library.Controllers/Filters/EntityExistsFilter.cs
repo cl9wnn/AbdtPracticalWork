@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using PracticalWork.Library.SharedKernel.Abstractions;
+using PracticalWork.Shared.Abstractions.Interfaces;
 
 namespace PracticalWork.Library.Controllers.Filters;
 

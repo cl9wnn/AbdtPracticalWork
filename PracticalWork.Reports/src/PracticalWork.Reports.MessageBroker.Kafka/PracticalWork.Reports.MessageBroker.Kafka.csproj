@@ -12,10 +12,10 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+      <PackageReference Include="PracticalWork.Shared.Abstractions"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\PracticalWork.Reports.SharedKernel\PracticalWork.Reports.SharedKernel.csproj" />
       <ProjectReference Include="..\PracticalWork.Reports\PracticalWork.Reports.csproj" />
     </ItemGroup>
 

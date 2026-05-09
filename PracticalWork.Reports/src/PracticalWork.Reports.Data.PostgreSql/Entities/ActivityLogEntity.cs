@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using PracticalWork.Reports.Enums;
-using PracticalWork.Reports.SharedKernel.Entities;
+using PracticalWork.Shared.Abstractions.Entities;
 
 namespace PracticalWork.Reports.Data.PostgreSql.Entities;
 

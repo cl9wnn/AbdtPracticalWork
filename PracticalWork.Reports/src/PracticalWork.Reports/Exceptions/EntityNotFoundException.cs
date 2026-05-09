@@ -1,4 +1,4 @@
-﻿using PracticalWork.Reports.SharedKernel.Exceptions;
+﻿using PracticalWork.Shared.Abstractions.Exceptions;
 
 namespace PracticalWork.Reports.Exceptions;
 

@@ -3,8 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using PracticalWork.Reports.SharedKernel.Abstractions;
-using PracticalWork.Reports.SharedKernel.Events;
+using PracticalWork.Shared.Abstractions.Events;
+using PracticalWork.Shared.Abstractions.Interfaces;
 
 namespace PracticalWork.Reports.MessageBroker.Kafka;
 

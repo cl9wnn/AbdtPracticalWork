@@ -2,7 +2,7 @@
 using PracticalWork.Reports.Abstractions.Storage;
 using PracticalWork.Reports.Enums;
 using PracticalWork.Reports.Models;
-using PracticalWork.Reports.SharedKernel.Abstractions;
+using PracticalWork.Shared.Abstractions.Interfaces;
 
 namespace PracticalWork.Reports.Events.Books.Return;
 

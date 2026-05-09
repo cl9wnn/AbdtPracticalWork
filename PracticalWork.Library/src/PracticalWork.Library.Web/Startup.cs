@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 using PracticalWork.Library.BackgroundJobs.Quartz;
 using PracticalWork.Library.MessageBroker.Kafka;
 using PracticalWork.Library.Notification.Email;
-using PracticalWork.Library.SharedKernel.Exceptions;
+using PracticalWork.Shared.Abstractions.Exceptions;
 
 namespace PracticalWork.Library.Web;
 

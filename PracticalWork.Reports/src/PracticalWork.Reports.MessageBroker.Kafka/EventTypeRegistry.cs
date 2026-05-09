@@ -4,7 +4,7 @@ using PracticalWork.Reports.Events.Books.Create;
 using PracticalWork.Reports.Events.Books.Return;
 using PracticalWork.Reports.Events.Readers.Close;
 using PracticalWork.Reports.Events.Readers.Create;
-using PracticalWork.Reports.SharedKernel.Events;
+using PracticalWork.Shared.Abstractions.Events;
 
 namespace PracticalWork.Reports.MessageBroker.Kafka;
 

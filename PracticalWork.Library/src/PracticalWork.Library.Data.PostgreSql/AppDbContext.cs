@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PracticalWork.Library.Data.PostgreSql.Entities;
-using PracticalWork.Library.SharedKernel.Abstractions;
+using PracticalWork.Shared.Abstractions.Interfaces;
 
 namespace PracticalWork.Library.Data.PostgreSql;
 
