@@ -1,0 +1,15 @@
+﻿<Solution>
+
+    <Folder Name="/solution Items/">
+        <File Path="README.md" />
+        <File Path="Directory.Build.props" />
+        <File Path="Directory.Packages.props" />
+    </Folder>
+
+    <Folder Name="/src/">
+
+        <Project Path="src/PracticalWork.Shared.Abstractions/PracticalWork.Shared.Abstractions.csproj" />
+        <Project Path="src/PracticalWork.Shared.Contracts/PracticalWork.Shared.Contracts.csproj" />
+    </Folder>
+    
+</Solution>

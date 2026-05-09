@@ -1,0 +1,9 @@
+<Project>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+        <CentralPackageFloatingVersionsEnabled>false</CentralPackageFloatingVersionsEnabled>
+        <NoWarn>$(NoWarn);NU1507</NoWarn>
+    </PropertyGroup>
+  
+</Project>
