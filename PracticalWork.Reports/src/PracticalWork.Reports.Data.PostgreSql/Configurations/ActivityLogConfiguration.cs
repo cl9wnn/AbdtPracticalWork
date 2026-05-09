@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PracticalWork.Reports.Data.PostgreSql.Entities;
+using PracticalWork.Shared.Abstractions.Entities;
 
 namespace PracticalWork.Reports.Data.PostgreSql.Configurations;
 

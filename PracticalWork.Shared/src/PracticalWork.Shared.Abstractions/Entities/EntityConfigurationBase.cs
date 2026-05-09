@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PracticalWork.Shared.Abstractions.Interfaces;
 
-namespace PracticalWork.Reports.Data.PostgreSql.Configurations;
+namespace PracticalWork.Shared.Abstractions.Entities;
 
 public abstract class EntityConfigurationBase<TEntity> : IEntityTypeConfiguration<TEntity>
     where TEntity : class, IEntity
@@ -13,8 +13,8 @@ public abstract class EntityConfigurationBase<TEntity> : IEntityTypeConfiguratio
             .ValueGeneratedOnAdd();
 
         builder.Property(e => e.CreatedAt)
-            .HasColumnType("timestamp with time zone") 
-            .HasDefaultValueSql("NOW()") 
+            .HasColumnType("timestamp with time zone") // То есть, UTC в современном Postgres.
+            .HasDefaultValueSql("NOW()") // `now()` Генерит значение типа `timestamp with timezone` == UTC.
             .ValueGeneratedOnAdd();
 
         builder.Property(e => e.UpdatedAt)
