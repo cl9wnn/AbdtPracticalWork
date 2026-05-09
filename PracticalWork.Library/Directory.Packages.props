@@ -1,73 +1,60 @@
 <Project>
-    <PropertyGroup>
-        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-        <CentralPackageFloatingVersionsEnabled>false</CentralPackageFloatingVersionsEnabled>
-        <NoWarn>$(NoWarn);NU1507</NoWarn>
-        <MicrosoftPackageVersion>10.0.5</MicrosoftPackageVersion>
-    </PropertyGroup>
-
-    <ItemGroup Label="Microsoft">
-        <PackageVersion Include="Microsoft.Extensions.Configuration" Version="$(MicrosoftPackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(MicrosoftPackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(MicrosoftPackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(MicrosoftPackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(MicrosoftPackageVersion)" />
-
-        <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="$(MicrosoftPackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="$(MicrosoftPackageVersion)" />
-
-        <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="$(MicrosoftPackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="$(MicrosoftPackageVersion)" />
-
-        <PackageVersion Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="$(MicrosoftPackageVersion)" />
-        <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="$(MicrosoftPackageVersion)" />
-
-        <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(MicrosoftPackageVersion)" />
-        <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="$(MicrosoftPackageVersion)" />
-        <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(MicrosoftPackageVersion)" />
-        <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="$(MicrosoftPackageVersion)" />
-    </ItemGroup>
-
-    <ItemGroup Label="Messaging and Jobs">
-        <PackageVersion Include="Confluent.Kafka" Version="2.14.0" />
-        <PackageVersion Include="Quartz" Version="3.18.1" />
-        <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.18.1" />
-    </ItemGroup>
-
-    <ItemGroup Label="Storage and Data">
-        <PackageVersion Include="StackExchange.Redis" Version="2.12.14" />
-        <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
-        <PackageVersion Include="Minio" Version="7.0.0" />
-    </ItemGroup>
-
-    <ItemGroup Label="API and Versioning">
-        <PackageVersion Include="Asp.Versioning.Mvc" Version="10.0.0" />
-        <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.0.0" />
-    </ItemGroup>
-
-    <ItemGroup Label="Validation">
-        <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.1" />
-    </ItemGroup>
-
-    <ItemGroup Label="Swagger">
-        <PackageVersion Include="Swashbuckle.AspNetCore.Swagger" Version="10.1.7" />
-        <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.7" />
-        <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
-    </ItemGroup>
-
-    <ItemGroup Label="Email">
-        <PackageVersion Include="FluentEmail.Core" Version="3.0.2" />
-        <PackageVersion Include="FluentEmail.Razor" Version="3.0.2" />
-        <PackageVersion Include="FluentEmail.Smtp" Version="3.0.2" />
-    </ItemGroup>
-
-    <ItemGroup Label="Other">
-        <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4" />
-    </ItemGroup>
-
-    <ItemGroup Label="Own PracticalWork packages">
-        <PackageVersion Include="PracticalWork.Shared.Abstractions" Version="1.0.0" />
-    </ItemGroup>
-
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    <CentralPackageFloatingVersionsEnabled>false</CentralPackageFloatingVersionsEnabled>
+    <NoWarn>$(NoWarn);NU1507</NoWarn>
+    <MicrosoftPackageVersion>10.0.5</MicrosoftPackageVersion>
+  </PropertyGroup>
+  <ItemGroup Label="Microsoft">
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="$(MicrosoftPackageVersion)" />
+  </ItemGroup>
+  <ItemGroup Label="Messaging and Jobs">
+    <PackageVersion Include="Confluent.Kafka" Version="2.14.0" />
+    <PackageVersion Include="Quartz" Version="3.18.1" />
+    <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.18.1" />
+  </ItemGroup>
+  <ItemGroup Label="Storage and Data">
+    <PackageVersion Include="StackExchange.Redis" Version="2.12.14" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
+    <PackageVersion Include="Minio" Version="7.0.0" />
+  </ItemGroup>
+  <ItemGroup Label="API and Versioning">
+    <PackageVersion Include="Asp.Versioning.Mvc" Version="10.0.0" />
+    <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.0.0" />
+  </ItemGroup>
+  <ItemGroup Label="Validation">
+    <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.1" />
+  </ItemGroup>
+  <ItemGroup Label="Swagger">
+    <PackageVersion Include="Swashbuckle.AspNetCore.Swagger" Version="10.1.7" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.7" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
+  </ItemGroup>
+  <ItemGroup Label="Email">
+    <PackageVersion Include="FluentEmail.Core" Version="3.0.2" />
+    <PackageVersion Include="FluentEmail.Razor" Version="3.0.2" />
+    <PackageVersion Include="FluentEmail.Smtp" Version="3.0.2" />
+  </ItemGroup>
+  <ItemGroup Label="Other">
+    <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4" />
+  </ItemGroup>
+  <ItemGroup Label="Own PracticalWork packages">
+    <PackageVersion Include="PracticalWork.Shared.Abstractions" Version="1.0.0" />
+    <PackageVersion Include="PracticalWork.Shared.Contracts" Version="1.0.0" />
+  </ItemGroup>
 </Project>

@@ -3,8 +3,9 @@ using PracticalWork.Reports.Abstractions.Storage;
 using PracticalWork.Reports.Enums;
 using PracticalWork.Reports.Models;
 using PracticalWork.Shared.Abstractions.Interfaces;
+using PracticalWork.Shared.Contracts.Events.Books;
 
-namespace PracticalWork.Reports.Events.Books.Create;
+namespace PracticalWork.Reports.Features.Books.Create;
 
 /// <summary>
 /// Обработчик события создания новой книги в библиотеке

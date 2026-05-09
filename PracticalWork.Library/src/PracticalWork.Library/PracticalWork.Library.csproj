@@ -9,5 +9,6 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
     <PackageReference Include="PracticalWork.Shared.Abstractions"/>
+    <PackageReference Include="PracticalWork.Shared.Contracts" />
   </ItemGroup>
 </Project>

@@ -2,17 +2,19 @@
 using Microsoft.Extensions.DependencyInjection;
 using PracticalWork.Reports.Abstractions.Services.Domain;
 using PracticalWork.Reports.Dtos;
-using PracticalWork.Reports.Events.Books.Archive;
-using PracticalWork.Reports.Events.Books.Borrow;
-using PracticalWork.Reports.Events.Books.Create;
-using PracticalWork.Reports.Events.Books.Return;
-using PracticalWork.Reports.Events.Readers.Close;
-using PracticalWork.Reports.Events.Readers.Create;
+using PracticalWork.Reports.Features.Books.Create;
+using PracticalWork.Reports.Features.Books.Return;
+using PracticalWork.Reports.Features.Readers.Close;
+using PracticalWork.Reports.Features.Readers.Create;
+using PracticalWork.Reports.Features.Books.Archive;
+using PracticalWork.Reports.Features.Books.Borrow;
 using PracticalWork.Reports.Models;
 using PracticalWork.Reports.Options.Cache;
 using PracticalWork.Reports.Options.Email;
 using PracticalWork.Reports.Services;
 using PracticalWork.Shared.Abstractions.Interfaces;
+using PracticalWork.Shared.Contracts.Events.Books;
+using PracticalWork.Shared.Contracts.Events.Readers;
 
 namespace PracticalWork.Reports;
 

@@ -1,10 +1,6 @@
-﻿using PracticalWork.Reports.Events.Books.Archive;
-using PracticalWork.Reports.Events.Books.Borrow;
-using PracticalWork.Reports.Events.Books.Create;
-using PracticalWork.Reports.Events.Books.Return;
-using PracticalWork.Reports.Events.Readers.Close;
-using PracticalWork.Reports.Events.Readers.Create;
-using PracticalWork.Shared.Abstractions.Events;
+﻿using PracticalWork.Shared.Abstractions.Events;
+using PracticalWork.Shared.Contracts.Events.Books;
+using PracticalWork.Shared.Contracts.Events.Readers;
 
 namespace PracticalWork.Reports.MessageBroker.Kafka;
 

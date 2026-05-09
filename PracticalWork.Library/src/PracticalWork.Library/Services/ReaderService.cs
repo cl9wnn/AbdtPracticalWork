@@ -3,11 +3,10 @@ using PracticalWork.Library.Abstractions.Services.Domain;
 using PracticalWork.Library.Abstractions.Services.Infrastructure;
 using PracticalWork.Library.Abstractions.Storage;
 using PracticalWork.Library.Dtos;
-using PracticalWork.Library.Events.Readers;
 using PracticalWork.Library.Exceptions;
 using PracticalWork.Library.Models;
-using PracticalWork.Library.Options;
 using PracticalWork.Library.Options.Cache;
+using PracticalWork.Shared.Contracts.Events.Readers;
 
 namespace PracticalWork.Library.Services;
 
