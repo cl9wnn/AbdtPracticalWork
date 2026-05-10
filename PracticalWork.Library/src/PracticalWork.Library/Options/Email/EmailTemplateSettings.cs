@@ -10,4 +10,9 @@ public class EmailTemplateSettings
     /// Настройки шаблона для email напоминаний о возврате книг
     /// </summary>
     public ReturnReminderTemplate ReturnReminder { get; set; } = new();
+    
+    /// <summary>
+    /// Настройки шаблона для email с еженедельными отчетами
+    /// </summary>
+    public WeeklyReportTemplate WeeklyReport { get; set; } = new();
 }

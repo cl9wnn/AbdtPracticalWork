@@ -18,8 +18,6 @@ COPY PracticalWork.Reports/src/PracticalWork.Reports.Cache.Redis/PracticalWork.R
 COPY PracticalWork.Reports/src/PracticalWork.Reports.Data.PostgreSql/PracticalWork.Reports.Data.PostgreSql.csproj src/PracticalWork.Reports.Data.PostgreSql/
 COPY PracticalWork.Reports/src/PracticalWork.Reports.MessageBroker.Kafka/PracticalWork.Reports.MessageBroker.Kafka.csproj src/PracticalWork.Reports.MessageBroker.Kafka/
 COPY PracticalWork.Reports/src/PracticalWork.Reports.Data.Minio/PracticalWork.Reports.Data.Minio.csproj src/PracticalWork.Reports.Data.Minio/
-COPY PracticalWork.Reports/src/PracticalWork.Reports.BackgroundJobs.Quartz/PracticalWork.Reports.BackgroundJobs.Quartz.csproj src/PracticalWork.Reports.BackgroundJobs.Quartz/
-COPY PracticalWork.Reports/src/PracticalWork.Reports.Notification.Email/PracticalWork.Reports.Notification.Email.csproj src/PracticalWork.Reports.Notification.Email/
 COPY PracticalWork.Reports/utils/PracticalWork.Reports.Data.PostgreSql.Migrator/PracticalWork.Reports.Data.PostgreSql.Migrator.csproj utils/PracticalWork.Reports.Data.PostgreSql.Migrator/
 
 COPY PracticalWork.Reports/PracticalWork.Reports.slnx .

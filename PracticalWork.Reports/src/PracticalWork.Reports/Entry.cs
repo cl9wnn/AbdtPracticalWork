@@ -10,7 +10,6 @@ using PracticalWork.Reports.Features.Books.Archive;
 using PracticalWork.Reports.Features.Books.Borrow;
 using PracticalWork.Reports.Models;
 using PracticalWork.Reports.Options.Cache;
-using PracticalWork.Reports.Options.Email;
 using PracticalWork.Reports.Services;
 using PracticalWork.Shared.Abstractions.Interfaces;
 using PracticalWork.Shared.Contracts.Events.Books;
@@ -26,7 +25,6 @@ public static class Entry
     public static IServiceCollection AddDomain(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<BooksCacheOptions>(configuration.GetSection("App:BooksCache"));
-        services.Configure<EmailTemplateSettings>(configuration.GetSection("App:EmailTemplateSettings"));
 
         services.AddScoped<IActivityLogService, ActivityLogService>();
         services.AddScoped<ITabularCsvExportService<ActivityLog>, ActivityLogCsvExportService>();

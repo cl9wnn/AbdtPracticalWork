@@ -1,6 +1,6 @@
-﻿using PracticalWork.Reports.Abstractions.Services.Infrastructure;
+﻿using PracticalWork.Library.Abstractions.Services.Infrastructure;
 
-namespace PracticalWork.Reports.Dtos;
+namespace PracticalWork.Library.Dtos;
 
 /// <summary>
 /// Модель письма для еженедельного отчета для администрации

@@ -18,8 +18,6 @@ PracticalWork.Reports
 2. **Распределенный кэш** - Redis
 3. **Хранение файлов** - MinIO
 4. **Межсервисная коммуникация** - Kafka
-5. **Email-нотификация**: smtp4dev 
-6. **Планировщик фоновых задач**: Quartz.NET
 
 ## Примеры запросов API
 
@@ -49,8 +47,4 @@ curl -X 'GET' 'http://localhost:8082/api/v1/reports?EventType=BookCreated&Page=2
 curl -X 'POST' 'http://localhost:8082/api/v1/reports/generate?PeriodFrom=2025.12.21&PeriodTo=2025.12.24&EventType=BookCreated' -H 'accept: text/plain' -d ''
 ```
 
-## Фоновые задачи
-
-### Еженедельный отчет со статистикой для администрации
-**Триггер**: каждый понедельник в 5:00 UTC
 
