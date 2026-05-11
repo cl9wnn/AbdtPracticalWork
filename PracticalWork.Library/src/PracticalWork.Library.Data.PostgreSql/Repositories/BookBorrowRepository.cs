@@ -84,23 +84,23 @@ public class BookBorrowRepository: IBookBorrowRepository
     /// <inheritdoc cref="IBookBorrowRepository.GetReaderInfoByBorrowedBookId"/>
     public async Task<ReaderInfoDto> GetReaderInfoByBorrowedBookId(Guid bookId, CancellationToken cancellationToken)
     {
-        var bookBorrowEntity = await _dbContext.BookBorrows
-            .Include(bookBorrowEntity => bookBorrowEntity.Reader)
-            .FirstOrDefaultAsync(b => b.BookId == bookId && b.Status == BookIssueStatus.Issued, 
-                cancellationToken: cancellationToken);
+        var readerInfo = await _dbContext.BookBorrows
+            .Where(b => b.BookId == bookId && b.Status == BookIssueStatus.Issued)
+            .Select(b => new ReaderInfoDto
+            {
+                Id = b.Reader.Id,
+                FullName = b.Reader.FullName,
+                PhoneNumber = b.Reader.PhoneNumber,
+                Email = b.Reader.Email
+            })
+            .FirstOrDefaultAsync(cancellationToken);
 
-        if (bookBorrowEntity == null)
+        if (readerInfo == null)
         {
             throw new EntityNotFoundException("Отсутствует активная запись о выдаче книги!");
         }
 
-        return new ReaderInfoDto
-        {
-            Id = bookBorrowEntity.ReaderId,
-            FullName = bookBorrowEntity.Reader.FullName,
-            PhoneNumber = bookBorrowEntity.Reader.PhoneNumber,
-            Email = bookBorrowEntity.Reader.Email
-        };
+        return readerInfo;
     }
     
     /// <inheritdoc cref="IBookBorrowRepository.GetBorrowsDueInDays"/>
@@ -109,12 +109,19 @@ public class BookBorrowRepository: IBookBorrowRepository
         var targetDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(days);
         
         return await _dbContext.BookBorrows
-            .Include(x => x.Reader)
-            .Include(x => x.Book)
             .Where(x =>
                 x.Status == BookIssueStatus.Issued &&
                 x.DueDate == targetDate)
-            .Select(x => x.ToBorrowedBookDto())
-            .ToListAsync(cancellationToken: cancellationToken);
+            .Select(x => new BorrowedBookDto
+            {
+                BookId = x.BookId,
+                Title = x.Book.Title,
+                Authors = x.Book.Authors,
+                Description = x.Book.Description,
+                Year = x.Book.Year,
+                BorrowDate = x.BorrowDate,
+                DueDate = x.DueDate,
+            })            
+            .ToListAsync(cancellationToken);
     }
 }

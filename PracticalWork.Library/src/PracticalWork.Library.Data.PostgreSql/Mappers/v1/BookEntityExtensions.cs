@@ -22,17 +22,6 @@ public static class BookEntityExtensions
             IsArchived = bookEntity.Status == BookStatus.Archived,
         };
     }
-
-    public static BookListDto ToBookListDto(this AbstractBookEntity bookEntity)
-    {
-        return new BookListDto
-        {
-            Title = bookEntity.Title,
-            Authors = bookEntity.Authors,
-            Description = bookEntity.Description,
-            Year = bookEntity.Year,
-        };
-    }
     
     public static LibraryBookDto ToLibraryBookDto(this AbstractBookEntity bookEntity, BookBorrowEntity activeBorrow)
     {

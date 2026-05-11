@@ -26,7 +26,7 @@ public sealed class BookRepository : IBookRepository
     public async Task<Book> GetById(Guid id, CancellationToken cancellationToken)
     {
         var bookEntity = await _appDbContext.Books
-            .FindAsync(id);
+            .FindAsync([id], cancellationToken);
 
         if (bookEntity == null)
         {
@@ -78,7 +78,7 @@ public sealed class BookRepository : IBookRepository
     public async Task<Book> Update(Guid id, Book book, CancellationToken cancellationToken)
     {
         var bookEntity = await _appDbContext.Books
-            .FindAsync(id);
+            .FindAsync([id], cancellationToken);
 
         if (bookEntity == null)
         {
@@ -106,7 +106,7 @@ public sealed class BookRepository : IBookRepository
     public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
         var bookEntity = await _appDbContext.Books
-            .FindAsync(id);
+            .FindAsync([id], cancellationToken);
 
         if (bookEntity == null)
         {
@@ -138,14 +138,21 @@ public sealed class BookRepository : IBookRepository
     public async Task<IReadOnlyList<BookListDto>> GetBooks(BookFilterDto filter, PaginationDto pagination,
         CancellationToken cancellationToken)
     {
-        var query = BuildBooksQuery(filter, includeIssuance: false);
+        var query = BuildBooksQuery(filter);
         
         return await query
             .OrderBy(b => b.Title)
             .Skip((pagination.Page - 1) * pagination.PageSize)
             .Take(pagination.PageSize)
-            .Select(b => b.ToBookListDto())
             .AsNoTracking()
+            .AsNoTracking()
+            .Select(b => new BookListDto
+            {
+                Title = b.Title,
+                Authors = b.Authors,
+                Description = b.Description,
+                Year = b.Year
+            })
             .ToListAsync(cancellationToken: cancellationToken);
     }
 
@@ -153,7 +160,7 @@ public sealed class BookRepository : IBookRepository
     public async Task<IReadOnlyList<LibraryBookDto>> GetLibraryBooks(BookFilterDto filter, PaginationDto pagination,
         CancellationToken cancellationToken)
     {
-        var query = BuildBooksQuery(filter, includeIssuance: true);
+        var query = BuildBooksQuery(filter);
 
         var bookEntities = await query
             .OrderBy(b => b.Title)
@@ -186,6 +193,7 @@ public sealed class BookRepository : IBookRepository
                         .Max(r => r.BorrowDate) < DateOnly.FromDateTime(thresholdDate)
                 )
             )
+            .OrderBy(b => b.CreatedAt)
             .Take(limit)
             .Select(b => new ValueTuple<Guid, Book>(
                 b.Id,
@@ -197,7 +205,7 @@ public sealed class BookRepository : IBookRepository
     /// <summary>
     /// Построение запроса для поиска книг по фильтрации
     /// </summary>
-    private IQueryable<AbstractBookEntity> BuildBooksQuery(BookFilterDto filter, bool includeIssuance)
+    private IQueryable<AbstractBookEntity> BuildBooksQuery(BookFilterDto filter)
     {
         IQueryable<AbstractBookEntity> query = filter.Category switch
         {
@@ -215,13 +223,6 @@ public sealed class BookRepository : IBookRepository
 
         if (filter.AvailableOnly == true)
             query = query.Where(b => b.Status == BookStatus.Available);
-
-        if (includeIssuance)
-        {
-            query = query
-                .Where(b => b.Status != BookStatus.Archived)
-                .Include(b => b.IssuanceRecords);
-        }
 
         return query;
     }

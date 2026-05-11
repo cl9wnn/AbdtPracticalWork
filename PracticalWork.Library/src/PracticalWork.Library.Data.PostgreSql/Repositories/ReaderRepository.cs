@@ -26,7 +26,7 @@ public class ReaderRepository: IReaderRepository
     public async Task<Reader> GetById(Guid id, CancellationToken cancellationToken)
     {
         var readerEntity = await _appDbContext.Readers
-            .FindAsync(id);
+            .FindAsync([id], cancellationToken);
 
         if (readerEntity == null)
         {
@@ -40,11 +40,19 @@ public class ReaderRepository: IReaderRepository
     public async Task<IReadOnlyList<BorrowedBookDto>> GetBorrowedBooks(Guid readerId, CancellationToken cancellationToken)
     {
         var borrowedBooks = await _appDbContext.BookBorrows
-            .Include(b => b.Book)
             .Where(b => b.ReaderId == readerId && b.Status == BookIssueStatus.Issued)
             .AsNoTracking()
-            .Select(b => b.ToBorrowedBookDto())
-            .ToListAsync(cancellationToken: cancellationToken);
+            .Select(b => new BorrowedBookDto
+            {
+                BookId = b.BookId,
+                Title = b.Book.Title,
+                Authors = b.Book.Authors,
+                Description = b.Book.Description,
+                Year = b.Book.Year,
+                BorrowDate = b.BorrowDate,
+                DueDate = b.DueDate
+            })
+            .ToListAsync(cancellationToken);
 
         return borrowedBooks;
     }
@@ -81,7 +89,7 @@ public class ReaderRepository: IReaderRepository
     public async Task<Reader> Update(Guid id, Reader reader, CancellationToken cancellationToken)
     {
         var readerEntity = await _appDbContext.Readers
-            .FindAsync(id);
+            .FindAsync([id], cancellationToken);
 
         if (readerEntity == null)
         {
@@ -100,7 +108,7 @@ public class ReaderRepository: IReaderRepository
     public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
         var readerEntity = await _appDbContext.Readers
-            .FindAsync(id);
+            .FindAsync([id], cancellationToken);
 
         if (readerEntity == null)
         {
