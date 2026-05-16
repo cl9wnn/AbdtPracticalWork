@@ -1,30 +1,25 @@
 ﻿<Solution>
-
-    <Folder Name="/solution Items/">
-        <File Path="README.md" />
-        <File Path="Directory.Build.props" />
-        <File Path="Directory.Packages.props" />
-    </Folder>
-
-    <Folder Name="/src/">
-
-        <Project Path="src/PracticalWork.Library.Web/PracticalWork.Library.Web.csproj" />
-        <Project Path="src/PracticalWork.Library/PracticalWork.Library.csproj" />
-        <Project Path="src/PracticalWork.Library.Contracts/PracticalWork.Library.Contracts.csproj" />
-        <Project Path="src/PracticalWork.Library.Controllers/PracticalWork.Library.Controllers.csproj" />
-    </Folder>
-
-    <Folder Name="/src/Infrastructure/">
-            <Project Path="src/PracticalWork.Library.Data.PostgreSql/PracticalWork.Library.Data.PostgreSql.csproj" />
-            <Project Path="src/PracticalWork.Library.Data.Minio/PracticalWork.Library.Data.Minio.csproj" />
-            <Project Path="src/PracticalWork.Library.Cache.Redis/PracticalWork.Library.Cache.Redis.csproj" />
-            <Project Path="src/PracticalWork.Library.MessageBroker.Kafka/PracticalWork.Library.MessageBroker.Kafka.csproj" />
-            <Project Path="src/PracticalWork.Library.BackgroundJobs.Quartz/PracticalWork.Library.BackgroundJobs.Quartz.csproj" />
-            <Project Path="src/PracticalWork.Library.Notification.Email/PracticalWork.Library.Notification.Email.csproj" />
-    </Folder>
-    
-    <Folder Name="/utils/">
-        <Project Path="utils/PracticalWork.Library.Data.PostgreSql.Migrator/PracticalWork.Library.Data.PostgreSql.Migrator.csproj" />
-    </Folder>
-
+  <Folder Name="/solution Items/">
+    <File Path="README.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/PracticalWork.Library.Contracts/PracticalWork.Library.Contracts.csproj" />
+    <Project Path="src/PracticalWork.Library.Controllers/PracticalWork.Library.Controllers.csproj" />
+    <Project Path="src/PracticalWork.Library.Web/PracticalWork.Library.Web.csproj" />
+    <Project Path="src/PracticalWork.Library/PracticalWork.Library.csproj" />
+  </Folder>
+  <Folder Name="/src/Infrastructure/">
+    <Project Path="src/PracticalWork.Library.BackgroundJobs.Quartz/PracticalWork.Library.BackgroundJobs.Quartz.csproj" />
+    <Project Path="src/PracticalWork.Library.Cache.Redis/PracticalWork.Library.Cache.Redis.csproj" />
+    <Project Path="src/PracticalWork.Library.Data.Minio/PracticalWork.Library.Data.Minio.csproj" />
+    <Project Path="src/PracticalWork.Library.Data.PostgreSql/PracticalWork.Library.Data.PostgreSql.csproj" />
+    <Project Path="src/PracticalWork.Library.MessageBroker.Kafka/PracticalWork.Library.MessageBroker.Kafka.csproj" />
+    <Project Path="src/PracticalWork.Library.Notification.Email/PracticalWork.Library.Notification.Email.csproj" />
+    <Project Path="src\PracticalWork.Library.Clients.Http\PracticalWork.Library.Clients.Http.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/utils/">
+    <Project Path="utils/PracticalWork.Library.Data.PostgreSql.Migrator/PracticalWork.Library.Data.PostgreSql.Migrator.csproj" />
+  </Folder>
 </Solution>

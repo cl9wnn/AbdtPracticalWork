@@ -15,6 +15,7 @@ services:
       App__Kafka__BootstrapServers: kafka:29092
       App__EmailSettings__SmtpServer: smtp4dev
       App__EmailSettings__SmtpPort: 25
+      App__Services__Reports: http://reports-service:8080
       
     depends_on:
       library-service-db:
@@ -40,8 +41,6 @@ services:
       App__Redis__RedisCacheConnection: redis:6379
       App__Minio__Endpoint: minio:9000
       App__Kafka__BootstrapServers: kafka:29092
-      App__EmailSettings__SmtpServer: smtp4dev
-      App__EmailSettings__SmtpPort: 25
     depends_on:
       reports-service-db:
         condition: service_healthy

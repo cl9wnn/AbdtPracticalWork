@@ -8,6 +8,7 @@ using PracticalWork.Library.Data.PostgreSql;
 using PracticalWork.Library.Web.Configuration;
 using System.Text.Json.Serialization;
 using PracticalWork.Library.BackgroundJobs.Quartz;
+using PracticalWork.Library.Clients.Http;
 using PracticalWork.Library.MessageBroker.Kafka;
 using PracticalWork.Library.Notification.Email;
 using PracticalWork.Shared.Abstractions.Exceptions;
@@ -62,6 +63,7 @@ public class Startup
         services.AddKafkaProducer(Configuration);
         services.AddEmailService(Configuration);
         services.AddQuartz(Configuration);
+        services.AddReportsHttpClient(Configuration);
     }
 
     [UsedImplicitly]

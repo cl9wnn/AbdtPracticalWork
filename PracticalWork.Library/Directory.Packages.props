@@ -11,6 +11,8 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(MicrosoftPackageVersion)" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(MicrosoftPackageVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="$(MicrosoftPackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(MicrosoftPackageVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="$(MicrosoftPackageVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="$(MicrosoftPackageVersion)" />
@@ -55,6 +57,6 @@
   </ItemGroup>
   <ItemGroup Label="Own PracticalWork packages">
     <PackageVersion Include="PracticalWork.Shared.Abstractions" Version="1.0.1" />
-    <PackageVersion Include="PracticalWork.Shared.Contracts" Version="1.0.0" />
+    <PackageVersion Include="PracticalWork.Shared.Contracts" Version="1.0.1" />
   </ItemGroup>
 </Project>

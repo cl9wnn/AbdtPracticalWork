@@ -21,6 +21,7 @@ COPY PracticalWork.Library/src/PracticalWork.Library.Data.Minio/PracticalWork.Li
 COPY PracticalWork.Library/src/PracticalWork.Library.BackgroundJobs.Quartz/PracticalWork.Library.BackgroundJobs.Quartz.csproj src/PracticalWork.Library.BackgroundJobs.Quartz/
 COPY PracticalWork.Library/src/PracticalWork.Library.Notification.Email/PracticalWork.Library.Notification.Email.csproj src/PracticalWork.Library.Notification.Email/
 COPY PracticalWork.Library/utils/PracticalWork.Library.Data.PostgreSql.Migrator/PracticalWork.Library.Data.PostgreSql.Migrator.csproj utils/PracticalWork.Library.Data.PostgreSql.Migrator/
+COPY PracticalWork.Library/src/PracticalWork.Library.Clients.Http/PracticalWork.Library.Clients.Http.csproj src/PracticalWork.Library.Clients.Http/
 
 COPY PracticalWork.Library/PracticalWork.Library.slnx .
 COPY PracticalWork.Library/Directory.Packages.props .
