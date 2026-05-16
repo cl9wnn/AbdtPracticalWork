@@ -9,4 +9,4 @@ namespace PracticalWork.Reports.Contracts.v1.ActivityLogs.Get;
 /// <param name="EventType">Тип события</param>
 /// <param name="EventDate">Дата события</param>
 /// <param name="Metadata">Дополнительная информация об активности</param>
-public record GetActivityLogsResponse(ActivityEventType EventType, DateOnly EventDate, JsonDocument Metadata);
+public sealed record GetActivityLogsResponse(ActivityEventType EventType, DateOnly EventDate, JsonDocument Metadata);

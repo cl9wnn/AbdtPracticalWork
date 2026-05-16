@@ -5,7 +5,7 @@ namespace PracticalWork.Reports.Dtos;
 /// <summary>
 /// DTO для генерации отчета с данными об активности
 /// </summary>
-public class GenerateActivityLogReportDto
+public class GenerateLibraryActivityReportDto
 {
     /// <summary>
     /// Начало периода отчетности

@@ -156,6 +156,16 @@ public sealed class BookRepository : IBookRepository
             .ToListAsync(cancellationToken: cancellationToken);
     }
 
+    /// <inheritdoc cref="IBookRepository.GetNewBooksCount"/>
+    public async Task<int> GetNewBooksCount(DateTime from, DateTime to, CancellationToken cancellationToken = default)
+    {
+        return await _appDbContext.Books
+            .CountAsync(x =>
+                    x.CreatedAt >= from &&
+                    x.CreatedAt <= to,
+                cancellationToken);
+    }
+
     /// <inheritdoc cref="IBookRepository.GetLibraryBooks"/>
     public async Task<IReadOnlyList<LibraryBookDto>> GetLibraryBooks(BookFilterDto filter, PaginationDto pagination,
         CancellationToken cancellationToken)

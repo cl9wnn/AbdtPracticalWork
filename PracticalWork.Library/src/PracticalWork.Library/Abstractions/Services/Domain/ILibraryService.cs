@@ -48,4 +48,14 @@ public interface ILibraryService
     /// <param name="cancellationToken">Токен отмены операции</param>
     /// <returns>Детальная информация о книге</returns>
     Task<BookDetailsDto> GetBookDetailsByTitle(string title, CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    /// Получение статистики активности библиотеки
+    /// </summary>
+    /// <param name="from">Дата начала периода</param>
+    /// <param name="to">Дата конца периода</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Еженедельная статистика</returns>
+    Task<LibraryStatisticsDto> GetLibraryStatistics(DateOnly from, DateOnly to,
+        CancellationToken cancellationToken = default);
 }

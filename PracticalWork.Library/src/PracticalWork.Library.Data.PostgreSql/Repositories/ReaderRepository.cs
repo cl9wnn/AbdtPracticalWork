@@ -56,7 +56,16 @@ public class ReaderRepository: IReaderRepository
 
         return borrowedBooks;
     }
-    
+
+    public async Task<int> GetNewReadersCount(DateTime from, DateTime to, CancellationToken cancellationToken = default)
+    {
+        return await _appDbContext.Readers
+            .CountAsync(x =>
+                    x.CreatedAt >= from &&
+                    x.CreatedAt <= to,
+                cancellationToken);
+    }
+
     /// <inheritdoc cref="IEntityRepository{Guid,Reader}.GetAll"/>
     public async Task<ICollection<Reader>> GetAll(CancellationToken cancellationToken)
     {

@@ -9,20 +9,20 @@ namespace PracticalWork.Reports.Abstractions.Services.Domain;
 public interface IReportService
 {
     /// <summary>
-    /// Генерация отчета с данными об активности
+    /// Генерация отчета с данными об активности библиотеки
     /// </summary>
     /// <param name="dto">Модель с данными для генерации отчета</param>
     /// <param name="cancellationToken">Токен отмены операции</param>
     /// <returns>Информация о сгенерированном отчете</returns>
-    Task<Report> GenerateActivityLogsReport(GenerateActivityLogReportDto dto, CancellationToken cancellationToken = default);
+    Task<Report> GenerateLibraryActivityReport(GenerateLibraryActivityReportDto dto, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Генерация отчета с еженедельной статистикой
     /// </summary>
     /// <param name="dto">Модель с данными для генерации отчета</param>
     /// <param name="cancellationToken">Токен отмены операции</param>
-    /// <returns>Информация о сгенерированном отчете</returns>
-    Task<Report> GenerateWeeklyStatisticsReport(GenerateWeeklyReportDto dto, CancellationToken cancellationToken = default);
+    /// <returns>Информация о сгенерированном отчете с еженедельной статистикой</returns>
+    Task<WeeklyReportDto> GenerateWeeklyReport(GenerateWeeklyReportDto dto, CancellationToken cancellationToken = default);
     
     /// <summary>
     /// Получение всех отчетов

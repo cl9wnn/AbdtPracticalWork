@@ -18,6 +18,7 @@ public class ReportService : IReportService
 {
     private readonly IReportRepository _reportRepository;
     private readonly IActivityLogRepository _activityLogRepository;
+    private readonly IActivityLogService _activityLogService;
     private readonly ITabularCsvExportService<ActivityLog> _tabularCsvExportService;
     private readonly IKeyValueCsvExportService<WeeklyStatisticsDto> _keyValueCsvExportService;
     private readonly IFileStorageService _fileStorageService;
@@ -29,7 +30,8 @@ public class ReportService : IReportService
         IFileStorageService fileStorageService, IActivityLogRepository activityLogRepository,
         ICacheService cacheService,
         IOptions<BooksCacheOptions> cacheOptions,
-        IKeyValueCsvExportService<WeeklyStatisticsDto> keyValueCsvExportService)
+        IKeyValueCsvExportService<WeeklyStatisticsDto> keyValueCsvExportService,
+        IActivityLogService activityLogService)
     {
         _reportRepository = reportRepository;
         _tabularCsvExportService = tabularCsvExportService;
@@ -38,12 +40,13 @@ public class ReportService : IReportService
         _cacheService = cacheService;
         _cacheOptions = cacheOptions;
         _keyValueCsvExportService = keyValueCsvExportService;
+        _activityLogService = activityLogService;
 
         _reportsCacheVersionPrefix = cacheOptions.Value.ReportsCacheVersionPrefix;
     }
 
-    /// <inheritdoc cref="IReportService.GenerateActivityLogsReport"/>
-    public async Task<Report> GenerateActivityLogsReport(GenerateActivityLogReportDto dto, 
+    /// <inheritdoc cref="IReportService.GenerateLibraryActivityReport"/>
+    public async Task<Report> GenerateLibraryActivityReport(GenerateLibraryActivityReportDto dto, 
         CancellationToken cancellationToken)
     {
         var logs = await _activityLogRepository.GetActivityLogsByPeriod(dto.PeriodFrom,
@@ -55,14 +58,22 @@ public class ReportService : IReportService
         return await GenerateReport(csvBytes, fileName, dto.PeriodFrom, dto.PeriodTo, cancellationToken);
     }
 
-    /// <inheritdoc cref="IReportService.GenerateWeeklyStatisticsReport"/>
-    public async Task<Report> GenerateWeeklyStatisticsReport(GenerateWeeklyReportDto dto, 
+    /// <inheritdoc cref="IReportService.GenerateWeeklyReport"/>
+    public async Task<WeeklyReportDto> GenerateWeeklyReport(GenerateWeeklyReportDto dto, 
         CancellationToken cancellationToken)
     {
         var csvBytes = _keyValueCsvExportService.Generate(dto.WeeklyStatistics);
         var fileName = $"weekly_report_{dto.PeriodFrom:yyyyMMdd}-{dto.PeriodTo:yyyyMMdd}";
        
-        return await GenerateReport(csvBytes, fileName, dto.PeriodFrom, dto.PeriodTo, cancellationToken);
+        var generatedReport = await GenerateReport(csvBytes, fileName, dto.PeriodFrom, dto.PeriodTo, cancellationToken);
+        var downloadUrl = await GetDownloadUrl(generatedReport.Name, cancellationToken);
+
+        return new WeeklyReportDto
+        {
+            Name = generatedReport.Name,
+            DownloadUrl = downloadUrl,
+            GeneratedAt = generatedReport.GeneratedAt
+        };
     }
 
     /// <inheritdoc cref="IReportService.GetAll"/>

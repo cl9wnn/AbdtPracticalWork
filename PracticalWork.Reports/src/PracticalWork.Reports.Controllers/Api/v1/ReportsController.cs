@@ -1,12 +1,11 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using PracticalWork.Reports.Abstractions.Services.Domain;
-using PracticalWork.Reports.Contracts.v1.Abstracts;
-using PracticalWork.Reports.Contracts.v1.ActivityLogs.Get;
 using PracticalWork.Reports.Contracts.v1.Reports.Download;
 using PracticalWork.Reports.Contracts.v1.Reports.Generate;
 using PracticalWork.Reports.Contracts.v1.Reports.Get;
 using PracticalWork.Reports.Controllers.Mappers.v1;
+using PracticalWork.Shared.Contracts.Http.Reports.WeeklyReport;
 
 namespace PracticalWork.Reports.Controllers.Api.v1;
 
@@ -19,48 +18,41 @@ namespace PracticalWork.Reports.Controllers.Api.v1;
 public class ReportsController: Controller
 {
     private readonly IReportService _reportService;
-    private readonly IActivityLogService _activityLogService;
 
-    public ReportsController(IReportService reportService, IActivityLogService activityLogService)
+    public ReportsController(IReportService reportService)
     {
         _reportService = reportService;
-        _activityLogService = activityLogService;
     }
     
     /// <summary>
-    /// Получение логов активности
-    /// </summary>
-    /// <param name="request">Запрос на получение логов активности, содержащий параметры фильтрации и пагинации</param>
-    /// <returns>Страница с логами активности</returns>
-    [HttpGet("activity")]
-    [ProducesResponseType(typeof(PagedResponse<GetActivityLogsResponse>), 200)]
-    [ProducesResponseType(500)]
-    public async Task<IActionResult> GetActivityLogs([FromQuery] GetActivityLogsRequest request)
-    {
-        var result = await _activityLogService.GetPagedActivityLogs(
-            request.ToActivityLogFilterDto(),
-            request.ToActivityLogPaginationDto());
-        
-        return Ok(new PagedResponse<GetActivityLogsResponse>(
-            result.Page,
-            result.PageSize,
-            result.Items.ToActivityLogsResponseList()));
-    }
-    
-    /// <summary>
-    /// Генерация отчета в формате CSV с данными об активности
+    /// Генерация отчета в формате CSV с данными об активности библиотеки
     /// </summary>
     /// <param name="request">Запрос на генерацию отчета</param>
     /// <returns>Метаданные сгенерированного отчета</returns>
-    [HttpPost("generate")]
-    [ProducesResponseType(typeof(GenerateReportResponse), 200)]
+    [HttpPost("generate-activity")]
+    [ProducesResponseType(typeof(GenerateLibraryActivityReportResponse), 200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
-    public async Task<IActionResult> GenerateCsvReport([FromQuery] GenerateReportRequest request)
+    public async Task<IActionResult> GenerateLibraryActivityReport([FromQuery] GenerateLibraryActivityReportRequest request)
     {
-        var generatedReport = await _reportService.GenerateActivityLogsReport(request.ToGenerateReportDto());
-        return Ok(generatedReport.ToGenerateReportResponse());
+        var generatedReport = await _reportService.GenerateLibraryActivityReport(request.ToGenerateLibraryActivityReportDto());
+        return Ok(generatedReport.ToGenerateLibraryActivityReportResponse());
+    }
+    
+    /// <summary>
+    /// Генерация отчета в формате CSV с еженедельной статистикой библиотеки
+    /// </summary>
+    /// <param name="request">Запрос на генерацию отчета</param>
+    /// <returns>Signed URL на скачивание отчета</returns>
+    [HttpPost("generate-weekly")]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> GenerateWeeklyReport([FromBody] GenerateWeeklyReportRequest request)
+    {
+        var generatedReport = await _reportService.GenerateWeeklyReport(request.ToGenerateWeeklyReportDto());
+        return Ok(generatedReport.ToGenerateWeeklyReportResponse());
     }
     
     /// <summary>

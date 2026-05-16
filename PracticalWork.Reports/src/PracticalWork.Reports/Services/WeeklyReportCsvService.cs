@@ -9,7 +9,7 @@ namespace PracticalWork.Reports.Services;
 /// <summary>
 /// Сервис для генерации csv таблицы по еженедельной статистике 
 /// </summary>
-public class WeeklyStatisticsCsvExportService : IKeyValueCsvExportService<WeeklyStatisticsDto>
+public class WeeklyReportCsvService : IKeyValueCsvExportService<WeeklyStatisticsDto>
 {
     /// <inheritdoc cref="IKeyValueCsvExportService{T}.Generate"/>
     public byte[] Generate(WeeklyStatisticsDto stats)
@@ -22,23 +22,23 @@ public class WeeklyStatisticsCsvExportService : IKeyValueCsvExportService<Weekly
         csv.WriteField("Значение");
         csv.NextRecord();
 
-        csv.WriteField(nameof(stats.NewBooksCount));
+        csv.WriteField("Количество новых книг");
         csv.WriteField(stats.NewBooksCount);
         csv.NextRecord();
 
-        csv.WriteField(nameof(stats.NewReadersCount));
+        csv.WriteField("Количество новых читателей");
         csv.WriteField(stats.NewReadersCount);
         csv.NextRecord();
 
-        csv.WriteField(nameof(stats.BorrowedBooksCount));
+        csv.WriteField("Количество выданных книг");
         csv.WriteField(stats.BorrowedBooksCount);
         csv.NextRecord();
 
-        csv.WriteField(nameof(stats.ReturnedBooksCount));
+        csv.WriteField("Количество возвращенных книг");
         csv.WriteField(stats.ReturnedBooksCount);
         csv.NextRecord();
 
-        csv.WriteField(nameof(stats.OverdueBooksCount));
+        csv.WriteField("Количество просроченных выдач");
         csv.WriteField(stats.OverdueBooksCount);
         csv.NextRecord();
 

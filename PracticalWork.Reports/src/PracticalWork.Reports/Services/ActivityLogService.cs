@@ -32,21 +32,4 @@ public class ActivityLogService: IActivityLogService
             Items = activityLogs
         };
     }
-
-    /// <inheritdoc cref="IActivityLogService.GetWeeklyStatistics"/>
-    public async Task<WeeklyStatisticsDto> GetWeeklyStatistics(DateOnly from, DateOnly to, 
-        CancellationToken cancellationToken)
-    {
-        var eventTypesCountDict = 
-            await _activityLogRepository.GetActivityEventTypeCountsByPeriod(from, to, cancellationToken);
-
-        return new WeeklyStatisticsDto
-        {
-            NewBooksCount = eventTypesCountDict.GetValueOrDefault(ActivityEventType.BookCreated),
-            NewReadersCount = eventTypesCountDict.GetValueOrDefault(ActivityEventType.ReaderCreated),
-            BorrowedBooksCount = eventTypesCountDict.GetValueOrDefault(ActivityEventType.BookBorrowed),
-            ReturnedBooksCount = eventTypesCountDict.GetValueOrDefault(ActivityEventType.BookReturned),
-            OverdueBooksCount = 0
-        };
-    }
 }

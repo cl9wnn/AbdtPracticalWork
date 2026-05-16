@@ -40,14 +40,4 @@ public interface IActivityLogRepository
     /// <returns>Список логов активности</returns>
     Task<IReadOnlyList<ActivityLog>> GetActivityLogsByPeriod(DateOnly from, DateOnly to,
         ActivityEventType eventType, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Получение количества каждого типа лога активности за определенный период времени
-    /// </summary>
-    /// <param name="from">Дата начала периода</param>
-    /// <param name="to">Дата конца периода</param>
-    /// <param name="cancellationToken">Токен отмены операции</param>
-    /// <returns>Словарь с типом лога активности и количеством логов соответствующего типа</returns>
-    Task<IReadOnlyDictionary<ActivityEventType, int>> GetActivityEventTypeCountsByPeriod(DateOnly from, DateOnly to,
-        CancellationToken cancellationToken = default);
 }

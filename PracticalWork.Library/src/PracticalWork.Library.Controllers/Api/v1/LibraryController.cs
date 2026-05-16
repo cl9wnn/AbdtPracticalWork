@@ -6,6 +6,7 @@ using PracticalWork.Library.Contracts.v1.Books.AddDetails;
 using PracticalWork.Library.Contracts.v1.Library.Borrow;
 using PracticalWork.Library.Contracts.v1.Library.Get;
 using PracticalWork.Library.Contracts.v1.Library.Return;
+using PracticalWork.Library.Contracts.v1.Library.Statistics;
 using PracticalWork.Library.Controllers.Attributes;
 using PracticalWork.Library.Controllers.Mappers.v1;
 using PracticalWork.Library.Models;
@@ -108,5 +109,15 @@ public class LibraryController : Controller
         var result = await _libraryService.GetBookDetailsByTitle(title);
 
         return Ok(result.ToBookDetailsResponse());
+    }
+    
+    /// <summary>
+    /// Получение статистики библиотеки за определенный период времени
+    /// </summary>
+    [HttpGet("statistics")]
+    public async Task<IActionResult> GetLibraryStatistics([FromQuery] GetLibraryStatisticsRequest request)
+    {
+        var result = await _libraryService.GetLibraryStatistics(request.PeriodFrom, request.PeriodTo);
+        return Ok(result.ToLibraryStatisticsResponse());
     }
 }

@@ -186,4 +186,30 @@ public class LibraryService : ILibraryService
 
         return book;
     }
+
+    /// <inheritdoc cref="ILibraryService.GetLibraryStatistics"/>
+    public async Task<LibraryStatisticsDto> GetLibraryStatistics(DateOnly from, DateOnly to,
+        CancellationToken cancellationToken = default)
+    {
+        var fromDate = from.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+        var toDate = to.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
+        
+        return new LibraryStatisticsDto
+        {
+            NewBooksCount = await _bookRepository
+                .GetNewBooksCount(fromDate, toDate, cancellationToken),
+
+            NewReadersCount = await _readerRepository
+                .GetNewReadersCount(fromDate, toDate, cancellationToken),
+
+            BorrowedBooksCount = await _bookBorrowRepository
+                .GetBorrowedBooksCount(from, to, cancellationToken),
+
+            ReturnedBooksCount = await _bookBorrowRepository
+                .GetReturnedBooksCount(from, to, cancellationToken),
+
+            OverdueBooksCount = await _bookBorrowRepository
+                .GetOverdueBooksCount(to ,cancellationToken)
+        };
+    }
 }

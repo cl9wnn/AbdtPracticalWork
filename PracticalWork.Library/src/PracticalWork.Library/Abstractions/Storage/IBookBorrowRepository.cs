@@ -47,6 +47,32 @@ public interface IBookBorrowRepository
     /// </summary>
     /// <param name="days">Количество дней до возврата книги</param>
     /// <param name="cancellationToken">Токен отмены операции</param>
-    /// <returns></returns>
+    /// <returns>Спиоск активных выдач книг</returns>
     Task<IReadOnlyList<BorrowedBookDto>> GetBorrowsDueInDays(int days, CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    /// Получение количества взятых книг за определенный период
+    /// </summary>
+    /// <param name="from">Дата начала периода</param>
+    /// <param name="to">Дата конца периода</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Количество взятых книг</returns>
+    Task<int> GetBorrowedBooksCount(DateOnly from, DateOnly to, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Получение количества возвращенных книг за определенный период
+    /// </summary>
+    /// <param name="from">Дата начала периода</param>
+    /// <param name="to">Дата конца периода</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Количество возвращенных книг</returns>
+    Task<int> GetReturnedBooksCount(DateOnly from, DateOnly to, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Получение количества просроченных книг на определенную дату
+    /// </summary>
+    /// <param name="date">Дата, на момент которой считается количество</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Количество просроченных книг</returns>
+    Task<int> GetOverdueBooksCount(DateOnly date, CancellationToken cancellationToken = default);
 }

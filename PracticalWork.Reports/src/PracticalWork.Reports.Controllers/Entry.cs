@@ -23,7 +23,7 @@ public static class Entry
 
     private static void AddValidation(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<GenerateReportValidator>();
+        services.AddValidatorsFromAssemblyContaining<GenerateLibraryActivityReportValidator>();
         services.AddFluentValidationAutoValidation();
 
         ValidatorOptions.Global.DisplayNameResolver = (_, member, _) => member?.Name;

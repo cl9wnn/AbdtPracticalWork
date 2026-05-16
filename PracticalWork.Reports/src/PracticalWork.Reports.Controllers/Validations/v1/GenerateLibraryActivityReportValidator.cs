@@ -3,9 +3,9 @@ using PracticalWork.Reports.Contracts.v1.Reports.Generate;
 
 namespace PracticalWork.Reports.Controllers.Validations.v1;
 
-public class GenerateReportValidator : AbstractValidator<GenerateReportRequest>
+public class GenerateLibraryActivityReportValidator : AbstractValidator<GenerateLibraryActivityReportRequest>
 {
-    public GenerateReportValidator()
+    public GenerateLibraryActivityReportValidator()
     {
         RuleFor(x => x.PeriodFrom)
             .NotEmpty()

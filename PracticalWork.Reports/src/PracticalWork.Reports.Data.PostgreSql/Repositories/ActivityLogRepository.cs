@@ -58,24 +58,6 @@ public class ActivityLogRepository : IActivityLogRepository
             .AsNoTracking()
             .ToListAsync(cancellationToken: cancellationToken);
     }
-
-    /// <inheritdoc cref="IActivityLogRepository.GetActivityEventTypeCountsByPeriod"/>
-    public async Task<IReadOnlyDictionary<ActivityEventType, int>> GetActivityEventTypeCountsByPeriod (
-        DateOnly from,
-        DateOnly to,
-        CancellationToken cancellationToken)
-    {
-        return await _appDbContext.ActivityLogs
-            .Where(x => x.EventDate >= from && x.EventDate <= to)
-            .GroupBy(x => x.EventType)
-            .Select(g => new
-            {
-                EventType = g.Key,
-                Count = g.Count()
-            })
-            .ToDictionaryAsync(x => x.EventType, x => x.Count,
-                cancellationToken: cancellationToken);
-    }
     
     /// <summary>
     /// Построение запроса для поиска логов активности по фильтрации

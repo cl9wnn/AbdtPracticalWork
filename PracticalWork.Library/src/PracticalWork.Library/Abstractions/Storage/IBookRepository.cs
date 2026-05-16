@@ -28,6 +28,16 @@ public interface IBookRepository: IEntityRepository<Guid, Book>
         CancellationToken cancellationToken = default);
     
     /// <summary>
+    /// Получение количества новых книг за определенный период 
+    /// </summary>
+    /// <param name="from">Дата начала периода</param>
+    /// <param name="to">Дата конца периода</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Количество новых книг</returns>
+    Task<int> GetNewBooksCount(DateTime from, DateTime to,
+        CancellationToken cancellationToken = default);
+    
+    /// <summary>
     /// Получение списка не архивных книг из библиотеки с учетом фильтров и пагинации
     /// </summary>
     /// <param name="filter">Фильтр поиска</param>
@@ -40,8 +50,8 @@ public interface IBookRepository: IEntityRepository<Guid, Book>
     /// <summary>
     /// Получение списка старых книг, подлежащих архивации
     /// </summary>
-    /// <param name="thresholdDate"></param>
-    /// <param name="limit"></param>
+    /// <param name="thresholdDate">Пороговая дата</param>
+    /// <param name="limit">Лимит на количество</param>
     /// <param name="cancellationToken">Токен отмены операции</param>
     /// <returns></returns>
     Task<IReadOnlyList<(Guid, Book)>> GetBooksForArchiving(DateTime thresholdDate, int limit, 

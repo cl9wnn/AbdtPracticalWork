@@ -27,8 +27,8 @@ public static class Entry
         services.Configure<BooksCacheOptions>(configuration.GetSection("App:BooksCache"));
 
         services.AddScoped<IActivityLogService, ActivityLogService>();
-        services.AddScoped<ITabularCsvExportService<ActivityLog>, ActivityLogCsvExportService>();
-        services.AddScoped<IKeyValueCsvExportService<WeeklyStatisticsDto>, WeeklyStatisticsCsvExportService>();
+        services.AddScoped<ITabularCsvExportService<ActivityLog>, LibraryActivityReportCsvService>();
+        services.AddScoped<IKeyValueCsvExportService<WeeklyStatisticsDto>, WeeklyReportCsvService>();
         services.AddScoped<IReportService, ReportService>();
         
         services.AddScoped<IEventHandler<BookCreatedEvent>, BookCreatedEventHandler>();

@@ -10,7 +10,7 @@ namespace PracticalWork.Reports.Services;
 /// <summary>
 /// Сервис для генерации csv таблицы по логам активностей
 /// </summary>
-public sealed class ActivityLogCsvExportService
+public sealed class LibraryActivityReportCsvService
     : ITabularCsvExportService<ActivityLog>
 {
     /// <inheritdoc cref="ITabularCsvExportService{T}.Generate"/>

@@ -23,4 +23,14 @@ public interface IReaderRepository: IEntityRepository<Guid, Reader>
     /// <param name="cancellationToken">Токен отмены операции</param>
     /// <returns>Список взятых читателем книг</returns>
     Task<IReadOnlyList<BorrowedBookDto>> GetBorrowedBooks(Guid readerId, CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    /// Получение количества новых карточек читателей за определенный период
+    /// </summary>
+    /// <param name="from">Дата начала периода</param>
+    /// <param name="to">Дата конца периода</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Количество новых карточек</returns>
+    Task<int> GetNewReadersCount(DateTime from, DateTime to,
+        CancellationToken cancellationToken = default);
 }
