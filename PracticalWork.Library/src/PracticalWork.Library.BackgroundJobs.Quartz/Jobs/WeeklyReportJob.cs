@@ -1,13 +1,14 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using PracticalWork.Library.Abstractions.Services.Domain;
 using PracticalWork.Library.Abstractions.Services.Infrastructure;
 using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Options.Email;
+using PracticalWork.Shared.Contracts.Http.Reports.WeeklyReport;
 using Quartz;
 
 namespace PracticalWork.Library.BackgroundJobs.Quartz.Jobs;
 
-/*
 /// <summary>
 /// Фоновая задача, создающая еженедельный отчет со статистикой для администрации
 /// </summary>
@@ -15,22 +16,22 @@ namespace PracticalWork.Library.BackgroundJobs.Quartz.Jobs;
 public class WeeklyReportJob : BaseJob
 {
     private readonly ILogger<WeeklyReportJob> _logger;
-    private readonly IActivityLogService _activityLogService;
-    private readonly IReportService _reportService;
+    private readonly ILibraryService _libraryService;
+    private readonly IReportsApiClient _reportApiClient;
     private readonly IEmailService _emailService;
     private readonly WeeklyReportTemplate _weeklyReportTemplate;
 
     public WeeklyReportJob(
         ILogger<WeeklyReportJob> logger,
-        IActivityLogService activityLogService,
+        ILibraryService activityLogService,
         IEmailService emailService,
         IOptions<EmailTemplateSettings> emailTemplateSettings,
-        IReportService reportService)
+        IReportsApiClient reportApiClient)
     {
         _logger = logger;
-        _activityLogService = activityLogService;
+        _libraryService = activityLogService;
         _emailService = emailService;
-        _reportService = reportService;
+        _reportApiClient = reportApiClient;
         _weeklyReportTemplate = emailTemplateSettings.Value.WeeklyReport;
     }
 
@@ -49,16 +50,19 @@ public class WeeklyReportJob : BaseJob
 
         try
         {
-            var statistics = await _activityLogService.GetWeeklyStatistics(from, to, ct);
+            var statistics = await _libraryService.GetLibraryStatistics(from, to, ct);
 
-            var report = await _reportService.GenerateWeeklyStatisticsReport(new GenerateWeeklyReportDto
-            {
-                PeriodFrom = from,
-                PeriodTo = to,
-                WeeklyStatistics = statistics
-            }, ct);
+            var report = await _reportApiClient.GenerateWeeklyReport(new GenerateWeeklyReportRequest(
+                PeriodFrom: from,
+                PeriodTo: to,
+                NewBooksCount: statistics.NewBooksCount,
+                NewReadersCount: statistics.NewReadersCount,
+                BorrowedBooksCount: statistics.BorrowedBooksCount,
+                ReturnedBooksCount: statistics.ReturnedBooksCount,
+                OverdueBooksCount: statistics.OverdueBooksCount
+            ), ct);
 
-            var downloadUrl = await _reportService.GetDownloadUrl(report.Name, ct);
+            var downloadUrl = report.DownloadUrl;
 
             var messageSubject = string.Format(_weeklyReportTemplate.SubjectTemplate,
                 from.ToString("dd.MM.yyyy"),
@@ -74,13 +78,14 @@ public class WeeklyReportJob : BaseJob
                 ReturnedBooksCount = statistics.ReturnedBooksCount,
                 OverdueBooksCount = statistics.OverdueBooksCount,
                 ReportDownloadLink = downloadUrl,
-                GeneratedAt = DateTime.UtcNow,
+                GeneratedAt = report.GeneratedAt,
             };
 
             await _emailService.SendBulkAsync(_weeklyReportTemplate.AdminEmails, messageSubject, message, ct);
 
-            _logger.LogInformation("Еженедельный отчет сгенерирован. " +
-                                   "Письма со статистикой успешно отправлены на почты администраторов.");
+            _logger.LogInformation("Еженедельный отчет {name} сгенерирован в {time}. " +
+                                   "Письма со статистикой успешно отправлены на почты администраторов.",
+                report.Name, report.GeneratedAt);
         }
         catch (Exception ex)
         {
@@ -88,4 +93,3 @@ public class WeeklyReportJob : BaseJob
         }
     }
 }
-*/
