@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PracticalWork.Reports.Abstractions.Storage;
-using PracticalWork.Reports.Data.PostgreSql.Entities;
 using PracticalWork.Reports.Data.PostgreSql.Mappers.v1;
-using PracticalWork.Reports.Enums;
 using PracticalWork.Reports.Exceptions;
 using PracticalWork.Reports.Models;
 

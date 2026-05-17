@@ -2,10 +2,8 @@
 using Microsoft.Extensions.Options;
 using PracticalWork.Library.Abstractions.Services.Infrastructure;
 using PracticalWork.Library.Abstractions.Storage;
-using PracticalWork.Library.BackgroundJobs.Quartz.Interfaces;
 using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Options.Email;
-using PracticalWork.Library.Options.Jobs;
 using Quartz;
 
 namespace PracticalWork.Library.BackgroundJobs.Quartz.Jobs;

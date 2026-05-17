@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PracticalWork.Library.Abstractions.Services.Domain;
-using PracticalWork.Library.Options;
 using PracticalWork.Library.Options.Cache;
 using PracticalWork.Library.Options.Email;
 using PracticalWork.Library.Options.Jobs;

@@ -10,6 +10,6 @@ public class ExtendReaderRequestValidator: AbstractValidator<ExtendReaderRequest
         RuleFor(x => x.NewExpiryDate)
             .NotEmpty().WithMessage("Новая дата окончания срока действия должна быть указана.")
             .GreaterThan(DateOnly.FromDateTime(DateTime.UtcNow))
-            .WithMessage("Новая дата окончания срока действия должна быть в будущем.");;
+            .WithMessage("Новая дата окончания срока действия должна быть в будущем.");
     }
 }

@@ -1,5 +1,4 @@
 ﻿using PracticalWork.Reports.Data.PostgreSql.Entities;
-using PracticalWork.Reports.Enums;
 using PracticalWork.Reports.Models;
 
 namespace PracticalWork.Reports.Data.PostgreSql.Mappers.v1;

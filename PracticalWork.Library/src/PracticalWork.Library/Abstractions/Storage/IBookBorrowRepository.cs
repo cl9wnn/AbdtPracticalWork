@@ -47,7 +47,7 @@ public interface IBookBorrowRepository
     /// </summary>
     /// <param name="days">Количество дней до возврата книги</param>
     /// <param name="cancellationToken">Токен отмены операции</param>
-    /// <returns>Спиоск активных выдач книг</returns>
+    /// <returns>Список активных выдач книг</returns>
     Task<IReadOnlyList<BorrowedBookDto>> GetBorrowsDueInDays(int days, CancellationToken cancellationToken = default);
     
     /// <summary>

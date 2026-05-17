@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using PracticalWork.Library.Data.PostgreSql.Entities;
+﻿using PracticalWork.Library.Data.PostgreSql.Entities;
 using PracticalWork.Library.Dtos;
 using PracticalWork.Library.Enums;
 using PracticalWork.Library.Models;

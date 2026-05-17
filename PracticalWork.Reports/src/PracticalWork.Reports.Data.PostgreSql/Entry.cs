@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using PracticalWork.Reports.Abstractions.Storage;
 using PracticalWork.Reports.Data.PostgreSql.Repositories;
-using PracticalWork.Reports.Models;
 
 namespace PracticalWork.Reports.Data.PostgreSql;
 
